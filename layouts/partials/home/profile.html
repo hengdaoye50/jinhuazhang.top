@@ -48,7 +48,8 @@
 
       <div class="intro-avatar-wrap">
         <div class="avatar-ring">
-          {{ with .Site.Params.Author.image }}
+          {{ $avatarPath := .Site.Params.Author.image | default .Site.Params.Author.avatar }}
+          {{ with $avatarPath }}
             {{ $img := "" }}
             {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
               {{ $img = resources.GetRemote . }}

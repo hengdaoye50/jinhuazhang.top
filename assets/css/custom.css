@@ -62,9 +62,9 @@
    Home Container
    ============================================= */
 .home-container {
-  max-width: 780px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
 }
 
 /* =============================================
@@ -107,8 +107,8 @@
 /* Banner card */
 .hero-card {
   position: relative;
-  max-width: 620px;
-  padding: 2rem 2.5rem;
+  max-width: 900px;
+  padding: 2.2rem 3rem;
   background: linear-gradient(
     160deg,
     rgba(126, 12, 110, 0.04) 0%,
@@ -220,8 +220,8 @@
 .intro-card {
   display: flex;
   align-items: flex-start;
-  gap: 2rem;
-  padding: 2rem 2rem 1.8rem;
+  gap: 2.5rem;
+  padding: 2.2rem 2.5rem 2rem;
   background: linear-gradient(145deg, #fffcf8, var(--cream-warm));
   border: 1px solid rgba(196, 162, 101, 0.2);
   border-radius: var(--radius);
@@ -254,12 +254,12 @@
 
 .avatar-ring {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
-  padding: 3px;
+  padding: 4px;
   background: linear-gradient(135deg, var(--purple), var(--gold), var(--purple-light));
-  box-shadow: 0 4px 16px rgba(126, 12, 110, 0.15);
+  box-shadow: 0 4px 20px rgba(126, 12, 110, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -373,8 +373,8 @@
 
 .updates-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.2rem;
 }
 
 .update-card {
