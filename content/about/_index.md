@@ -7,7 +7,7 @@ showTableOfContents = false
 
 ## 张津华
 
-南开大学 **PPE**（哲学、政治学、经济学）专业本科生。
+南开大学 **PPE**（哲学、政治学与经济学）实验班2024级本科生。
 
 ### 研究兴趣
 
@@ -18,5 +18,5 @@ showTableOfContents = false
 
 ### 联系方式
 
-- GitHub: [jasper-zhang](https://github.com/jasper-zhang)
-- Email: you@example.com
+- GitHub: [hengdaoye50](https://github.com/hengdaoye50)
+- Email: 2411638@mail.nankai.edu.cn
