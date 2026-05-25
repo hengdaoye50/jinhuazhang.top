@@ -15,9 +15,8 @@ title = "张津华丨Jasper Zhang"
   name = "张津华"
   email = "you@example.com"
   headline = "南开大学 PPE 专业 · 准科研工作者"
-  bio = "南开大学 PPE（哲学、政治学、经济学）专业本科生。关注社会科学方法论、政治哲学与公共政策。在这个站点记录我的阅读、研究和思考。"
+  bio = "南开大学 PPE（政治学、经济学、哲学）专业2024级本科生。关注社会科学方法论、AI4SS、政府与市场关系、乡村振兴。勇于面对世界的复杂性。对生活怀有善意，对研究保持警惕。"
   avatar = "img/avatar.svg"
   links = [
-    { github = "https://github.com/jasper-zhang" },
-    { email = "mailto:you@example.com" },
+    { github = "https://github.com/hengdaoye50" },
   ]
