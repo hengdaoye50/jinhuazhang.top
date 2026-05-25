@@ -14,6 +14,11 @@
   pageRef = "about"
   weight = 30
 
+[[main]]
+  name = "GitHub"
+  url = "https://github.com/hengdaoye50"
+  weight = 40
+
 # -- Footer Menu --
 [[footer]]
   name = "标签"

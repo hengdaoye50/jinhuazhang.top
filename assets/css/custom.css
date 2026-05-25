@@ -1,264 +1,470 @@
 /* =============================================
    jinhuazhang.top — Custom Styles
-   Primary: RGB(126, 12, 110) → #7E0C6E
+   Primary: #7E0C6E (Purple)  |  Accent: #C4A265 (Gold)
    ============================================= */
 
-/* ---------- Google Fonts ---------- */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+SC:wght@300;400;600;700&display=swap');
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
 
-/* ---------- CSS Custom Properties ---------- */
+/* ---------- Custom Properties ---------- */
 :root {
-  --color-primary: #7E0C6E;
-  --color-primary-light: #A83296;
-  --color-primary-dark: #5C084F;
-  --color-accent: #B44FA0;
-  --color-bg-hero: #7E0C6E;
-  --color-bg-hero-end: #3D0635;
-  --color-text-hero: #f5f0f4;
-  --color-text-hero-sub: #e0c8da;
-  --color-border-hero: rgba(255, 255, 255, 0.15);
-  --font-serif: 'Playfair Display', 'Noto Serif SC', 'Georgia', serif;
-  --font-sans: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --purple:        #7E0C6E;
+  --purple-light:  #A83296;
+  --purple-dark:   #5C084F;
+  --purple-deep:   #3D0635;
+  --gold:          #C4A265;
+  --gold-light:    #D4C08A;
+  --gold-bright:   #D4AF37;
+  --gold-dark:     #A68845;
+  --cream:         #FDF8F0;
+  --ink:           #2C2C2C;
+  --ink-light:     #6b6b6b;
+
+  --font-display:  'Playfair Display', 'Noto Serif SC', Georgia, serif;
+  --font-body:     'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-serif:    'Noto Serif SC', 'Playfair Display', Georgia, serif;
+
+  --radius:        10px;
+  --shadow-sm:     0 2px 8px rgba(126, 12, 110, 0.08);
+  --shadow-md:     0 4px 20px rgba(126, 12, 110, 0.12);
+  --shadow-gold:   0 4px 16px rgba(196, 162, 101, 0.15);
 }
 
-/* ---------- Dark mode overrides ---------- */
 .dark {
-  --color-bg-hero: #3D0635;
-  --color-bg-hero-end: #1a031a;
+  --cream:         #1a1a1a;
+  --ink:           #e8e8e8;
+  --ink-light:     #a0a0a0;
+  --purple-deep:   #1a031a;
 }
 
 /* =============================================
-   Slogan Hero Banner
+   1. Slogan Banner (compact)
    ============================================= */
-.slogan-hero {
+.hero-banner {
   position: relative;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
-  padding: 5rem 1.5rem 4.5rem;
+  padding: 2.5rem 1.5rem 2rem;
   background: linear-gradient(
-    160deg,
-    var(--color-bg-hero) 0%,
-    var(--color-primary-dark) 40%,
-    var(--color-bg-hero-end) 100%
+    135deg,
+    var(--purple) 0%,
+    var(--purple-dark) 45%,
+    var(--purple-deep) 100%
   );
   text-align: center;
   overflow: hidden;
 }
 
-/* Subtle grain texture overlay */
-.slogan-hero::before {
+/* Gold accent line at bottom */
+.hero-banner::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold) 30%,
+    var(--gold-bright) 50%,
+    var(--gold) 70%,
+    transparent 100%
+  );
 }
 
-/* Soft top fade */
-.slogan-hero::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, rgba(126, 12, 110, 0.15), transparent);
-  pointer-events: none;
-}
-
-.slogan-hero-inner {
-  position: relative;
-  z-index: 1;
-  max-width: 700px;
+.hero-inner {
+  max-width: 680px;
   margin: 0 auto;
 }
 
-/* Chinese slogan */
-.slogan-zh {
-  font-family: var(--font-sans);
-  font-size: 1.25rem;
-  font-weight: 300;
-  line-height: 2.2;
-  color: var(--color-text-hero);
-  letter-spacing: 0.12em;
-  margin: 0;
-}
-
-.slogan-zh-2 {
-  display: block;
-  margin-top: 0.3em;
-  opacity: 0.9;
-}
-
-/* Divider */
-.slogan-divider {
-  width: 48px;
-  height: 1px;
-  margin: 2rem auto;
-  background: var(--color-border-hero);
-}
-
-/* English slogan */
-.slogan-en {
+.hero-slogan-zh {
   font-family: var(--font-serif);
   font-size: 1.05rem;
-  font-style: italic;
   font-weight: 400;
   line-height: 2;
-  color: var(--color-text-hero-sub);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.1em;
+  color: #f0e8ed;
   margin: 0;
 }
 
-.slogan-en-2 {
+.hero-divider {
   display: block;
-  margin-top: 0.2em;
-  opacity: 0.85;
+  width: 36px;
+  height: 1px;
+  margin: 1.2rem auto;
+  background: rgba(196, 162, 101, 0.5);
+}
+
+.hero-slogan-en {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  color: #d5c4d0;
+  margin: 0;
 }
 
 /* =============================================
-   Profile Card
+   2. Personal Intro Section
    ============================================= */
-.profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 2.5rem 1rem 2rem;
-  max-width: 560px;
-  margin: -2rem auto 0;
-  position: relative;
-  z-index: 2;
+.intro-section {
+  max-width: 720px;
+  margin: 2rem auto 0;
+  padding: 0 1rem;
 }
 
-.profile-avatar {
+.intro-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 2rem 2rem 1.8rem;
+  background: linear-gradient(145deg, #fffcf8, #faf5ef);
+  border: 1px solid rgba(196, 162, 101, 0.2);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-gold);
+  position: relative;
+}
+
+/* Gold corner accent */
+.intro-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-bright), var(--gold));
+  border-radius: var(--radius) 0 0 0;
+}
+
+.dark .intro-card {
+  background: linear-gradient(145deg, #2a1a28, #221520);
+  border-color: rgba(196, 162, 101, 0.15);
+}
+
+.intro-avatar-wrap {
+  flex-shrink: 0;
+}
+
+.intro-avatar {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(126, 12, 110, 0.2);
-  box-shadow: 0 4px 20px rgba(126, 12, 110, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid rgba(196, 162, 101, 0.3);
+  box-shadow: 0 4px 16px rgba(126, 12, 110, 0.1);
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.profile-avatar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 28px rgba(126, 12, 110, 0.25);
+.intro-avatar:hover {
+  transform: scale(1.04);
+  border-color: var(--gold);
 }
 
-.profile-name {
-  font-family: var(--font-serif);
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin: 1rem 0 0.3rem;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.intro-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.2rem;
 }
 
-.profile-headline {
-  font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 400;
-  color: #6b7280;
-  margin: 0 0 1.2rem;
-  letter-spacing: 0.04em;
-}
-
-.dark .profile-headline {
-  color: #9ca3af;
-}
-
-.profile-intro {
-  font-family: var(--font-sans);
+.intro-line {
+  font-family: var(--font-body);
   font-size: 0.92rem;
-  line-height: 1.9;
-  color: #4b5563;
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.5rem;
-  border-left: 2px solid var(--color-primary);
-  text-align: left;
-  max-width: 420px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0;
 }
 
-.dark .profile-intro {
-  color: #d1d5db;
-  border-left-color: var(--color-accent);
+.intro-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--gold-dark);
+  background: rgba(196, 162, 101, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
 }
 
-.profile-links {
-  margin-top: 0.5rem;
-}
-
-.profile-links a {
-  color: var(--color-primary);
-  transition: color 0.2s ease;
-}
-
-.profile-links a:hover {
-  color: var(--color-accent);
-}
-
-.dark .profile-links a {
-  color: var(--color-accent);
-}
-
-.dark .profile-links a:hover {
-  color: #d47cc4;
-}
-
-/* =============================================
-   Recent Articles Section
-   ============================================= */
-.recent-section {
-  max-width: 640px;
-  margin: 2rem auto 0;
-  padding-top: 1.5rem;
+.intro-line-slogan {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--purple);
+  margin-top: 0.3rem;
+  padding-top: 0.5rem;
   border-top: 1px solid rgba(126, 12, 110, 0.1);
 }
 
-/* Style recent article links */
-.recent-section a {
-  transition: color 0.2s ease;
+.dark .intro-line-slogan {
+  color: var(--gold-light);
+  border-top-color: rgba(196, 162, 101, 0.2);
 }
 
-.recent-section a:hover {
-  color: var(--color-primary);
+.dark .intro-line {
+  color: #d1d5db;
 }
 
 /* =============================================
-   Responsive Adjustments
+   3. Section Headers (shared)
+   ============================================= */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--purple);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.dark .section-title {
+  color: var(--gold-light);
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(126, 12, 110, 0.2), transparent);
+}
+
+.dark .section-line {
+  background: linear-gradient(90deg, rgba(196, 162, 101, 0.2), transparent);
+}
+
+/* =============================================
+   4. Recent Updates Cards
+   ============================================= */
+.updates-section {
+  max-width: 720px;
+  margin: 2.5rem auto 0;
+  padding: 0 1rem;
+}
+
+.updates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.update-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.2rem;
+  background: #fff;
+  border: 1px solid rgba(126, 12, 110, 0.08);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Purple gradient top bar */
+.update-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--purple), var(--gold));
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.update-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(196, 162, 101, 0.3);
+}
+
+.update-card:hover::before {
+  opacity: 1;
+}
+
+.dark .update-card {
+  background: #221520;
+  border-color: rgba(196, 162, 101, 0.1);
+}
+
+.update-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.update-tag {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--purple);
+  background: rgba(126, 12, 110, 0.08);
+  padding: 0.12rem 0.45rem;
+  border-radius: 3px;
+}
+
+.dark .update-tag {
+  color: var(--gold-light);
+  background: rgba(196, 162, 101, 0.1);
+}
+
+.update-date {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+}
+
+.update-title {
+  font-family: var(--font-serif);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 0.4rem;
+  line-height: 1.45;
+}
+
+.update-summary {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--ink-light);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =============================================
+   5. PPE Knowledge Base Card
+   ============================================= */
+.kb-section {
+  max-width: 720px;
+  margin: 2.5rem auto 3rem;
+  padding: 0 1rem;
+}
+
+.kb-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.3rem 1.8rem;
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(126, 12, 110, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gold shimmer overlay */
+.kb-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(196, 162, 101, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.kb-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(126, 12, 110, 0.3);
+}
+
+.kb-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.kb-content {
+  flex: 1;
+}
+
+.kb-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+  color: #fff;
+}
+
+.kb-desc {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  margin: 0;
+  color: #d5c4d0;
+  letter-spacing: 0.02em;
+}
+
+.kb-arrow {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--gold);
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.kb-card:hover .kb-arrow {
+  transform: translateX(4px);
+}
+
+/* =============================================
+   Responsive
    ============================================= */
 @media (max-width: 640px) {
-  .slogan-hero {
-    padding: 3.5rem 1.25rem 3rem;
+  .hero-banner {
+    padding: 2rem 1.2rem 1.6rem;
   }
 
-  .slogan-zh {
-    font-size: 1.05rem;
-    line-height: 2;
-    letter-spacing: 0.08em;
+  .hero-slogan-zh {
+    font-size: 0.92rem;
+    line-height: 1.85;
+    letter-spacing: 0.06em;
   }
 
-  .slogan-en {
-    font-size: 0.9rem;
-    line-height: 1.8;
+  .hero-slogan-en {
+    font-size: 0.8rem;
   }
 
-  .slogan-divider {
-    margin: 1.5rem auto;
+  .intro-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    gap: 1.2rem;
   }
 
-  .profile-avatar {
+  .intro-avatar {
     width: 100px;
     height: 100px;
   }
 
-  .profile-name {
-    font-size: 1.5rem;
+  .intro-label {
+    display: block;
+    margin-bottom: 0.2rem;
   }
 
-  .profile-intro {
-    font-size: 0.88rem;
-    padding: 0.8rem 1rem;
+  .updates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kb-card {
+    padding: 1rem 1.2rem;
   }
 }
