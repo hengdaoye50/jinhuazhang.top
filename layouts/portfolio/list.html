@@ -8,20 +8,6 @@
       {{ with .Description }}
       <p class="portfolio-hero-desc">{{ . }}</p>
       {{ end }}
-      <div class="portfolio-hero-stats">
-        <span class="portfolio-stat">
-          <span class="portfolio-stat-num">{{ len .Pages }}</span>
-          <span class="portfolio-stat-label">作品</span>
-        </span>
-        <span class="portfolio-stat-sep"></span>
-        {{ $categories := slice }}
-        {{ range .Pages }}{{ range .Params.categories }}{{ $categories = $categories | append . }}{{ end }}{{ end }}
-        {{ $uniqueCategories := $categories | uniq }}
-        <span class="portfolio-stat">
-          <span class="portfolio-stat-num">{{ len $uniqueCategories }}</span>
-          <span class="portfolio-stat-label">方向</span>
-        </span>
-      </div>
     </div>
     <div class="portfolio-hero-deco"></div>
   </section>
@@ -37,11 +23,8 @@
 
         {{/* Card header */}}
         <div class="portfolio-card-header">
-          {{ with .Params.categories }}
-          <span class="portfolio-card-cat">{{ index . 0 }}</span>
-          {{ end }}
           <time class="portfolio-card-date" datetime="{{ .Date.Format "2006-01-02" }}">
-            {{ .Date.Format "2006年1月" }}
+            {{ .Date.Format "2006年1月2日" }}
           </time>
         </div>
 

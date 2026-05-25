@@ -92,18 +92,10 @@
       {{ range $portfolioPosts }}
       <a class="work-card" href="{{ .RelPermalink }}">
         <div class="work-card-top">
-          {{ with .Params.categories }}
-          <span class="work-cat">{{ index . 0 }}</span>
-          {{ end }}
-          <span class="work-date">{{ .Date.Format "2006/01" }}</span>
+          <span class="work-date">{{ .Date.Format "2006/01/02" }}</span>
         </div>
         <h3 class="work-title">{{ .Title }}</h3>
         {{ with .Description }}<p class="work-desc">{{ . }}</p>{{ end }}
-        {{ with .Params.tags }}
-        <div class="work-tags">
-          {{ range first 3 . }}<span class="work-tag">{{ . }}</span>{{ end }}
-        </div>
-        {{ end }}
         <span class="work-link">阅读全文 →</span>
       </a>
       {{ end }}
