@@ -1,0 +1,81 @@
+{{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
+
+{{/* ===== Slogan Hero Banner ===== */}}
+<section class="slogan-hero">
+  <div class="slogan-hero-inner">
+    <p class="slogan-zh">
+      趁念头尚温，将它拓印在纸上，<br>
+      宛如接过一片刚落的雪。<br>
+      <span class="slogan-zh-2">
+        待到炉火旁反刍，才从那消融的水痕里，<br>
+        认出你跋涉已久的山脉。
+      </span>
+    </p>
+    <div class="slogan-divider"></div>
+    <p class="slogan-en">
+      While the thought is still warm, press it onto the page —<br>
+      like catching a snowflake in its fleeting age.<br>
+      <span class="slogan-en-2">
+        Only by the fireside, from the meltwater stain,<br>
+        you discern the mountain range you've traveled again and again.
+      </span>
+    </p>
+  </div>
+</section>
+
+{{/* ===== Profile Card ===== */}}
+<article class="profile-card">
+  {{/* Avatar */}}
+  {{ with .Site.Params.Author.image }}
+    {{ $authorImage := "" }}
+    {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+      {{ $authorImage = resources.GetRemote . }}
+    {{ else }}
+      {{ $authorImage = resources.Get . }}
+    {{ end }}
+    {{ if $authorImage }}
+      {{ $final := $authorImage }}
+      {{ if not (or $disableImageOptimization (eq $authorImage.MediaType.SubType "svg")) }}
+        {{ $final = $authorImage.Fill (print "288x288 q" ( $.Site.Params.Author.imagequality | default "96" )) }}
+      {{ end }}
+      <img
+        class="profile-avatar"
+        width="128"
+        height="128"
+        alt="{{ $.Site.Params.Author.name | default `Author` }}"
+        src="{{ $final.RelPermalink }}">
+    {{ end }}
+  {{ end }}
+
+  {{/* Name */}}
+  <h1 class="profile-name">
+    {{ .Site.Params.Author.name | default .Site.Title }}
+  </h1>
+
+  {{/* Headline */}}
+  {{ with .Site.Params.Author.headline }}
+    <h2 class="profile-headline">
+      {{ . | markdownify }}
+    </h2>
+  {{ end }}
+
+  {{/* Bio / Intro */}}
+  <div class="profile-intro">
+    <p>
+      南开大学PPE实验班2024级本科生<br>
+      勇于面对世界的复杂性，坚持自我迭代的终身学习者
+    </p>
+  </div>
+
+  {{/* Social Links */}}
+  <div class="profile-links">
+    {{ partialCached "author-links.html" . }}
+  </div>
+</article>
+
+{{/* ===== Recent Articles ===== */}}
+{{ if .Site.Params.homepage.showRecent }}
+  <section class="recent-section">
+    {{ partial "recent-articles/main.html" . }}
+  </section>
+{{ end }}

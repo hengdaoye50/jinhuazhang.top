@@ -10,6 +10,12 @@ enableSearch = true
 enableCodeCopy = true
 enableStructuredBreadcrumbs = true
 
+# Fonts
+[font]
+  text = "Noto Serif SC"
+  brand = "Playfair Display"
+  mono = "Fira Code"
+
 replyByEmail = false
 
 mainSections = ["blog"]
