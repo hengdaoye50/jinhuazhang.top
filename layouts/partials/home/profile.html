@@ -80,24 +80,31 @@
     </div>
   </section>
 
-  {{/* ===== 3. Recent Updates ===== */}}
-  {{ $allPosts := where .Site.RegularPages "Section" "in" (slice "blog" "portfolio") }}
-  {{ $recent := first 5 $allPosts }}
-  {{ if $recent }}
-  <section class="updates-section">
+  {{/* ===== 3. Portfolio Works ===== */}}
+  {{ $portfolioPosts := where .Site.RegularPages "Section" "portfolio" }}
+  {{ if $portfolioPosts }}
+  <section class="works-section">
     <div class="section-header">
-      <h2 class="section-title">最近更新</h2>
+      <h2 class="section-title">近期作品</h2>
       <span class="section-line"></span>
     </div>
-    <div class="updates-grid">
-      {{ range $recent }}
-      <a class="update-card" href="{{ .RelPermalink }}">
-        <div class="update-card-top">
-          <span class="update-tag">{{ with .Params.categories }}{{ index . 0 }}{{ else }}{{ .Section }}{{ end }}</span>
-          <span class="update-date">{{ .Date.Format "01/02" }}</span>
+    <div class="works-grid">
+      {{ range $portfolioPosts }}
+      <a class="work-card" href="{{ .RelPermalink }}">
+        <div class="work-card-top">
+          {{ with .Params.categories }}
+          <span class="work-cat">{{ index . 0 }}</span>
+          {{ end }}
+          <span class="work-date">{{ .Date.Format "2006/01" }}</span>
         </div>
-        <h3 class="update-title">{{ .Title }}</h3>
-        {{ with .Summary }}<p class="update-summary">{{ . | plainify | truncate 80 }}</p>{{ end }}
+        <h3 class="work-title">{{ .Title }}</h3>
+        {{ with .Description }}<p class="work-desc">{{ . }}</p>{{ end }}
+        {{ with .Params.tags }}
+        <div class="work-tags">
+          {{ range first 3 . }}<span class="work-tag">{{ . }}</span>{{ end }}
+        </div>
+        {{ end }}
+        <span class="work-link">阅读全文 →</span>
       </a>
       {{ end }}
     </div>

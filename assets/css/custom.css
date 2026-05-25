@@ -684,100 +684,134 @@
 }
 
 /* =============================================
-   4. Recent Updates Cards
+   4. Portfolio Works Cards
    ============================================= */
-.updates-section {
+.works-section {
   margin-top: 2rem;
 }
 
-.updates-grid {
+.works-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
-.update-card {
+.work-card {
   display: flex;
   flex-direction: column;
-  padding: 1.1rem 1.3rem;
+  padding: 1.5rem 1.8rem;
   background: #fff;
   border: var(--card-border);
   border-radius: var(--card-radius);
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
   box-shadow: var(--card-shadow);
   position: relative;
   overflow: hidden;
 }
 
 /* Top gradient bar */
-.update-card::before {
+.work-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, var(--purple), var(--gold));
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.3s ease;
 }
 
-.update-card:hover {
-  transform: translateY(-3px);
+.work-card:hover {
+  transform: translateY(-4px);
   box-shadow: var(--card-shadow-hover);
 }
 
-.update-card:hover::before {
+.work-card:hover::before {
   opacity: 1;
 }
 
-.dark .update-card {
+.dark .work-card {
   background: #1e121c;
 }
 
-.update-card-top {
+.work-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.8rem;
 }
 
-.update-tag {
+.work-cat {
   font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--purple);
   background: rgba(126, 12, 110, 0.06);
-  padding: 0.12rem 0.5rem;
+  padding: 0.15rem 0.6rem;
   border-radius: 3px;
 }
 
-.dark .update-tag {
+.dark .work-cat {
   color: var(--gold-light);
   background: rgba(196, 162, 101, 0.1);
 }
 
-.update-date {
+.work-date {
   font-size: 0.7rem;
   color: var(--ink-light);
 }
 
-.update-title {
+.work-title {
   font-family: var(--font-serif);
-  font-size: 0.94rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--ink);
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.6rem;
   line-height: 1.45;
 }
 
-.update-summary {
+.work-desc {
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--ink-light);
-  line-height: 1.55;
-  margin: 0;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+  flex: 1;
+}
+
+.work-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.work-tag {
+  font-size: 0.65rem;
+  color: var(--ink-muted);
+  background: rgba(126, 12, 110, 0.04);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
+
+.dark .work-tag {
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.06);
+}
+
+.work-link {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--purple);
+  transition: color 0.2s ease;
+}
+
+.work-card:hover .work-link {
+  color: var(--gold);
 }
 
 /* =============================================
@@ -934,7 +968,7 @@
     margin-bottom: 0.25rem;
   }
 
-  .updates-grid {
+  .works-grid {
     grid-template-columns: 1fr;
   }
 
