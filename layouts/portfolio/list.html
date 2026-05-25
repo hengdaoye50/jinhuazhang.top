@@ -1,0 +1,85 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* ===== Portfolio Hero ===== */}}
+  <section class="portfolio-hero">
+    <div class="portfolio-hero-inner">
+      <h1 class="portfolio-hero-title">{{ .Title }}</h1>
+      {{ with .Description }}
+      <p class="portfolio-hero-desc">{{ . }}</p>
+      {{ end }}
+      <div class="portfolio-hero-stats">
+        <span class="portfolio-stat">
+          <span class="portfolio-stat-num">{{ len .Pages }}</span>
+          <span class="portfolio-stat-label">作品</span>
+        </span>
+        <span class="portfolio-stat-sep"></span>
+        {{ $categories := slice }}
+        {{ range .Pages }}{{ range .Params.categories }}{{ $categories = $categories | append . }}{{ end }}{{ end }}
+        {{ $uniqueCategories := $categories | uniq }}
+        <span class="portfolio-stat">
+          <span class="portfolio-stat-num">{{ len $uniqueCategories }}</span>
+          <span class="portfolio-stat-label">方向</span>
+        </span>
+      </div>
+    </div>
+    <div class="portfolio-hero-deco"></div>
+  </section>
+
+  {{/* ===== Portfolio Grid ===== */}}
+  {{ if gt .Pages 0 }}
+  <section class="portfolio-grid-section">
+    <div class="portfolio-grid">
+      {{ range .Pages }}
+      <article class="portfolio-card">
+        {{/* Top gradient bar */}}
+        <div class="portfolio-card-bar"></div>
+
+        {{/* Card header */}}
+        <div class="portfolio-card-header">
+          {{ with .Params.categories }}
+          <span class="portfolio-card-cat">{{ index . 0 }}</span>
+          {{ end }}
+          <time class="portfolio-card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "2006年1月" }}
+          </time>
+        </div>
+
+        {{/* Card body */}}
+        <h2 class="portfolio-card-title">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h2>
+
+        {{ with .Description }}
+        <p class="portfolio-card-desc">{{ . }}</p>
+        {{ end }}
+
+        {{/* Tags */}}
+        {{ with .Params.tags }}
+        <div class="portfolio-card-tags">
+          {{ range . }}<span class="portfolio-card-tag">{{ . }}</span>{{ end }}
+        </div>
+        {{ end }}
+
+        {{/* Card footer */}}
+        <div class="portfolio-card-footer">
+          <a href="{{ .RelPermalink }}" class="portfolio-card-link">
+            <span>阅读全文</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8h10M9 4l4 4-4 4"/>
+            </svg>
+          </a>
+        </div>
+
+        {{/* Hover overlay */}}
+        <a href="{{ .RelPermalink }}" class="portfolio-card-overlay" aria-label="{{ .Title }}"></a>
+      </article>
+      {{ end }}
+    </div>
+  </section>
+  {{ else }}
+  <section class="portfolio-empty">
+    <p>暂无作品，敬请期待。</p>
+  </section>
+  {{ end }}
+{{ end }}
