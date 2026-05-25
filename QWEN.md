@@ -3,7 +3,7 @@
 ## 项目概览
 - **站点名称**：张津华丨Jasper Zhang 个人学术主页
 - **域名**：https://jinhuazhang.top/
-- **技术栈**：Hugo v0.161+ (extended) + Blowfish 主题 + Netlify 托管
+- **技术栈**：Hugo v0.161+ (extended) + Blowfish 主题 + Cloudflare Pages 托管
 - **版本管理**：GitHub (`hengdaoye50`)
 
 ---
@@ -14,7 +14,6 @@ zhangjinhua.com/
 ├── QWEN.md                    # 本文件 — 开发文档
 ├── .gitignore
 ├── .gitmodules                # Blowfish 子模块
-├── netlify.toml               # Netlify 部署配置 (Hugo 0.161.0)
 ├── config/_default/           # Hugo 配置
 │   ├── hugo.toml              #   站点基础、分页、taxonomies
 │   ├── languages.zh-cn.toml   #   中文语言、个人信息、社交链接
@@ -165,7 +164,7 @@ hugo version
 3. 撰写正文（Markdown 格式）
 4. 运行 `hugo server -D` 本地预览
 5. `git add` → `git commit` → `git push`
-6. Netlify 自动部署
+6. Cloudflare Pages 自动部署
 
 ### 方式二：通过 AI 辅助
 直接说 "写一篇关于 XXX 的博客" 或 "帮我新建一个作品条目"，AI 会生成完整 Markdown 并写入对应目录。
@@ -179,16 +178,11 @@ hugo version
 
 ---
 
-## 部署配置 (netlify.toml)
-```toml
-[build]
-  command = "hugo --gc --minify"
-  publish = "public"
-
-[build.environment]
-  HUGO_VERSION = "0.161.0"
-  HUGO_ENV = "production"
-```
+## 部署配置 (Cloudflare Pages)
+- **构建命令**：`hugo --gc --minify`
+- **输出目录**：`public`
+- **Hugo 版本**：`0.161.0`（通过 `HUGO_VERSION` 环境变量）
+- **框架预设**：Hugo
 
 ---
 
@@ -201,7 +195,7 @@ git status
 git add -A
 git commit -m "feat: 描述更改内容"
 
-# 推送到 GitHub（触发 Netlify 部署）
+# 推送到 GitHub（触发 Cloudflare Pages 部署）
 git push origin main
 ```
 
