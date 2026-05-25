@@ -764,6 +764,39 @@
   color: var(--ink-light);
 }
 
+/* Type badge for Recent Updates section */
+.work-type-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+}
+
+.work-type-blog {
+  color: #7E0C6E;
+  background: rgba(126, 12, 110, 0.07);
+  border: 1px solid rgba(126, 12, 110, 0.14);
+}
+
+.dark .work-type-blog {
+  color: #D4C08A;
+  background: rgba(196, 162, 101, 0.12);
+  border-color: rgba(196, 162, 101, 0.18);
+}
+
+.work-type-portfolio {
+  color: #A68845;
+  background: rgba(196, 162, 101, 0.08);
+  border: 1px solid rgba(196, 162, 101, 0.16);
+}
+
+.dark .work-type-portfolio {
+  color: #D4C08A;
+  background: rgba(196, 162, 101, 0.08);
+  border-color: rgba(196, 162, 101, 0.14);
+}
+
 .work-title {
   font-family: var(--font-serif);
   font-size: 1.05rem;

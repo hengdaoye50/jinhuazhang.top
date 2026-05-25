@@ -80,18 +80,25 @@
     </div>
   </section>
 
-  {{/* ===== 3. Portfolio Works ===== */}}
+  {{/* ===== 3. Recent Updates (Blog + Portfolio) ===== */}}
+  {{ $blogPosts := where .Site.RegularPages "Section" "blog" }}
   {{ $portfolioPosts := where .Site.RegularPages "Section" "portfolio" }}
-  {{ if $portfolioPosts }}
+  {{ $recentPosts := $blogPosts | union $portfolioPosts }}
+  {{ if $recentPosts }}
   <section class="works-section">
     <div class="section-header">
-      <h2 class="section-title">近期作品</h2>
+      <h2 class="section-title">近期更新</h2>
       <span class="section-line"></span>
     </div>
     <div class="works-grid">
-      {{ range $portfolioPosts }}
+      {{ range first 6 (sort $recentPosts "Date" "desc") }}
       <a class="work-card" href="{{ .RelPermalink }}">
         <div class="work-card-top">
+          {{ if eq .Section "blog" }}
+          <span class="work-type-badge work-type-blog">博客</span>
+          {{ else }}
+          <span class="work-type-badge work-type-portfolio">作品</span>
+          {{ end }}
           <span class="work-date">{{ .Date.Format "2006/01/02" }}</span>
         </div>
         <h3 class="work-title">{{ .Title }}</h3>
