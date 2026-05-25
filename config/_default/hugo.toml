@@ -2,7 +2,7 @@
 # https://blowfish.page/docs/getting-started/
 
 theme = "blowfish"
-baseURL = "https://localhost:1313"
+baseURL = "https://coruscating-faun-9ad21b.netlify.app/"
 defaultContentLanguage = "zh-cn"
 disableLanguages = ["de", "en", "es", "fr", "it", "ja", "pt-br", "pt-pt"]
 
