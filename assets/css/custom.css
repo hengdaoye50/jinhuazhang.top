@@ -339,6 +339,48 @@
 }
 
 /* =============================================
+   Site Footer
+   ============================================= */
+.site-footer {
+  text-align: center;
+  padding: 2.5rem 2rem 2rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(196, 162, 101, 0.1);
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--ink-light);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: var(--purple);
+}
+
+.dark .footer-link:hover {
+  color: var(--gold-light);
+}
+
+.footer-copyright {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: #b0b0b0;
+  margin: 0;
+}
+
+/* =============================================
    Home Container
    ============================================= */
 .home-container {

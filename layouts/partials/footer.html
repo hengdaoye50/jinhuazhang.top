@@ -1,0 +1,46 @@
+{{/* =============================================
+     Custom Footer — jinhuazhang.top
+     ============================================= */}}
+
+<footer class="site-footer">
+  {{/* Footer menu links */}}
+  {{ if .Site.Params.footer.showMenu | default true }}
+    {{ if .Site.Menus.footer }}
+      <nav class="footer-nav">
+        {{ range .Site.Menus.footer }}
+          <a href="{{ .URL }}" class="footer-link" title="{{ .Title }}">
+            {{ .Name | markdownify }}
+          </a>
+        {{ end }}
+      </nav>
+    {{ end }}
+  {{ end }}
+
+  {{/* Copyright */}}
+  {{ if .Site.Params.footer.showCopyright | default true }}
+    <p class="footer-copyright">
+      {{- with replace .Site.Params.copyright "{ year }" now.Year }}
+        {{ . | markdownify }}
+      {{- else }}
+        &copy; {{ now.Format "2006" }} {{ .Site.Params.Author.name | markdownify }}
+      {{- end }}
+    </p>
+  {{ end }}
+</footer>
+
+{{/* Image zoom */}}
+{{ if not .Site.Params.disableImageZoom | default true }}
+  <script>
+    if (typeof mediumZoom !== 'undefined') {
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    }
+  </script>
+{{ end }}
+
+{{ if templates.Exists "partials/extend-footer.html" }}
+  {{ partialCached "extend-footer.html" . }}
+{{ end }}
