@@ -1,0 +1,91 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "list" }}
+
+  {{/* ===== Blog Hero ===== */}}
+  <section class="blog-hero">
+    <div class="blog-hero-inner">
+      <h1 class="blog-hero-title">{{ .Title }}</h1>
+      {{ with .Description }}
+      <p class="blog-hero-desc">{{ . }}</p>
+      {{ end }}
+      <div class="blog-hero-stats">
+        <span class="blog-stat">
+          <span class="blog-stat-num">{{ len .Pages }}</span>
+          <span class="blog-stat-label">篇文章</span>
+        </span>
+      </div>
+    </div>
+    <div class="blog-hero-deco"></div>
+  </section>
+
+  {{/* Section content (markdown from _index.md) */}}
+  {{ if .Content }}
+  <section class="blog-intro">
+    <div class="blog-intro-card">
+      {{ .Content }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{/* ===== Blog List ===== */}}
+  {{ if gt .Pages 0 }}
+  <section class="blog-list-section">
+    <div class="blog-list">
+      {{ range .Pages.ByDate.Reverse }}
+      <article class="blog-card">
+        {{/* Top accent bar */}}
+        <div class="blog-card-bar"></div>
+
+        {{/* Card meta */}}
+        <div class="blog-card-meta">
+          <time class="blog-card-date" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "2006年1月2日" }}
+          </time>
+          {{/* Reading time */}}
+          {{ $wordCount := .WordCount }}
+          {{ $readingTime := div (add $wordCount 200) 400 }}
+          {{ if lt $readingTime 1 }}{{ $readingTime = 1 }}{{ end }}
+          <span class="blog-card-readtime">{{ $readingTime }} 分钟阅读</span>
+        </div>
+
+        {{/* Title */}}
+        <h2 class="blog-card-title">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h2>
+
+        {{/* Description */}}
+        {{ with .Description }}
+        <p class="blog-card-desc">{{ . }}</p>
+        {{ else }}
+        <p class="blog-card-desc">{{ .Summary | plainify | truncate 120 }}</p>
+        {{ end }}
+
+        {{/* Tags */}}
+        {{ with .Params.tags }}
+        <div class="blog-card-tags">
+          {{ range first 4 . }}<span class="blog-card-tag">{{ . }}</span>{{ end }}
+        </div>
+        {{ end }}
+
+        {{/* Footer */}}
+        <div class="blog-card-footer">
+          <a href="{{ .RelPermalink }}" class="blog-card-link">
+            <span>阅读全文</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8h10M9 4l4 4-4 4"/>
+            </svg>
+          </a>
+        </div>
+
+        {{/* Hover overlay */}}
+        <a href="{{ .RelPermalink }}" class="blog-card-overlay" aria-label="{{ .Title }}"></a>
+      </article>
+      {{ end }}
+    </div>
+  </section>
+  {{ else }}
+  <section class="blog-empty">
+    <p>暂无文章，敬请期待。</p>
+  </section>
+  {{ end }}
+{{ end }}

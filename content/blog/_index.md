@@ -1,6 +1,7 @@
 +++
 title = "博客"
 description = "记录我的阅读、研究和思考。"
+showHero = false
+showBreadcrumbs = false
 +++
 
-stay hungry, stay foolish.

@@ -1142,6 +1142,347 @@
 }
 
 /* =============================================
+   4c. Blog List Page
+   ============================================= */
+
+/* --- Blog Hero --- */
+.blog-hero {
+  position: relative;
+  padding: 3.5rem 2.5rem 2.5rem;
+  margin: -2rem -2rem 2rem;
+  background: linear-gradient(135deg, #7E0C6E 0%, #4A1942 40%, #2D1B3D 100%);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.blog-hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.blog-hero-title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.blog-hero-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.75);
+  margin: 0 0 1.5rem;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.blog-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.blog-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.blog-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+.blog-stat-label {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.blog-hero-deco {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,162,101,0.15) 0%, transparent 70%);
+  z-index: 1;
+}
+
+.dark .blog-hero {
+  background: linear-gradient(135deg, #5a0a50 0%, #3d1535 40%, #1e0e28 100%);
+}
+
+/* --- Blog Intro (from _index.md content) --- */
+.blog-intro {
+  margin-bottom: 2.5rem;
+}
+
+.blog-intro-card {
+  padding: 1.4rem 1.8rem;
+  background: #fff;
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+.dark .blog-intro-card {
+  background: #1e121c;
+}
+
+.blog-intro-card p {
+  margin: 0;
+}
+
+/* --- Blog List --- */
+.blog-list-section {
+  padding: 0 0 3rem;
+}
+
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Blog Card --- */
+.blog-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: var(--card-border);
+  border-radius: 16px;
+  padding: 1.6rem 2rem 1.5rem;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.blog-card-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--purple), var(--gold));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.blog-card:hover {
+  transform: translateX(6px);
+  box-shadow: 0 12px 32px rgba(126, 12, 110, 0.1), 0 4px 8px rgba(0,0,0,0.04);
+}
+
+.blog-card:hover .blog-card-bar {
+  opacity: 1;
+}
+
+.dark .blog-card {
+  background: #1e121c;
+  border-color: rgba(255,255,255,0.08);
+}
+
+.dark .blog-card:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 4px 8px rgba(196,162,101,0.06);
+}
+
+/* Card meta */
+.blog-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+
+.blog-card-date {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--ink-light);
+}
+
+.blog-card-readtime {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  background: rgba(126, 12, 110, 0.04);
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+}
+
+.dark .blog-card-readtime {
+  color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.04);
+}
+
+/* Title */
+.blog-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.6rem;
+  line-height: 1.4;
+}
+
+.blog-card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.blog-card-title a:hover {
+  color: var(--purple);
+}
+
+.dark .blog-card-title a:hover {
+  color: var(--gold-light);
+}
+
+/* Description */
+.blog-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--ink-light);
+  line-height: 1.65;
+  margin: 0 0 1.2rem;
+  flex: 1;
+}
+
+/* Tags */
+.blog-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.blog-card-tag {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  background: rgba(126, 12, 110, 0.04);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid rgba(126, 12, 110, 0.08);
+}
+
+.dark .blog-card-tag {
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* Footer */
+.blog-card-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(126, 12, 110, 0.08);
+}
+
+.dark .blog-card-footer {
+  border-top-color: rgba(255,255,255,0.06);
+}
+
+.blog-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--purple);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.blog-card-link:hover {
+  gap: 0.7rem;
+  color: var(--gold);
+}
+
+.dark .blog-card-link {
+  color: var(--gold-light);
+}
+
+.dark .blog-card-link:hover {
+  color: var(--gold);
+}
+
+.blog-card-link svg {
+  transition: transform 0.2s ease;
+}
+
+.blog-card-link:hover svg {
+  transform: translateX(2px);
+}
+
+/* Full-card overlay */
+.blog-card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+}
+
+.blog-card-link,
+.blog-card-title a {
+  position: relative;
+  z-index: 2;
+}
+
+/* Empty state */
+.blog-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--ink-light);
+  font-family: var(--font-body);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .blog-hero {
+    padding: 3rem 1.5rem 2rem;
+    margin: -1rem -1rem 2rem;
+    border-radius: 12px;
+  }
+
+  .blog-hero-title {
+    font-size: 1.8rem;
+  }
+
+  .blog-hero-desc {
+    font-size: 0.92rem;
+  }
+
+  .blog-stat-num {
+    font-size: 1.4rem;
+  }
+
+  .blog-intro-card {
+    padding: 1rem 1.2rem;
+  }
+
+  .blog-card {
+    padding: 1.3rem 1.3rem 1.2rem;
+  }
+
+  .blog-card-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* =============================================
    5. PPE Knowledge Base Card
    ============================================= */
 .kb-section {
