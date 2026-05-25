@@ -1,0 +1,19 @@
+# Hugo generated files
+/public/
+/resources/_gen/
+
+# Hugo default output
+/hugo_stats.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if using PostCSS etc.)
+node_modules/

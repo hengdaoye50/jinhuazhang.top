@@ -1,0 +1,23 @@
+locale = "zh-cn"
+label = "简体中文"
+weight = 1
+title = "张津华丨Jasper Zhang"
+
+[params]
+  displayName = "张津华丨Jasper Zhang"
+  isoCode = "zh-cn"
+  rtl = false
+  dateFormat = "2006-01-02"
+  logo = "img/logo.svg"
+  description = "个人学术主页 - PPE · 科研 · 思考"
+
+[params.author]
+  name = "张津华"
+  email = "you@example.com"
+  headline = "南开大学 PPE 专业 · 准科研工作者"
+  bio = "南开大学 PPE（哲学、政治学、经济学）专业本科生。关注社会科学方法论、政治哲学与公共政策。在这个站点记录我的阅读、研究和思考。"
+  avatar = "img/avatar.svg"
+  links = [
+    { github = "https://github.com/jasper-zhang" },
+    { email = "mailto:you@example.com" },
+  ]
