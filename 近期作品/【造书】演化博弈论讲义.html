@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>演化博弈论讲义</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']], tags: 'ams' },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --primary:#7E0C6E;
+  --primary-light:#a83298;
+  --primary-dark:#5a0850;
+  --accent:#c94dbd;
+  --accent2:#e8a0df;
+  --bg:#faf8fb;
+  --bg-card:#ffffff;
+  --text:#1e1e2f;
+  --text-muted:#5a5a72;
+  --border:#e4d8e8;
+  --code-bg:#f5f0f7;
+  --gradient:linear-gradient(135deg,#7E0C6E 0%,#a83298 50%,#c94dbd 100%);
+  --gradient-subtle:linear-gradient(135deg,#f5eaf4 0%,#faf0f9 50%,#fdf5fc 100%);
+  --shadow:0 2px 16px rgba(126,12,110,.08);
+  --shadow-lg:0 8px 32px rgba(126,12,110,.12);
+}
+
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',Georgia,serif;
+  color:var(--text);background:var(--bg);line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== LAYOUT ===== */
+.page-wrapper{display:flex;min-height:100vh}
+
+/* NAV */
+.nav-sidebar{
+  position:fixed;top:0;left:0;width:280px;height:100vh;
+  background:var(--gradient);color:#fff;
+  overflow-y:auto;z-index:100;
+  box-shadow:4px 0 24px rgba(126,12,110,.15);
+  display:flex;flex-direction:column;
+}
+.nav-header{
+  padding:32px 24px 20px;text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.15);
+}
+.nav-header h1{font-size:1.35rem;font-weight:700;letter-spacing:.05em;line-height:1.5}
+.nav-header .subtitle{
+  font-size:.8rem;opacity:.75;margin-top:6px;
+  font-family:'Noto Sans SC',sans-serif;letter-spacing:.08em;
+}
+.nav-list{list-style:none;padding:16px 0;flex:1}
+.nav-list li{margin:0}
+.nav-list a{
+  display:block;padding:10px 24px 10px 28px;
+  color:rgba(255,255,255,.82);text-decoration:none;
+  font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;
+  font-size:.88rem;transition:all .2s;border-left:3px solid transparent;
+}
+.nav-list a:hover,.nav-list a.active{
+  color:#fff;background:rgba(255,255,255,.1);
+  border-left-color:#fff;
+}
+.nav-list .nav-section{
+  padding:14px 24px 6px;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.15em;
+  opacity:.5;font-family:'Noto Sans SC',sans-serif;
+}
+.nav-footer{
+  padding:16px 24px;border-top:1px solid rgba(255,255,255,.15);
+  font-size:.72rem;opacity:.5;text-align:center;
+  font-family:'Noto Sans SC',sans-serif;
+}
+
+/* MAIN */
+.main-content{
+  margin-left:280px;flex:1;
+  max-width:860px;padding:48px 56px 120px;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1.chapter-title{
+  font-size:2rem;font-weight:800;
+  color:var(--primary-dark);
+  margin:0 0 8px;padding-bottom:16px;
+  border-bottom:3px solid var(--primary);
+  position:relative;
+}
+h1.chapter-title::after{
+  content:'';position:absolute;bottom:-3px;left:0;width:60px;height:3px;
+  background:var(--accent);
+}
+h1.chapter-title .chapter-num{
+  display:block;font-size:.85rem;font-weight:400;
+  color:var(--primary);margin-bottom:4px;
+  font-family:'Noto Sans SC',sans-serif;letter-spacing:.1em;
+}
+
+h2{
+  font-size:1.45rem;font-weight:700;color:var(--primary-dark);
+  margin:52px 0 18px;padding:12px 0 10px;
+  border-bottom:2px solid var(--border);
+  position:relative;
+}
+h2::before{
+  content:'';position:absolute;bottom:-2px;left:0;width:40px;height:2px;
+  background:var(--gradient);
+}
+
+h3{font-size:1.18rem;font-weight:600;color:#3a1836;margin:32px 0 12px}
+h4{font-size:1.05rem;font-weight:600;color:var(--primary);margin:24px 0 10px}
+
+p{margin:0 0 14px;text-align:justify}
+strong{color:var(--primary-dark)}
+em{font-style:italic}
+
+/* BLOCKS */
+.definition,.theorem,.proposition,.note,.example,.remark{
+  margin:24px 0;padding:20px 24px;border-radius:8px;
+  position:relative;overflow:hidden;
+}
+.definition{
+  background:linear-gradient(135deg,#f3e8f5 0%,#faf0fb 100%);
+  border-left:4px solid var(--primary);
+}
+.theorem,.proposition{
+  background:linear-gradient(135deg,#efe3f0 0%,#f8f0f9 100%);
+  border-left:4px solid var(--accent);
+}
+.note,.remark{
+  background:var(--gradient-subtle);
+  border-left:4px solid var(--accent2);
+}
+.example{
+  background:#fff;border:1px solid var(--border);
+  border-left:4px solid var(--primary-light);
+  box-shadow:var(--shadow);
+}
+.block-label{
+  font-family:'Noto Sans SC','Microsoft YaHei',sans-serif;
+  font-size:.75rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.12em;margin-bottom:10px;display:block;
+}
+.definition .block-label{color:var(--primary)}
+.theorem .block-label,.proposition .block-label{color:var(--accent)}
+.note .block-label,.remark .block-label{color:#8a6d9e}
+.example .block-label{color:var(--primary-light)}
+
+blockquote{
+  margin:16px 0;padding:14px 20px;
+  background:var(--gradient-subtle);
+  border-left:4px solid var(--accent2);
+  border-radius:0 6px 6px 0;font-size:.95rem;
+  color:var(--text-muted);
+}
+
+/* CODE */
+code{
+  font-family:'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+  background:var(--code-bg);padding:2px 6px;border-radius:3px;
+  font-size:.88em;color:var(--primary-dark);
+}
+pre{
+  background:var(--code-bg);padding:18px 22px;border-radius:8px;
+  overflow-x:auto;margin:16px 0;border:1px solid var(--border);
+  font-size:.88rem;line-height:1.7;
+}
+pre code{background:none;padding:0;font-size:inherit}
+
+/* TABLES */
+table{
+  width:100%;border-collapse:collapse;margin:20px 0;
+  font-size:.92rem;
+}
+thead{background:var(--gradient);color:#fff}
+th{
+  padding:12px 16px;text-align:left;font-weight:600;
+  font-family:'Noto Sans SC',sans-serif;font-size:.85rem;
+  letter-spacing:.03em;
+}
+td{padding:10px 16px;border-bottom:1px solid var(--border)}
+tbody tr:hover{background:#faf4fb}
+
+/* LISTS */
+ul,ol{margin:0 0 14px 24px}
+li{margin-bottom:6px}
+
+/* HR */
+hr{
+  border:none;height:2px;margin:48px 0;
+  background:linear-gradient(90deg,transparent,var(--border),var(--accent2),var(--border),transparent);
+}
+
+/* BOXED FORMULA */
+.formula-box{
+  background:#fff;border:1px solid var(--border);
+  border-radius:8px;padding:20px 24px;margin:20px 0;
+  text-align:center;box-shadow:var(--shadow);
+  position:relative;
+}
+.formula-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--gradient);border-radius:8px 8px 0 0;
+}
+
+/* EXERCISE */
+.exercise{
+  margin:16px 0;padding:14px 20px;
+  background:#fff;border:1px solid var(--border);
+  border-radius:6px;border-left:4px solid var(--primary);
+  font-size:.95rem;
+}
+.exercise strong{color:var(--primary)}
+
+/* CHAPTER DIVIDER */
+.chapter-divider{
+  margin:64px 0;text-align:center;position:relative;
+}
+.chapter-divider::before{
+  content:'';position:absolute;top:50%;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border),transparent);
+}
+.chapter-divider span{
+  background:var(--bg);padding:0 20px;position:relative;
+  color:var(--primary);font-size:.8rem;letter-spacing:.15em;
+  font-family:'Noto Sans SC',sans-serif;
+}
+
+/* COVER */
+.cover{
+  text-align:center;padding:80px 0 60px;
+  border-bottom:2px solid var(--border);margin-bottom:48px;
+}
+.cover h1{
+  font-size:2.6rem;font-weight:800;
+  background:var(--gradient);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:12px;
+}
+.cover .tagline{
+  font-size:1.1rem;color:var(--text-muted);
+  font-family:'Noto Sans SC',sans-serif;letter-spacing:.05em;
+}
+.cover .meta{
+  margin-top:24px;font-size:.85rem;color:var(--text-muted);
+  font-family:'Noto Sans SC',sans-serif;
+}
+.cover .meta span{margin:0 12px}
+
+/* TOC */
+.toc{margin:32px 0;padding:24px;background:var(--gradient-subtle);border-radius:10px;border:1px solid var(--border)}
+.toc h2{margin:0 0 16px;border:none;padding:0;font-size:1.2rem}
+.toc h2::before{display:none}
+.toc ol{margin:0 0 0 20px}
+.toc li{margin-bottom:8px;font-family:'Noto Sans SC',sans-serif;font-size:.92rem}
+.toc a{color:var(--primary);text-decoration:none;border-bottom:1px solid var(--accent2)}
+.toc a:hover{color:var(--primary-dark);border-bottom-color:var(--primary)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-sidebar{display:none}
+  .main-content{margin-left:0;padding:24px 20px 80px}
+}
+@media print{
+  .nav-sidebar{display:none}
+  .main-content{margin-left:0;max-width:100%}
+}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="nav-sidebar">
+  <div class="nav-header">
+    <h1>演化博弈论讲义</h1>
+    <div class="subtitle">Evolutionary Game Theory</div>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-section">讲义正文</li>
+    <li><a href="#ch1">第一章　引言</a></li>
+    <li><a href="#ch2">第二章　预备知识</a></li>
+    <li><a href="#ch3">第三章　对称博弈与种群设定</a></li>
+    <li><a href="#ch4">第四章　演化稳定策略</a></li>
+    <li><a href="#ch5">第五章　复制者动态</a></li>
+    <li><a href="#ch6">第六章　经典模型专题</a></li>
+    <li><a href="#ch7">第七章　非对称博弈</a></li>
+    <li><a href="#ch8">第八章　应用与扩展</a></li>
+    <li class="nav-section">附录</li>
+    <li><a href="#index">概念索引</a></li>
+  </ul>
+  <div class="nav-footer">学习工作区 · 自用</div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main-content">
+
+<!-- COVER -->
+<div class="cover">
+  <h1>演化博弈论讲义</h1>
+  <div class="tagline">从理性选择到种群动态 — Evolutionary Game Theory</div>
+  <div class="meta">
+    <span>本科教学讲义</span>
+    <span>·</span>
+    <span>2026 年 5 月</span>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>目　录</h2>
+  <ol>
+    <li><a href="#ch1">引言</a></li>
+    <li><a href="#ch2">预备知识——经典博弈论基础</a></li>
+    <li><a href="#ch3">对称博弈与种群设定</a></li>
+    <li><a href="#ch4">演化稳定策略（ESS）</a></li>
+    <li><a href="#ch5">复制者动态</a></li>
+    <li><a href="#ch6">经典模型专题</a></li>
+    <li><a href="#ch7">非对称博弈与多种群模型</a></li>
+    <li><a href="#ch8">应用与扩展方向</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 1 -->
+<!-- ================================================================ -->
+<article id="ch1">
+<h1 class="chapter-title"><span class="chapter-num">第一章</span>引言</h1>
+
+<h2>为什么需要演化博弈论？</h2>
+
+<p>经典博弈论建立在一个强有力但可疑的假设之上：参与者是<strong>完全理性</strong>的。他们知道博弈的全部结构，能计算所有可能的结果，并选择最优策略。纳什均衡——没有人在给定他人策略的情况下能单方面获益——是理性推理的终点。</p>
+
+<p>但这个框架在两个方向上遇到了困难：</p>
+
+<p><strong>第一，理性假设过强。</strong> 真实世界的参与者——无论是动物、企业还是个人——很少进行完全理性的计算。一只蜥蜴不会求解纳什均衡，一个消费者不会在超市里进行逆向归纳。如果博弈论的预测依赖于理性，而理性在现实中缺席，预测还有什么意义？</p>
+
+<p><strong>第二，多重均衡问题。</strong> 许多博弈有多个纳什均衡（如协调博弈的两个纯均衡）。经典博弈论说"两个都是均衡"，但不告诉你该选哪个。面对左行右行的交通规则博弈，理性推理无法决定你该靠左还是靠右——你需要的是惯例、历史或演化。</p>
+
+<p>演化博弈论（Evolutionary Game Theory）是对这两个困难的回应。它放弃"理性选择"的假设，转而问一个更朴素的问题：</p>
+
+<blockquote>如果种群中大量个体各自执行固定策略，通过反复博弈和自然选择（或模仿成功者），种群的策略分布会如何演化？最终稳定在什么状态？</blockquote>
+
+<p>没有全知的决策者，没有最优策略的计算，只有"越成功越增长"的自然选择逻辑。均衡不是理性选择的预设结果，而是动态过程的涌现终点。</p>
+
+<h2>起源</h2>
+
+<p>演化博弈论的历史起点是 1973 年 Maynard Smith 和 Price 的一篇短文。他们试图解释动物界中一个令人困惑的现象：为什么动物在争夺资源时经常"虚张声势"而不是真正打斗？如果攻击是更优策略（赢得资源），为什么退让策略在种群中没有被淘汰？</p>
+
+<p>Maynard Smith 的洞见是：这个问题不能用经典博弈论来回答，因为动物不是理性的。但他注意到，如果把博弈的支付理解为<strong>适应度</strong>（繁殖成功率），那么"成功策略扩张"的自然选择逻辑可以给出答案。这就是<strong>演化稳定策略</strong>（ESS）概念的诞生。</p>
+
+<p>随后，Taylor &amp; Jonker (1978) 引入了<strong>复制者动态</strong>，将静态的 ESS 概念嵌入了动态框架。Hofbauer &amp; Sigmund (1988, 1998) 建立了系统的数学理论。Weibull (1995) 和 Sandholm (2010) 提供了严谨的公理化处理。</p>
+
+<p>演化博弈论从生物学出发，但它的影响迅速扩展到经济学、社会学、计算机科学和哲学。因为核心问题——"在没有中央协调者的情况下，策略如何在群体中扩散和稳定"——是普遍的。</p>
+
+<h2>核心范式转变</h2>
+
+<table>
+<thead><tr><th></th><th>经典博弈论</th><th>演化博弈论</th></tr></thead>
+<tbody>
+<tr><td>参与者</td><td>理性的、全知的个体</td><td>平凡的、有限的个体</td></tr>
+<tr><td>策略选择</td><td>主动优化</td><td>被动继承或模仿</td></tr>
+<tr><td>混合策略</td><td>个体的随机化</td><td>种群中的份额分布</td></tr>
+<tr><td>均衡</td><td>理性推理的终点</td><td>动态过程的涌现结果</td></tr>
+<tr><td>均衡选择</td><td>无法内生决定</td><td>由初始条件和动态决定</td></tr>
+<tr><td>核心工具</td><td>最优反应、纳什均衡</td><td>适应度、复制者动态、ESS</td></tr>
+</tbody>
+</table>
+
+<p>最重要的一行是"混合策略"的解读。在经典博弈论中，混合策略是一个玩家按概率分布随机选择——这是一种奇怪的行为（为什么理性的你要随机化？）。在演化博弈论中，混合策略是种群中不同纯策略个体的比例——没有任何个体需要随机化，"混合"是种群层面的统计特征。这个重新解读消解了经典博弈论中关于混合策略的哲学困惑。</p>
+
+<h2>本讲义的路线图</h2>
+
+<p>本讲义按以下路径展开：</p>
+
+<ul>
+<li><strong>第二章</strong>回顾经典博弈论基础——标准式博弈、纳什均衡、混合策略。重点是混合策略的"种群解读"，这是演化博弈论的基石。</li>
+<li><strong>第三章</strong>建立对称博弈与种群设定的形式化框架——适应度函数、单纯形、平移不变性。</li>
+<li><strong>第四章</strong>引入演化稳定策略（ESS）——核心概念，回答"哪些策略能抵御入侵"。</li>
+<li><strong>第五章</strong>引入复制者动态——描述种群演化过程的微分方程，回答"种群如何到达均衡"。</li>
+<li><strong>第六章</strong>深入分析五个经典模型——鹰鸽博弈、石头-剪刀-布、协调博弈、猎鹿博弈、囚徒困境。每个模型揭示演化博弈论的一个核心主题。</li>
+<li><strong>第七章</strong>扩展到非对称博弈——不同角色的参与者、两种群动态、Bourgeois 策略。</li>
+<li><strong>第八章</strong>综述应用（生物学、经济学、社会困境）和扩展方向（空间博弈、网络、有限种群）。</li>
+</ul>
+
+<p>数学要求：微积分、线性代数、基础概率论。我们不追求最大的一般性，而追求对核心概念的清晰理解。每一个数学定义都会配有直觉解释，每一个定理都会被具体例子检验。</p>
+
+<h2>一个未完成的故事</h2>
+
+<p>演化博弈论回答了一些经典博弈论无法回答的问题，但它也有自己的边界和未解决的问题：</p>
+
+<ul>
+<li>当种群结构复杂（多层次、异质网络）时，分析变得极其困难</li>
+<li>将演化博弈论从"策略演化"推广到"博弈规则本身的演化"仍是开放问题</li>
+<li>与人类特有的理性能力（语言、文化传承、制度设计）的整合尚不成熟</li>
+</ul>
+
+<p>本讲义覆盖的是已经建立起来的"经典核心"。但演化博弈论仍是一个活跃的研究领域，新的模型和应用不断涌现。希望这份讲义能为你提供足够的基础，去阅读这个领域的前沿文献，并在这个未完成的故事中找到自己的位置。</p>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 2 -->
+<!-- ================================================================ -->
+<article id="ch2">
+<h1 class="chapter-title"><span class="chapter-num">第二章</span>预备知识——经典博弈论基础</h1>
+
+<p>本章回顾经典博弈论的核心概念。我们不追求面面俱到，只覆盖演化博弈论所依赖的最小知识集合。如果你对这些内容已经熟悉，可以快速浏览，重点关注<strong>混合策略的解读</strong>那一节——演化博弈论会给出完全不同的视角。</p>
+
+<h2>2.1 博弈的标准式表述</h2>
+
+<p>一个<strong>标准式博弈</strong>（normal-form game）由三个要素构成：</p>
+
+<div class="formula-box">$$\Gamma = (N, \{S_i\}_{i \in N}, \{u_i\}_{i \in N})$$</div>
+
+<p>其中：</p>
+<ul>
+<li>$N = \{1, 2, \ldots, n\}$ 是<strong>参与者</strong>（players）的集合</li>
+<li>$S_i$ 是参与者 $i$ 的<strong>策略空间</strong>（strategy space）</li>
+<li>$u_i: S_1 \times S_2 \times \cdots \times S_n \to \mathbb{R}$ 是参与者 $i$ 的<strong>支付函数</strong>（payoff function）</li>
+</ul>
+
+<p>在本讲义中，我们主要关注<strong>两人有限博弈</strong>（two-player finite game），即 $n = 2$ 且每个 $S_i$ 是有限集。</p>
+
+<p><strong>对称博弈</strong>（symmetric game）是一个关键概念：如果 $S_1 = S_2 = S$ 且对所有 $s, s' \in S$ 都有 $u_1(s, s') = u_2(s', s)$，则称博弈是对称的。直觉上，两个玩家"身份互换后游戏不变"。对称博弈可以用一个<strong>支付矩阵</strong> $A$ 完全描述：当玩家1选策略 $i$、玩家2选策略 $j$ 时，玩家1的支付为 $A_{ij}$，玩家2的支付为 $A_{ji}$。</p>
+
+<div class="example">
+<span class="block-label">例子：鹰鸽博弈（Hawk-Dove Game）</span>
+<p>两只动物争夺一份资源 $V$。策略：鹰（H，进攻）或鸽（D，退让）。</p>
+<div class="formula-box">$$A = \begin{pmatrix} \frac{V-C}{2} & V \\ 0 & \frac{V}{2} \end{pmatrix}$$</div>
+<p>其中 $C > V > 0$ 是打斗成本。鹰对鹰两败俱伤（均分 $V-C$），鹰对鸽拿走全部资源 $V$，鸽对鹰一无所获，鸽对鸽均分 $V/2$。</p>
+</div>
+
+<h2>2.2 纳什均衡</h2>
+
+<div class="definition">
+<span class="block-label">定义 2.1（纳什均衡）</span>
+<p>在 $n$ 人博弈中，策略组合 $(s_1^*, s_2^*, \ldots, s_n^*)$ 是一个<strong>纳什均衡</strong>（Nash Equilibrium），如果对每个参与者 $i$ 和任意替代策略 $s_i \in S_i$，都有：</p>
+<div class="formula-box">$$u_i(s_i^*, s_{-i}^*) \geq u_i(s_i, s_{-i}^*)$$</div>
+<p>其中 $s_{-i}^*$ 表示除 $i$ 之外所有人的均衡策略。</p>
+</div>
+
+<p><strong>直觉</strong>：没有人能通过单方面改变策略而获益。这是一个"互相最优反应"的状态。</p>
+
+<p><strong>纳什定理</strong>（存在性，不证明）：任何有限博弈（参与者有限、策略有限）至少存在一个混合策略纳什均衡。</p>
+
+<h2>2.3 混合策略——两种解读</h2>
+
+<p>这一节请特别注意，因为演化博弈论会彻底改变混合策略的含义。</p>
+
+<p>设参与者 $i$ 的纯策略集为 $S_i = \{1, 2, \ldots, m\}$。一个<strong>混合策略</strong>（mixed strategy）是一个概率分布：</p>
+
+<div class="formula-box">$$x = (x_1, x_2, \ldots, x_m), \quad x_k \geq 0, \quad \sum_{k=1}^{m} x_k = 1$$</div>
+
+<p>策略空间因此从有限集扩展为<strong>单纯形</strong>（simplex）：</p>
+
+<div class="formula-box">$$\Delta = \left\{ x \in \mathbb{R}^m : x_k \geq 0, \sum_{k=1}^{m} x_k = 1 \right\}$$</div>
+
+<h3>解读一：随机化（经典博弈论视角）</h3>
+
+<p>在经典博弈论中，混合策略被理解为<strong>单个玩家的随机化</strong>：玩家在每一轮博弈前，按概率分布 $x$ 随机选择一个纯策略。对手不知道你这轮会选什么。</p>
+
+<p>这种解读有一个著名的哲学困难：如果每个玩家都在随机化，那是什么让他们"恰好"按均衡概率随机的？Harsanyi (1973) 用"颤抖的手"来回应，但争议一直存在。</p>
+
+<h3>解读二：种群分布（演化博弈论视角）</h3>
+
+<p>演化博弈论给出了一个完全不同的、而且更自然的解读：</p>
+
+<blockquote><strong>混合策略 $x$ 不是一个玩家的随机化，而是种群中策略的份额分布。</strong></blockquote>
+
+<p>$x_k = 0.3$ 的意思不是"某个玩家以30%的概率选策略 $k$"，而是"种群中30%的个体采用策略 $k$"。</p>
+
+<p>这个解读消解了经典博弈论中的哲学困难——没有任何个体需要"随机化"，每个个体都坚定地执行一个纯策略，混合比例来自种群层面的统计。</p>
+
+<p><strong>这个重新解读是整门演化博弈论的基石。</strong> 后面所有的分析，都建立在这个理解之上。</p>
+
+<h3>两种解读不只是换了个说法</h3>
+
+<p>表面上看，两种解读只是对同一个数学对象 $x \in \Delta$ 的不同注释。但这个转换背后是一个更深的哲学位移：</p>
+
+<p>经典博弈论是<strong>本质主义思维</strong>（essentialism）——策略是抽象的，玩家是同质的理性人，混合策略是个体层面的属性。这种思维预设了一个理想的、全知的决策者在做最优选择。</p>
+
+<p>演化博弈论是<strong>种群思维</strong>（population thinking）——没有全知决策者，只有大量平凡个体各自执行固定策略。"混合比例"不是任何个体的属性，而是种群层面的涌现特征。</p>
+
+<p>这个区分呼应了 Ernst Mayr 在生物学中的经典命题：达尔文革命的本质不是"适者生存"，而是用种群思维取代本质主义思维。物种不是由一个"理想形式"定义的，而是由种群中个体的变异分布定义的。演化博弈论把同一条思路带进了策略分析。</p>
+
+<p>更深一层，这个转换重新定义了"均衡"的地位。经典博弈论中，纳什均衡要求理性玩家相互做出最优反应——但为什么理性人不能协调到帕累托更优的均衡？经典理论用"信息不完全"等外生条件来回答，但这些都是补丁。</p>
+
+<p>演化博弈论的回答更干净：<strong>根本没有人在"选择"均衡</strong>。种群动态是一个去中心化的过程，没有中央协调者，没有全知理性。均衡是动态过程的<strong>涌现结果</strong>，而不是理性选择的前提预设。</p>
+
+<p>这意味着演化博弈论把"均衡选择问题"变成了"动态收敛问题"——不问"哪个均衡是合理的"，而问"从给定初始状态出发，动态过程趋向哪个均衡"。这是一个更可操作、更可检验的问题。</p>
+
+<h3>适应度函数</h3>
+
+<p>给定种群分布 $x \in \Delta$，采用纯策略 $k$ 的个体的<strong>期望适应度</strong>（expected fitness）为：</p>
+
+<div class="formula-box">$$f_k(x) = \sum_{l=1}^{m} A_{kl} \, x_l = (Ax)_k$$</div>
+
+<p>而种群的<strong>平均适应度</strong>为：</p>
+
+<div class="formula-box">$$\bar{f}(x) = \sum_{k=1}^{m} x_k \, f_k(x) = x^\top A x$$</div>
+
+<h2>2.4 三个经典例子</h2>
+
+<p>以下三个博弈会在后续章节中反复出现。先熟悉它们的结构和均衡，后面会用演化视角重新分析。</p>
+
+<h3>例1：协调博弈（Coordination Game）</h3>
+
+<div class="formula-box">$$A = \begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix}, \quad a, b > 0$$</div>
+
+<p>两个玩家协调到同一策略就获益，否则为零。典型的例子是"左行右行"或技术标准选择（VHS vs BetaMax）。</p>
+
+<p><strong>均衡分析</strong>：</p>
+<ul>
+<li>纯策略纳什均衡：$(H, H)$ 和 $(D, D)$ —— 都是纳什均衡</li>
+<li>混合策略纳什均衡：$x^* = \frac{b}{a+b}$（选第一个策略的概率）</li>
+</ul>
+
+<p><strong>关键问题</strong>（演化博弈论会重新面对）：两个均衡都"合理"，经典博弈论无法告诉你该选哪个。如果你选了H但对手选了D，你一无所获——这就是<strong>协调失败</strong>。</p>
+
+<h3>例2：囚徒困境（Prisoner's Dilemma）</h3>
+
+<div class="formula-box">$$A = \begin{pmatrix} R & S \\ T & P \end{pmatrix}$$</div>
+
+<p>标准参数：$T > R > P > S$ 且 $2R > T + S$。</p>
+
+<ul>
+<li>纯策略纳什均衡：$(D, D)$ —— 唯一的纳什均衡</li>
+<li>合作 $(C, C)$ 给双方更高收益，但不是均衡——每个玩家都有动机单方面背叛</li>
+</ul>
+
+<p><strong>演化视角的伏笔</strong>：经典博弈论说理性人最终都背叛。但如果合作者在种群中占多数，背叛者短期内确实能获利，长期呢？演化博弈论要回答的就是这个问题。</p>
+
+<h3>例3：鹰鸽博弈（Hawk-Dove）</h3>
+
+<p>前面已给出支付矩阵。这里补充均衡分析。</p>
+
+<p>设 $V = 2, C = 4$（典型参数），则：</p>
+
+<div class="formula-box">$$A = \begin{pmatrix} -1 & 2 \\ 0 & 1 \end{pmatrix}$$</div>
+
+<p><strong>均衡分析</strong>：</p>
+<ul>
+<li>纯策略纳什均衡：不存在（可以验证H和D都不是彼此的最优反应）</li>
+<li>混合策略纳什均衡：$x^* = \frac{2}{3}$（选鹰的概率）</li>
+</ul>
+
+<p>混合均衡的意思是：当种群中 $\frac{2}{3}$ 的个体是鹰、$\frac{1}{3}$ 是鸽时，两种策略的适应度相等，种群处于均衡。</p>
+
+<p><strong>直觉</strong>：如果鹰太多，打斗成本使鹰的适应度下降，鸽变得有利 → 鹰的比例下降；如果鸽太多，鹰可以轻松掠夺 → 鹰的比例上升。最终稳定在一个中间比例。</p>
+
+<p>这个"比例来回摆动最终稳定"的过程，正是复制者动态要刻画的内容。</p>
+
+<h2>2.5 小结</h2>
+
+<p>本章的关键要点：</p>
+
+<ol>
+<li><strong>标准式博弈</strong>提供了演化博弈论的基本语言</li>
+<li><strong>纳什均衡</strong>是"互相最优反应"的状态，后面会问：演化过程是否收敛到纳什均衡？</li>
+<li><strong>混合策略的种群解读</strong>是核心伏笔——不是个体随机化，而是种群中的策略分布</li>
+<li><strong>三个例子</strong>各有特色：协调博弈有多个均衡、囚徒困境有合作困境、鹰鸽博弈有唯一的混合均衡</li>
+</ol>
+
+<p>这些概念的精确版本会在第三、四、五章中被重新审视和扩展。</p>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>2.1（计算）</strong> 设鹰鸽博弈的参数为 $V = 3, C = 6$。写出支付矩阵，求混合策略纳什均衡。</div>
+<div class="exercise"><strong>2.2（证明）</strong> 证明：在对称两人博弈中，如果 $(s_1^*, s_2^*)$ 是纯策略纳什均衡且 $s_1^* \neq s_2^*$，则 $(s_2^*, s_1^*)$ 也是纳什均衡。</div>
+<div class="exercise"><strong>2.3（直觉判断）</strong> 在囚徒困境中，如果博弈重复进行有限次（比如100次），经典博弈论的预测是什么？你认为这个预测合理吗？（提示：逆向归纳法）</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 3 -->
+<!-- ================================================================ -->
+<article id="ch3">
+<h1 class="chapter-title"><span class="chapter-num">第三章</span>对称博弈与种群设定</h1>
+
+<p>本章将第二章介绍的框架正式化。目标是建立一个干净的数学语言，让后续的 ESS 和复制者动态分析可以直接在上面展开。</p>
+
+<h2>3.1 对称两人博弈</h2>
+
+<div class="definition">
+<span class="block-label">定义 3.1（对称两人博弈）</span>
+<p>一个<strong>对称两人博弈</strong>（symmetric two-player game）由以下要素确定：</p>
+<ul>
+<li>有限策略集 $S = \{1, 2, \ldots, n\}$</li>
+<li>支付矩阵 $A \in \mathbb{R}^{n \times n}$，其中 $A_{ij}$ 表示选策略 $i$ 的玩家面对选策略 $j$ 的对手时的支付</li>
+</ul>
+<p>"对称"意味着：两个玩家从同一个策略集中选择，且角色可互换——如果我选 $i$ 你选 $j$，我的支付是 $A_{ij}$；如果你选 $i$ 我选 $j$，你的支付也是 $A_{ij}$。博弈的结构不区分"玩家1"和"玩家2"。</p>
+</div>
+
+<div class="remark">
+<span class="block-label">注意</span>
+<p>对称博弈不要求 $A$ 是对称矩阵。$A_{ij} \neq A_{ji}$ 是完全正常的——这表示选 $i$ 打选 $j$ 的支付不等于选 $j$ 打选 $i$ 的支付。</p>
+</div>
+
+<p><strong>为什么只关注对称博弈？</strong> 两个原因：(1) 大量经典模型（鹰鸽博弈、囚徒困境、石头-剪刀-布）天然对称；(2) 对称设定下，我们可以用<strong>一个</strong>种群来描述整个系统，数学上大幅简化。非对称博弈（第七章）需要多个种群。</p>
+
+<h2>3.2 种群状态</h2>
+
+<div class="definition">
+<span class="block-label">定义 3.2（种群状态）</span>
+<p>策略集 $S = \{1, 2, \ldots, n\}$ 上的一个<strong>种群状态</strong>是一个向量：</p>
+<div class="formula-box">$$x = (x_1, x_2, \ldots, x_n) \in \Delta^{n-1}$$</div>
+<p>其中 $\Delta^{n-1} = \{x \in \mathbb{R}^n : x_i \geq 0, \sum_{i=1}^{n} x_i = 1\}$ 是 $n-1$ 维<strong>单位单纯形</strong>（unit simplex）。$x_i$ 表示种群中采用策略 $i$ 的个体所占的<strong>份额</strong>（share）。</p>
+</div>
+
+<p>几个重要的特殊状态：</p>
+<ul>
+<li><strong>单态状态</strong>（monomorphic state）：$x = e_i$（第 $i$ 个标准基向量），即种群中所有个体都采用策略 $i$</li>
+<li><strong>内点状态</strong>（interior state）：$x_i > 0$ 对所有 $i$，即每种策略在种群中都有非零份额</li>
+<li><strong>边界点</strong>（boundary point）：至少有一个 $x_i = 0$</li>
+</ul>
+
+<p>在二维单纯形（$n = 3$）的情形中，种群状态可以用等边三角形中的一个点来可视化——三个顶点分别代表三种单态状态，内部点代表混合种群。</p>
+
+<h2>3.3 适应度函数</h2>
+
+<p>给定种群状态 $x$，一个采用策略 $i$ 的个体与种群中随机一个成员配对博弈。由于种群中策略 $j$ 的份额为 $x_j$，该个体的期望支付（即<strong>适应度</strong>）为：</p>
+
+<div class="definition">
+<span class="block-label">定义 3.3（适应度）</span>
+<p>在种群状态 $x$ 下，策略 $i$ 的<strong>适应度</strong>（fitness）为：</p>
+<div class="formula-box">$$f_i(x) = \sum_{j=1}^{n} A_{ij} x_j = (Ax)_i$$</div>
+<p>种群的<strong>平均适应度</strong>为：</p>
+<div class="formula-box">$$\bar{f}(x) = \sum_{i=1}^{n} x_i f_i(x) = x^\top A x$$</div>
+</div>
+
+<p><strong>性质 3.1</strong> 适应度函数 $f_i(x)$ 关于 $x$ 是线性的。平均适应度 $\bar{f}(x)$ 关于 $x$ 是二次的（一个二次型）。</p>
+
+<p>线性性的直觉：策略 $i$ 的适应度是对所有可能对手的支付的加权平均，权重就是种群中各策略的份额。份额变了，适应度按比例变化——没有"边际递减"效应。</p>
+
+<p><strong>性质 3.2</strong> 如果两个策略 $i$ 和 $j$ 满足 $f_i(x) > f_j(x)$，则策略 $i$ 比策略 $j$ 更"成功"——在种群中能获得更高的期望收益。</p>
+
+<p>这自然引出一个核心问题：<strong>更成功的策略是否会在种群中增长？</strong> 答案是"是的"，而这正是第五章复制者动态的全部内容。</p>
+
+<h2>3.4 支付矩阵的平移与缩放</h2>
+
+<p>演化博弈论中有一个重要但容易被忽视的事实：对适应度函数做某些变换，不会改变演化的定性结果。</p>
+
+<div class="proposition">
+<span class="block-label">命题 3.1</span>
+<p>设 $A$ 和 $B = A + c\mathbf{1}\mathbf{1}^\top$（即 $B_{ij} = A_{ij} + c$ 对所有 $i, j$）是两个支付矩阵。则对于演化博弈论中的所有标准概念（ESS、复制者动态的轨道、稳定性），$A$ 和 $B$ 给出完全相同的结果。</p>
+</div>
+
+<p><strong>证明思路</strong>：给每个支付加同一个常数 $c$，相当于把所有策略的适应度同时抬高 $c$：</p>
+<div class="formula-box">$$f_i^B(x) = f_i^A(x) + c$$</div>
+<p>平均适应度变为 $\bar{f}^B(x) = \bar{f}^A(x) + c$。但适应度的<strong>差异</strong> $f_i(x) - f_j(x)$ 不变，相对优劣关系不变。而复制者动态只依赖于适应度之差（见第五章），所以轨道完全相同。$\square$</p>
+
+<p><strong>推论 3.1</strong> 对支付矩阵做正缩放 $B = \alpha A$（$\alpha > 0$）也不改变演化结果——只是改变了动态的"速度"，不改变方向。</p>
+
+<p>这两个性质意味着：演化博弈论关心的是策略之间的<strong>相对优劣</strong>，而不是支付的绝对数值。这与生物学的精神一致——适应度是一个相对概念。</p>
+
+<div class="remark">
+<span class="block-label">例子</span>
+<p>鹰鸽博弈的支付矩阵 $A = \begin{pmatrix} \frac{V-C}{2} & V \\ 0 & \frac{V}{2} \end{pmatrix}$ 和 $B = \begin{pmatrix} -1 & 2 \\ 0 & 1 \end{pmatrix}$（取 $V=2, C=4$ 后加常数使最小支付为零）在演化分析中等价。</p>
+</div>
+
+<h2>3.5 支配与劣势策略</h2>
+
+<p>在进入演化稳定性的概念之前，我们需要一个经典的比较工具。</p>
+
+<div class="definition">
+<span class="block-label">定义 3.4（严格劣势）</span>
+<p>策略 $i$ 被策略 $j$ <strong>严格劣势</strong>（strictly dominated），如果对所有 $x \in \Delta^{n-1}$：</p>
+<div class="formula-box">$$f_i(x) < f_j(x)$$</div>
+<p>即不论种群状态如何，选 $j$ 总是比选 $i$ 获得更高的适应度。</p>
+</div>
+
+<div class="proposition">
+<span class="block-label">命题 3.2</span>
+<p>在演化博弈论中，被严格劣势的策略不能是任何 ESS 的组成部分，而且在复制者动态中，严格劣势策略的份额单调递减至零。</p>
+</div>
+
+<p>直觉很清楚：如果一个策略在任何环境下都不如另一个策略，那它在演化中注定被淘汰——没有"生态位"可以保护它。</p>
+
+<h2>3.6 小结</h2>
+
+<p>本章建立了演化博弈论的基本框架：</p>
+
+<ol>
+<li><strong>对称博弈</strong>：一个支付矩阵 $A$ 就能描述整个博弈</li>
+<li><strong>种群状态</strong>：单纯形 $\Delta^{n-1}$ 中的一个点，表示各策略在种群中的份额</li>
+<li><strong>适应度</strong>：$f_i(x) = (Ax)_i$，是 $x$ 的线性函数</li>
+<li><strong>平移不变性</strong>：演化结果不依赖支付的绝对水平，只依赖相对差异</li>
+<li><strong>劣势策略</strong>：严格劣势的策略在演化中必被淘汰</li>
+</ol>
+
+<p>有了这套语言，下一章就可以正式定义<strong>演化稳定策略</strong>——演化博弈论最核心的概念之一。</p>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>3.1（计算）</strong> 设支付矩阵为 $A = \begin{pmatrix} 1 & 3 \\ 0 & 2 \end{pmatrix}$。计算当 $x = (0.4, 0.6)$ 时，$f_1(x)$、$f_2(x)$ 和 $\bar{f}(x)$ 各为多少。</div>
+<div class="exercise"><strong>3.2（证明）</strong> 证明命题 3.1 的完整细节：设 $B = A + c\mathbf{1}\mathbf{1}^\top$，证明 $f_i^B(x) - f_j^B(x) = f_i^A(x) - f_j^A(x)$ 对所有 $x$ 成立。</div>
+<div class="exercise"><strong>3.3（直觉）</strong> 在鹰鸽博弈中，策略"鸽"是否被策略"鹰"严格劣势？为什么？（提示：考虑种群中全是鹰的情形）</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 4 -->
+<!-- ================================================================ -->
+<article id="ch4">
+<h1 class="chapter-title"><span class="chapter-num">第四章</span>演化稳定策略（ESS）</h1>
+
+<p>这是演化博弈论最核心的概念。John Maynard Smith 和 George Price 在 1973 年提出这个概念时，问了一个极其朴素的问题：<strong>如果种群中所有个体都采用某个策略，少量"突变"策略能否入侵这个种群？</strong> 如果不能，这个策略就是"演化稳定"的。</p>
+
+<p>这个想法简洁而强大，我们一步步把它形式化。</p>
+
+<h2>4.1 直觉：入侵与抵抗</h2>
+
+<p>想象一个种群，其中所有个体都采用策略 $x^*$（称为<strong>驻留策略</strong>，resident strategy）。突然出现了一小群采用不同策略 $y$ 的<strong>突变体</strong>（mutant），占种群的 $\epsilon$ 比例（$\epsilon$ 很小）。</p>
+
+<p>问题：突变体能不能站稳脚跟？</p>
+
+<p>要回答这个问题，我们需要比较两种策略在"几乎全是驻留策略"的环境中的表现。面对一个 $\epsilon$ 比例突变体、$(1-\epsilon)$ 比例驻留策略的种群：</p>
+
+<ul>
+<li>驻留策略的适应度：$f(x^*, \epsilon) = (1-\epsilon) \cdot x^{*\top} A x^* + \epsilon \cdot x^{*\top} A y$</li>
+<li>突变策略的适应度：$f(y, \epsilon) = (1-\epsilon) \cdot y^\top A x^* + \epsilon \cdot y^\top A y$</li>
+</ul>
+
+<p>如果驻留策略是<strong>纳什均衡</strong>（$x^{*\top} A x^* \geq y^\top A x^*$），那么当 $\epsilon$ 足够小时，驻留策略的适应度不会低于突变策略。但 Maynard Smith 的要求更强：<strong>突变体最终必须被淘汰</strong>，即其份额必须下降。</p>
+
+<p>突变体份额的变化取决于其适应度是否高于平均适应度。当 $\epsilon$ 很小时：</p>
+
+<div class="formula-box">$$f(y, \epsilon) - \bar{f}(\epsilon) \approx \underbrace{y^\top A x^* - x^{*\top} A x^*}_{\text{一阶项}} + \epsilon \cdot \underbrace{(y^\top A y - y^\top A x^* - x^{*\top} A y + x^{*\top} A x^*)}_{\text{二阶项}}$$</div>
+
+<ul>
+<li>如果一阶项 $< 0$：突变体适应度低于平均，直接被淘汰。条件满足。</li>
+<li>如果一阶项 $= 0$：一阶无法判断，需要看二阶项。此时要求二阶项 $< 0$，即突变体在同类型对局中表现比驻留策略差。</li>
+</ul>
+
+<p>这就是 ESS 的两个条件的来源。</p>
+
+<h2>4.2 形式化定义</h2>
+
+<div class="definition">
+<span class="block-label">定义 4.1（演化稳定策略，Maynard Smith）</span>
+<p>设 $A$ 为对称博弈的支付矩阵。策略 $x^* \in \Delta^{n-1}$ 是一个<strong>演化稳定策略</strong>（Evolutionarily Stable Strategy, ESS），如果对任意 $y \neq x^*$，以下两个条件至少有一个成立：</p>
+<p><strong>(E1)</strong> $\quad y^\top A x^* < x^{*\top} A x^*$</p>
+<p><strong>(E2)</strong> $\quad y^\top A x^* = x^{*\top} A x^* \text{ 且 } y^\top A y < x^{*\top} A y$</p>
+</div>
+
+<p>用文字说：</p>
+
+<ul>
+<li><strong>(E1)</strong>：面对驻留种群，突变策略的适应度严格低于驻留策略。突变体一进来就"水土不服"，直接被淘汰。</li>
+<li><strong>(E2)</strong>：如果突变策略面对驻留种群时和驻留策略打平手（一阶不分胜负），那么当两个突变体互相对局时，它们的表现不如面对驻留策略。这保证了突变体在二阶上仍然会被淘汰。</li>
+</ul>
+
+<p><strong>直觉总结</strong>：ESS 是一个"能抵御任何小规模入侵"的策略。入侵者要么直接适应度更低（E1），要么即使一时打平也在同族竞争中吃亏（E2）。</p>
+
+<h2>4.3 ESS 的等价刻画</h2>
+
+<div class="theorem">
+<span class="block-label">定理 4.1</span>
+<p>$x^*$ 是 ESS 当且仅当 $x^*$ 是纳什均衡，且对任意 $y \neq x^*$：</p>
+<div class="formula-box">$$\text{若 } y^\top A x^* = x^{*\top} A x^*, \text{ 则 } y^\top A y < x^{*\top} A y \tag{$\star$}$$</div>
+</div>
+
+<p><strong>证明</strong>：</p>
+
+<p>($\Rightarrow$) 若 $x^*$ 是 ESS，则 (E1) 和 (E2) 成立。特别地，取 $y$ 使得 $y^\top A x^* \leq x^{*\top} A x^*$（这由 (E1) 自动满足，或由 (E2) 加强），所以 $x^*$ 是纳什均衡。条件 ($\star$) 正是 (E2)。</p>
+
+<p>($\Leftarrow$) 设 $x^*$ 是纳什均衡且 ($\star$) 成立。对任意 $y \neq x^*$：</p>
+<ul>
+<li>若 $y^\top A x^* < x^{*\top} A x^*$，则 (E1) 成立。</li>
+<li>若 $y^\top A x^* = x^{*\top} A x^*$，由纳什均衡性有 $x^{*\top} A x^* \geq x^{*\top} A y$，结合 ($\star$) 有 $y^\top A y < x^{*\top} A y$，即 (E2) 成立。</li>
+<li>$y^\top A x^* > x^{*\top} A x^*$ 不可能（与纳什均衡矛盾）。</li>
+</ul>
+<p>$\square$</p>
+
+<div class="theorem">
+<span class="block-label">定理 4.2（纯策略 ESS 的简洁判据）</span>
+<p>纯策略 $i$ 是 ESS 当且仅当：</p>
+<div class="formula-box">$$A_{ii} > A_{ji} \quad \text{或} \quad (A_{ii} = A_{ji} \text{ 且 } A_{ij} > A_{jj}) \text{ 对所有 } j \neq i$$</div>
+</div>
+
+<p>这直接从定理 4.1 令 $x^* = e_i$、$y = e_j$ 得到。</p>
+
+<h2>4.4 ESS 与纳什均衡的关系</h2>
+
+<p>这是本章最重要的结构性结果之一。</p>
+
+<div class="theorem">
+<span class="block-label">定理 4.3</span>
+<ol>
+<li>每个 ESS 都是纳什均衡。</li>
+<li>每个<strong>严格纳什均衡</strong>都是 ESS。</li>
+<li>但存在非严格的纳什均衡也是 ESS（需要满足 (E2)）。</li>
+<li>也存在纳什均衡不是 ESS（不满足 (E2)）。</li>
+</ol>
+</div>
+
+<p>用集合关系表达：</p>
+
+<div class="formula-box">$$\{\text{严格纳什均衡}\} \subsetneq \{\text{ESS}\} \subsetneq \{\text{对称纳什均衡}\}$$</div>
+
+<p>两个包含关系都是真包含。</p>
+
+<p><strong>直觉</strong>：ESS 比纳什均衡更"严格"。纳什均衡只要求"没人想单方面偏离"，ESS 还要求"突变体来了也待不住"。这使得 ESS 能排除某些纳什均衡——那些"理论上是均衡但实际脆弱"的策略组合。</p>
+
+<h2>4.5 经典例子</h2>
+
+<h3>例1：鹰鸽博弈</h3>
+
+<p>支付矩阵（$V = 2, C = 4$，已平移使得最小支付为零）：</p>
+
+<div class="formula-box">$$A = \begin{pmatrix} -1 & 2 \\ 0 & 1 \end{pmatrix}$$</div>
+
+<p><strong>纯策略检验</strong>：</p>
+
+<ul>
+<li>鹰（H）：$A_{11} = -1$，$A_{21} = 0$。$A_{11} < A_{21}$，不满足 ESS 条件。</li>
+<li>鸽（D）：$A_{22} = 1$，$A_{12} = 2$。$A_{22} < A_{12}$，不满足 ESS 条件。</li>
+</ul>
+
+<p>直觉：全是鹰时，鸽入侵（面对鹰得0，鹰互打得-1）；全是鸽时，鹰入侵（面对鸽得2，鸽对鸽得1）。两种纯态都不稳定。</p>
+
+<p><strong>混合 ESS</strong>：由第三章已知混合纳什均衡为 $x^* = (\frac{1}{2}, \frac{1}{2})$。在这一点上 $f_H = f_D = \frac{1}{2}$。</p>
+
+<p><strong>ESS 验证</strong>：对 $y = e_1$（纯鹰），$y^\top A y = A_{11} = -1$，$x^{*\top} A y = \frac{1}{2}(-1) + \frac{1}{2}(0) = -\frac{1}{2}$。$-1 < -\frac{1}{2}$ ✓ (E2)。同理可验证 $y = e_2$ 也满足。对任意混合 $y$，条件也成立。</p>
+
+<p><strong>结论</strong>：$x^* = (\frac{1}{2}, \frac{1}{2})$ 是鹰鸽博弈唯一的 ESS。</p>
+
+<p><strong>直觉</strong>：种群中一半鹰一半鸽时，两种策略适应度相等，没有哪方能扩张。如果突变引入更多鹰，打斗成本上升，鹰的适应度下降，鹰被反压回去；反之亦然。种群会自动回到均衡比例。</p>
+
+<div class="remark">
+<span class="block-label">注</span>
+<p>上面的计算沿用了 $V=2, C=4$ 的参数。更一般地，混合均衡为 $x^* = (\frac{V}{C}, \frac{C-V}{C})$，即鹰的比例为 $V/C$。资源价值 $V$ 相对于打斗成本 $C$ 越高，均衡中鹰的比例越大——直觉上完全合理。</p>
+</div>
+
+<h3>例2：协调博弈</h3>
+
+<div class="formula-box">$$A = \begin{pmatrix} 2 & 0 \\ 0 & 1 \end{pmatrix}$$</div>
+
+<p><strong>纯策略检验</strong>：</p>
+<ul>
+<li>策略1：$A_{11} = 2 > 0 = A_{21}$。满足定理 4.2，是 ESS。✓</li>
+<li>策略2：$A_{22} = 1 > 0 = A_{12}$。满足定理 4.2，是 ESS。✓</li>
+</ul>
+
+<p>两个纯策略都是 ESS！</p>
+
+<p><strong>混合纳什均衡</strong>：$x^* = (\frac{1}{3}, \frac{2}{3})$。它是不是 ESS？</p>
+
+<p>取 $y = e_1$：$y^\top A x^* = \frac{2}{3} = x^{*\top} A x^*$，进入 (E2)。$y^\top A y = 2$，$x^{*\top} A y = \frac{2}{3}$。$2 > \frac{2}{3}$，不满足 (E2)！</p>
+
+<p><strong>结论</strong>：混合纳什均衡 $x^* = (\frac{1}{3}, \frac{2}{3})$ 不是 ESS。</p>
+
+<p><strong>直觉</strong>：在混合均衡附近，如果突变引入了更多策略1的个体，这些个体之间对局得2（高于均衡时的平均收益 $\frac{2}{3}$），所以策略1的份额会增长——突变体可以"自我扩张"。均衡是脆弱的。</p>
+
+<p><strong>总结</strong>：协调博弈有两个 ESS（两个纯策略），混合纳什均衡不是 ESS。这就是经典的"多重均衡 + 风险"问题——演化动力学会"选中"其中一个纯 ESS，具体选哪个取决于初始条件。</p>
+
+<h3>例3：石头-剪刀-布</h3>
+
+<div class="formula-box">$$A = \begin{pmatrix} 0 & 1 & -1 \\ -1 & 0 & 1 \\ 1 & -1 & 0 \end{pmatrix}$$</div>
+
+<p>可以验证：不存在纯策略 ESS（每种策略都被另一种克制），唯一的纳什均衡是 $x^* = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$。</p>
+
+<p><strong>但它是不是 ESS？</strong> 对 $y = e_1$：$y^\top A y = A_{11} = 0$，$x^{*\top} A y = \frac{1}{3}(0) + \frac{1}{3}(-1) + \frac{1}{3}(1) = 0$。(E1) 取等号，进入 (E2)：$y^\top A y = 0 = x^{*\top} A y$。(E2) 也取等号。<strong>不满足 ESS 条件。</strong></p>
+
+<p>原因在于 $A$ 的对角线全为零——纯策略面对自己时支付为零，恰好等于混合均衡下的平均支付。这是一个退化情形。</p>
+
+<div class="remark">
+<span class="block-label">修正</span>
+<p>如果修改 $A$ 使对角线元素非零（如 $A_{ii} = \epsilon > 0$），则 $x^*$ 满足 (E2) 成为 ESS。标准版本中 $x^*$ 是 NE 但不是 ESS——它在 Lyapunov 意义下稳定（第五章），但不满足 ESS 的入侵抵抗条件。</p>
+</div>
+
+<h2>4.6 ESS 的存在性</h2>
+
+<div class="theorem">
+<span class="block-label">定理 4.4</span>
+<p>每个有限对称两人博弈至少存在一个 ESS。</p>
+</div>
+
+<p><strong>证明概要</strong>：由纳什定理，至少存在一个对称纳什均衡。在所有对称纳什均衡中，取在"支付等价"意义下最优的那个（利用纳什均衡集合的结构性质），可以证明它满足 ESS 条件。完整证明见 Weibull (1995, Theorem 2.3.3)。$\square$</p>
+
+<p>但存在性不保证唯一性——协调博弈就有两个 ESS。当存在多个 ESS 时，演化博弈论本身不能告诉你"最终"会到达哪个，这取决于初始条件和动态过程的细节（第五章会深入讨论）。</p>
+
+<h2>4.7 ESS 的局限</h2>
+
+<p>ESS 是一个漂亮的静态概念，但它有几个已知的局限：</p>
+
+<ol>
+<li><strong>只对对称博弈定义</strong>。非对称博弈需要推广到"演化稳定集合"等概念（第七章）。</li>
+<li><strong>只考虑"小规模突变"</strong>。大量突变体同时入侵的情况不在 ESS 的框架内。</li>
+<li><strong>不涉及动态</strong>。ESS 告诉你"均衡是稳定的"，但不告诉你从任意初始状态出发是否能到达均衡——这是复制者动态的任务（第五章）。</li>
+<li><strong>对有限种群不适用</strong>。ESS 的定义假设种群无限大，有限种群需要不同的工具。</li>
+</ol>
+
+<p>这些局限恰好指出了下一章（复制者动态）的必要性。</p>
+
+<h2>4.8 小结</h2>
+
+<ol>
+<li><strong>ESS 的核心问题</strong>：驻留策略能否抵御突变入侵？</li>
+<li><strong>两个条件</strong>：(E1) 适应度严格高于突变，或 (E2) 适应度相等时在同族竞争中占优</li>
+<li><strong>ESS ⊂ 纳什均衡</strong>：ESS 是更强的稳定性概念，能排除某些"脆弱"的纳什均衡</li>
+<li><strong>严格纳什均衡 → ESS</strong>：但 ESS 不一定是严格的（如鹰鸽博弈的混合 ESS）</li>
+<li><strong>多重 ESS 存在</strong>：协调博弈有两个纯 ESS，演化结果取决于初始条件</li>
+</ol>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>4.1（计算）</strong> 设鹰鸽博弈参数 $V = 3, C = 5$。求混合策略 ESS，验证其满足 ESS 条件。</div>
+<div class="exercise"><strong>4.2（证明）</strong> 证明：如果 $x^*$ 是 ESS，则 $x^*$ 不能被任何其他纯策略严格劣势。</div>
+<div class="exercise"><strong>4.3（计算）</strong> 验证石头-剪刀-布博弈中 $x^* = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$ 是纳什均衡，但不是 ESS。（提示：验证 (E1) 和 (E2) 都恰好取等号。）</div>
+<div class="exercise"><strong>4.4（直觉）</strong> 在协调博弈中，如果初始种群状态是 $x_0 = (0.1, 0.9)$，你认为演化过程最终会趋向哪个 ESS？为什么？（这是一个开放性问题，为第五章铺垫。）</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 5 -->
+<!-- ================================================================ -->
+<article id="ch5">
+<h1 class="chapter-title"><span class="chapter-num">第五章</span>复制者动态</h1>
+
+<p>第四章的 ESS 是一个静态概念——它问"这个策略能否抵御入侵"，但不关心"从任意初始状态出发，系统怎么演化"。复制者动态（Replicator Dynamics）回答的正是后者：它给出一个微分方程，描述种群中各策略份额随时间变化的过程。</p>
+
+<p>Taylor &amp; Jonker (1978) 首先研究了这个方程，Zeeman (1980) 和 Hofbauer et al. (1979) 建立了系统的理论。</p>
+
+<h2>5.1 方程的推导</h2>
+
+<p>设种群中采用策略 $i$ 的个体<strong>数量</strong>为 $N_i(t)$，总数量为 $N(t) = \sum_i N_i(t)$。策略 $i$ 的份额为 $x_i = N_i / N$。</p>
+
+<p>假设每个策略类型的数量按其适应度增长（"越成功，繁殖越多"）：</p>
+
+<div class="formula-box">$$\dot{N}_i = N_i \cdot f_i(x)$$</div>
+
+<p>这里 $f_i(x) = (Ax)_i$ 是策略 $i$ 的适应度，取决于当前的种群状态 $x$。</p>
+
+<p>对 $x_i = N_i / N$ 求导：</p>
+
+<div class="formula-box">$$\dot{x}_i = \frac{\dot{N}_i}{N} - \frac{N_i \dot{N}}{N^2}$$</div>
+
+<p>其中 $\dot{N} = \sum_j \dot{N}_j = \sum_j N_j f_j(x) = N \cdot \bar{f}(x)$。代入：</p>
+
+<div class="formula-box">$$\dot{x}_i = \frac{N_i f_i(x)}{N} - \frac{N_i}{N} \cdot \frac{N \bar{f}(x)}{N} = x_i f_i(x) - x_i \bar{f}(x)$$</div>
+
+<div class="definition">
+<span class="block-label">定义 5.1（连续时间复制者方程）</span>
+<div class="formula-box">$$\dot{x}_i = x_i \left[ f_i(x) - \bar{f}(x) \right] \tag{RD}$$</div>
+<p>其中 $f_i(x) = (Ax)_i$，$\bar{f}(x) = x^\top A x$。</p>
+</div>
+
+<p><strong>直觉</strong>：一个策略份额的增长率等于其适应度与平均适应度之差。高于平均就增长，低于平均就衰减，等于平均就保持不变。这就是"自然选择"的数学表达。</p>
+
+<div class="proposition">
+<span class="block-label">性质 5.1（单纯形不变性）</span>
+<p>如果初始状态 $x(0) \in \Delta^{n-1}$，则对所有 $t \geq 0$ 有 $x(t) \in \Delta^{n-1}$。</p>
+</div>
+
+<p><strong>证明</strong>：$\sum_i \dot{x}_i = \sum_i x_i f_i(x) - \bar{f}(x) \sum_i x_i = \bar{f}(x) - \bar{f}(x) \cdot 1 = 0$。又若某 $x_i$ 从边界出发（$x_i = 0$），则 $\dot{x}_i = 0$，不会变为负值。$\square$</p>
+
+<p><strong>性质 5.2</strong> 复制者方程是自治的（不显含时间 $t$），且右端是 $x$ 的二次函数（因为 $\bar{f}(x) = x^\top A x$ 是二次的，$f_i(x)$ 是线性的）。</p>
+
+<h2>5.2 不动点</h2>
+
+<div class="definition">
+<span class="block-label">定义 5.2</span>
+<p>状态 $x^*$ 是复制者动态的<strong>不动点</strong>（fixed point），如果对所有 $i$ 有 $\dot{x}_i = 0$。</p>
+</div>
+
+<p>由 (RD) 方程，$\dot{x}_i = 0$ 当且仅当 $x_i^* = 0$ 或 $f_i(x^*) = \bar{f}(x^*)$。换言之：</p>
+
+<blockquote>在不动点处，每一个在种群中<strong>存在</strong>的策略（$x_i^* > 0$），其适应度都等于平均适应度。</blockquote>
+
+<p>这恰好是纳什均衡的条件：</p>
+
+<div class="theorem">
+<span class="block-label">定理 5.1</span>
+<p>$x^*$ 是复制者动态的不动点 $\iff$ $x^*$ 是对称纳什均衡。</p>
+</div>
+
+<p><strong>证明</strong>：</p>
+
+<p>($\Leftarrow$) 设 $x^*$ 是对称纳什均衡。由纳什均衡定义，对所有 $j$ 有 $x^{*\top} A x^* \geq e_j^\top A x^*$。对 $x_j^* > 0$ 的 $j$，这等价于 $f_j(x^*) \geq \bar{f}(x^*)$。但 $\bar{f}(x^*) = \sum_i x_i^* f_i(x^*)$，若某个 $f_j(x^*) > \bar{f}(x^*)$ 则必有某个 $f_k(x^*) < \bar{f}(x^*)$（加权平均的性质），这与纳什均衡矛盾（$x_k^* > 0$ 时 $f_k(x^*)$ 不能低于平均）。所以所有 $x_i^* > 0$ 的 $i$ 都有 $f_i(x^*) = \bar{f}(x^*)$，即 $\dot{x}_i = 0$。</p>
+
+<p>($\Rightarrow$) 设 $x^*$ 是不动点。对所有 $x_i^* > 0$ 有 $f_i(x^*) = \bar{f}(x^*)$。对任意纯策略 $j$，由加权平均的性质，$f_j(x^*)$ 要么等于 $\bar{f}(x^*)$（若 $j$ 在支撑集中），要么 $f_j(x^*) \leq \bar{f}(x^*)$（因为若 $f_j(x^*) > \bar{f}(x^*)$ 则 $j$ 本应增长）。所以 $x^{*\top} A x^* = \bar{f}(x^*) \geq f_j(x^*) = e_j^\top A x^*$，即 $x^*$ 是纳什均衡。$\square$</p>
+
+<p><strong>这意味着</strong>：复制者动态的不动点集合恰好就是对称纳什均衡的集合。演化动态和理性选择在"停下来的地方"是一致的——但在"怎么到达"和"是否稳定"上可能完全不同。</p>
+
+<h2>5.3 稳定性</h2>
+
+<p>不动点可能稳定也可能不稳定。我们需要区分几种稳定性。</p>
+
+<div class="definition">
+<span class="block-label">定义 5.3</span>
+<p>设 $x^*$ 是不动点。</p>
+<ul>
+<li><strong>Lyapunov 稳定</strong>（稳定）：对任意 $\epsilon > 0$，存在 $\delta > 0$，使得若 $\|x(0) - x^*\| < \delta$，则对所有 $t \geq 0$ 有 $\|x(t) - x^*\| < \epsilon$。（不会跑远，但不一定回来。）</li>
+<li><strong>渐近稳定</strong>（asymptotically stable）：Lyapunov 稳定，且存在 $\delta > 0$，使得若 $\|x(0) - x^*\| < \delta$，则 $\lim_{t \to \infty} x(t) = x^*$。（不仅不跑远，还会回来。）</li>
+<li><strong>不稳定</strong>：既不 Lyapunov 稳定也不渐近稳定。（小扰动会被放大。）</li>
+</ul>
+</div>
+
+<p>直觉：Lyapunov 稳定是"小扰动不会导致灾难"，渐近稳定是"小扰动会被自动纠正"。演化博弈论关心的主要是渐近稳定——我们想知道均衡是否能"自我修复"。</p>
+
+<h3>二维情形的分析</h3>
+
+<p>在 $n = 2$（两种策略）的情形中，复制者动态退化为一个一维 ODE。设 $x = (x_1, 1 - x_1)$，记 $p = x_1$，则：</p>
+
+<div class="formula-box">$$\dot{p} = p(1-p) \left[ f_1(p) - f_2(p) \right]$$</div>
+
+<p>令 $\phi(p) = f_1(p) - f_2(p)$，不动点满足 $\phi(p^*) = 0$（或 $p^* \in \{0, 1\}$）。</p>
+
+<div class="proposition">
+<span class="block-label">稳定性判据</span>
+<p>不动点 $p^*$ 渐近稳定 $\iff$ $\phi'(p^*) < 0$。</p>
+</div>
+
+<p><strong>证明</strong>：在 $p^*$ 附近线性化，$\dot{p} \approx p^*(1 - p^*) \phi'(p^*) \cdot (p - p^*)$。若 $0 < p^* < 1$（内点不动点），则 $p^*(1 - p^*) > 0$，稳定性由 $\phi'(p^*)$ 的符号决定。$\square$</p>
+
+<h2>5.4 例子</h2>
+
+<h3>例1：鹰鸽博弈</h3>
+
+<p>支付矩阵 $A = \begin{pmatrix} -1 & 2 \\ 0 & 1 \end{pmatrix}$（$V=2, C=4$）。</p>
+
+<p>适应度差：$f_H(p) = 2 - 3p$，$f_D(p) = 1 - p$，$\phi(p) = 1 - 2p$。</p>
+
+<p>不动点：$\phi(p^*) = 0 \Rightarrow p^* = \frac{1}{2}$。</p>
+
+<p>稳定性：$\phi'(p^*) = -2 < 0$。<strong>渐近稳定</strong>。✓</p>
+
+<p><strong>动态行为</strong>：</p>
+<ul>
+<li>若初始 $p > \frac{1}{2}$（鹰太多），$\phi(p) < 0$（鹰适应度低于鸽），$\dot{p} < 0$，鹰的比例下降</li>
+<li>若初始 $p < \frac{1}{2}$（鸽太多），$\phi(p) > 0$（鹰适应度高于鸽），$\dot{p} > 0$，鹰的比例上升</li>
+<li>无论从哪个 $p_0 \in (0, 1)$ 出发，都趋向 $p^* = \frac{1}{2}$</li>
+</ul>
+
+<p>这就是"负反馈"机制：偏离均衡产生纠正力，拉回均衡。</p>
+
+<p><strong>与 ESS 的对应</strong>：$x^* = (\frac{1}{2}, \frac{1}{2})$ 是 ESS（第四章已证），也是渐近稳定的不动点。一一对应。</p>
+
+<h3>例2：协调博弈</h3>
+
+<div class="formula-box">$$A = \begin{pmatrix} 2 & 0 \\ 0 & 1 \end{pmatrix}$$</div>
+
+<p>$f_1(p) = 2p$，$f_2(p) = 1 - p$，$\phi(p) = 3p - 1$。</p>
+
+<p>不动点：$p^* = \frac{1}{3}$。</p>
+
+<p>稳定性：$\phi'(p^*) = 3 > 0$。<strong>不稳定！</strong></p>
+
+<p><strong>动态行为</strong>：</p>
+<ul>
+<li>若初始 $p > \frac{1}{3}$，$\phi(p) > 0$，策略1更有利，$p$ 继续增长 → 趋向 $p = 1$（纯策略1）</li>
+<li>若初始 $p < \frac{1}{3}$，$\phi(p) < 0$，策略2更有利，$p$ 继续下降 → 趋向 $p = 0$（纯策略2）</li>
+</ul>
+
+<pre>
+p = 0        p* = 1/3         p = 1
+  ←───────────┼───────────→
+  策略2占优    [不稳定]     策略1占优
+</pre>
+
+<p>混合均衡 $p^* = \frac{1}{3}$ 是一个"鞍点"——不是协调的稳定结果，而是分界线。种群最终收敛到哪个纯 ESS，完全取决于初始份额是否超过 $\frac{1}{3}$。</p>
+
+<p><strong>这就是"均衡选择问题"的动态回答</strong>：不是理论选不出均衡，而是初始条件决定了演化走向。现实中初始条件取决于历史偶然——技术标准的竞争、社会规范的形成，往往就是这么"路径依赖"的。</p>
+
+<h3>例3：石头-剪刀-布</h3>
+
+<div class="formula-box">$$A = \begin{pmatrix} 0 & 1 & -1 \\ -1 & 0 & 1 \\ 1 & -1 & 0 \end{pmatrix}$$</div>
+
+<p>内点不动点：$x^* = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$。</p>
+
+<p>这个博弈的动态比前两个丰富得多。不动点 $x^*$ 不是渐近稳定的——种群不会"停"在均匀混合状态。但也不是简单的不稳定：<strong>轨迹在 $x^*$ 附近形成闭合轨道（极限环）</strong>。</p>
+
+<p>可以证明：对于这个特殊博弈，轨道是<strong>渐近中性</strong>的——不螺旋向内也不向外，而是近似周期性地围绕 $x^*$ 运动。种群在三种策略之间循环：石头多 → 布有利 → 布多 → 剪刀有利 → 剪刀多 → 石头有利 → 循环。</p>
+
+<p><strong>在生物学中</strong>：侧斑蜥蜴（side-blotched lizard）的三种雄性策略（橙喉、蓝喉、黄喉）确实表现出这种循环动态——Orange beats Blue, Blue beats Yellow, Yellow beats Orange。田野数据观察到了周期约为4-5年的份额波动。</p>
+
+<p><strong>与 ESS 的关系</strong>：$x^* = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$ 是 NE 但<strong>不是 ESS</strong>（习题 4.3），也不是渐近稳定的——它是 Lyapunov 稳定的（轨道不跑远）。这说明在 $n \geq 3$ 时，Lyapunov 稳定的不动点不一定是 ESS（$n = 2$ 时不存在这种分离）。</p>
+
+<h2>5.5 ESS 与动态稳定性</h2>
+
+<p>汇总本章和第四章的结果：</p>
+
+<div class="theorem">
+<span class="block-label">定理 5.2（核心对应定理）</span>
+<p>在对称两人博弈的复制者动态中：</p>
+<ol>
+<li>每个 ESS 是 Lyapunov 稳定的不动点。</li>
+<li>在 $n = 2$（两种策略）的情形中：$x^*$ 是 ESS $\iff$ $x^*$ 是渐近稳定的不动点。一一对应。</li>
+<li>在 $n \geq 3$ 时：ESS 一定是 Lyapunov 稳定的，但 Lyapunov 稳定的不动点不一定是 ESS（如石头-剪刀-布）。</li>
+</ol>
+</div>
+
+<p>用集合关系说：</p>
+
+<p>$n = 2$ 时：</p>
+<div class="formula-box">$$\{\text{ESS}\} = \{\text{渐近稳定的不动点}\} \subsetneq \{\text{Lyapunov 稳定的不动点}\}$$</div>
+
+<p>$n \geq 3$ 时：</p>
+<div class="formula-box">$$\{\text{ESS}\} \subsetneq \{\text{Lyapunov 稳定的不动点}\}$$</div>
+
+<p><strong>直觉</strong>：ESS 保证"小规模突变会被淘汰"（静态入侵抵抗），渐近稳定保证"小扰动会被动态纠正"。两者高度相关但不等价。在二维（最常见的应用情形）中，二者完全等价。</p>
+
+<h2>5.6 离散时间复制者动态（简要）</h2>
+
+<p>连续时间的分析方便且直觉清晰，但现实中演化可能以离散世代进行。离散时间版本为：</p>
+
+<div class="formula-box">$$x_i(t+1) = x_i(t) \cdot \frac{f_i(x(t))}{\bar{f}(x(t))}$$</div>
+
+<p>前提是 $\bar{f}(x) > 0$ 对所有可达状态成立（否则需要先做支付平移，由命题 3.1 保证不改变结果）。</p>
+
+<p><strong>直觉</strong>：下一代中策略 $i$ 的份额 = 本代份额 ×（适应度 / 平均适应度）。适应度高于平均的策略份额放大，低于平均的缩小。</p>
+
+<p>连续时间版本是离散版本在时间步长趋于零时的极限。大部分定性结论（不动点、稳定性、ESS 的角色）在两个版本中一致，但离散版本可能出现连续版本中没有的复杂行为（如混沌），当支付函数的非线性足够强时。</p>
+
+<h2>5.7 小结</h2>
+
+<ol>
+<li><strong>复制者方程</strong> $\dot{x}_i = x_i(f_i - \bar{f})$ 刻画了"成功策略扩张"的自然选择过程</li>
+<li><strong>不动点 = 纳什均衡</strong>：演化动态和理性选择在"停下来"的地方一致</li>
+<li><strong>渐近稳定 vs Lyapunov 稳定</strong>：前者是"自我修复"，后者只是"不跑远"</li>
+<li><strong>二维情形</strong>：ESS ⇔ 渐近稳定，一一对应</li>
+<li><strong>高维情形</strong>：可能出现循环（石头-剪刀-布），Lyapunov 稳定但不是 ESS</li>
+<li><strong>路径依赖</strong>：多重 ESS 时，初始条件决定最终结果（协调博弈）</li>
+</ol>
+
+<p>ESS 告诉你"哪些策略是好的"，复制者动态告诉你"种群会不会找到好的策略，以及怎么找到"。两章合在一起，构成了演化博弈论的核心分析框架。</p>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>5.1（计算）</strong> 设支付矩阵 $A = \begin{pmatrix} 0 & 3 \\ 1 & 2 \end{pmatrix}$。写出复制者动态，求所有不动点，判断每个不动点的稳定性。</div>
+<div class="exercise"><strong>5.2（证明）</strong> 证明：在复制者动态中，被严格劣势的策略的份额单调递减（即若 $x_i(0) > 0$ 且策略 $i$ 被严格劣势，则 $\dot{x}_i < 0$ 对所有 $t$ 成立）。</div>
+<div class="exercise"><strong>5.3（计算）</strong> 对石头-剪刀-布博弈，验证 $x^* = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$ 是不动点，并说明为什么轨道是闭合的。（提示：考虑函数 $W(x) = x_1 x_2 x_3$ 的行为。）</div>
+<div class="exercise"><strong>5.4（直觉）</strong> 在协调博弈的复制者动态中，如果种群的初始状态恰好是 $x_0 = x^* = (\frac{1}{3}, \frac{2}{3})$，系统会怎样？如果初始状态有微小偏离呢？这与"理性人会选哪个均衡"的问题有什么关系？</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 6 -->
+<!-- ================================================================ -->
+<article id="ch6">
+<h1 class="chapter-title"><span class="chapter-num">第六章</span>经典模型专题</h1>
+
+<p>前几章建立了一般理论，本章深入分析几个经典模型。每个模型不只是数学练习——它们各自揭示了演化博弈论的一个核心主题：冲突与共存（鹰鸽）、循环与混沌（石头-剪刀-布）、路径依赖（协调博弈）、效率与风险（猎鹿）、合作困境（囚徒困境）。</p>
+
+<h2>6.1 鹰鸽博弈（Hawk-Dove）完整分析</h2>
+
+<h3>模型设定</h3>
+
+<p>两只动物争夺一份价值为 $V$ 的资源。策略：</p>
+<ul>
+<li><strong>鹰（H）</strong>：攻击，不惜打斗</li>
+<li><strong>鸽（D）</strong>：展示退让，不打斗</li>
+</ul>
+
+<div class="formula-box">$$A = \begin{pmatrix} \frac{V-C}{2} & V \\ 0 & \frac{V}{2} \end{pmatrix}$$</div>
+
+<p>假设 $V > 0, C > 0$（资源有价值，打斗有成本）。</p>
+
+<h3>分情况讨论</h3>
+
+<p><strong>情形 1：$C < V$（打斗成本低于资源价值）</strong></p>
+
+<p>鹰严格优于鸽：$A_{12} = V > \frac{V}{2} = A_{22}$ 且 $A_{11} = \frac{V-C}{2} > 0 = A_{21}$（因为 $C < V$）。鸽被鹰严格劣势。唯一的 ESS 是纯鹰 $x^* = (1, 0)$。</p>
+
+<p><strong>情形 2：$C = V$（打斗成本等于资源价值）</strong></p>
+
+<p>由定理 4.2 验证，纯鹰仍是 ESS。但这是边界情形——如果 $C$ 稍微再大一点，结论就变了。</p>
+
+<p><strong>情形 3：$C > V$（打斗成本高于资源价值）—— 核心情形</strong></p>
+
+<p>没有纯策略 ESS（第四章已验证）。</p>
+
+<p><strong>混合 ESS</strong>：令 $f_H = f_D$。</p>
+
+<div class="formula-box">$$p^* = \frac{V}{C}$$</div>
+
+<p>即鹰的比例为 $V/C$。</p>
+
+<p><strong>复制者动态</strong>：$\phi'(p^*) = -\frac{C}{2} < 0$。渐近稳定。✓</p>
+
+<h3>生物学意义</h3>
+
+<p>鹰鸽博弈是 Maynard Smith 最早的模型之一，解释了自然界中"攻击性策略"和"退让策略"为何能共存。</p>
+<ul>
+<li>鹰太多 → 打斗频繁 → 打斗成本压低鹰的适应度 → 鹰减少</li>
+<li>鸽太多 → 掠夺容易 → 鹰的适应度飙升 → 鹰增加</li>
+<li>均衡处两种策略共存，比例取决于 $V/C$</li>
+</ul>
+
+<p>这解释了一个反直觉的现象：<strong>即使攻击是"更好的"策略，种群中也不会全是攻击者</strong>——因为攻击者之间的互相伤害维持了退让者的生存空间。</p>
+
+<h2>6.2 石头-剪刀-布与循环动态</h2>
+
+<div class="formula-box">$$A = \begin{pmatrix} 0 & 1 & -1 \\ -1 & 0 & 1 \\ 1 & -1 & 0 \end{pmatrix}$$</div>
+
+<p>唯一纳什均衡：$x^* = (\frac{1}{3}, \frac{1}{3}, \frac{1}{3})$。轨道不是趋向 $x^*$，而是在 $x^*$ 附近形成<strong>闭合轨道</strong>（周期解）。</p>
+
+<h3>生物学实例：侧斑蜥蜴</h3>
+
+<p>加州大学戴维斯分校的 Barry Sinervo 等人在 1990 年代-2000 年代的田野研究中发现，侧斑蜥蜴（<em>Uta stansburiana</em>）的雄性存在三种喉色策略：</p>
+<ul>
+<li><strong>橙喉（Orange）</strong>：大领地、多妻，击败蓝喉 → 对应"石头"</li>
+<li><strong>蓝喉（Blue）</strong>：中等领地、忠实守护，击败黄喉 → 对应"剪刀"</li>
+<li><strong>黄喉（Yellow）</strong>：偷袭者，潜入他人领地，击败橙喉 → 对应"布"</li>
+</ul>
+
+<p>田野数据（1990-2002年）显示三种策略的份额确实呈现约4-5年的周期波动，与演化博弈论的预测高度吻合。这是演化博弈论预测得到实证支持的经典案例之一。</p>
+
+<h2>6.3 协调博弈与风险占优</h2>
+
+<div class="formula-box">$$A = \begin{pmatrix} a & 0 \\ 0 & b \end{pmatrix}, \quad a, b > 0$$</div>
+
+<p>两个纯 ESS，混合均衡 $p^* = \frac{b}{a+b}$ 不稳定。</p>
+
+<h3>风险占优（Risk Dominance）</h3>
+
+<p>偏离策略1到策略2的损失 = $a$；偏离策略2到策略1的损失 = $b$。损失更大者更"安全"，即<strong>风险占优</strong>。</p>
+
+<p>混合均衡 $p^* = \frac{b}{a+b}$ 靠近哪个纯态，哪个的吸引域就更小——另一个的风险占优。</p>
+
+<blockquote>在对称协调博弈中，风险占优和帕累托占优总是指向同一个方向。要让两者冲突，需要非对称的支付结构——猎鹿博弈提供了这样的例子。</blockquote>
+
+<h2>6.4 猎鹿博弈（Stag Hunt）：帕累托与风险的冲突</h2>
+
+<h3>模型</h3>
+
+<p>猎鹿博弈来自卢梭的寓言：两个猎人可以合作猎鹿（需要两人配合）或单独猎兔（一人即可完成）。</p>
+
+<div class="formula-box">$$A = \begin{pmatrix} 5 & 0 \\ 3 & 3 \end{pmatrix}$$</div>
+
+<h3>均衡分析</h3>
+
+<p><strong>纯策略均衡</strong>：$(\text{Stag}, \text{Stag})$ 和 $(\text{Hare}, \text{Hare})$ 都是纯 ESS。</p>
+
+<p><strong>混合均衡</strong>：$f_S(p) = 5p$，$f_H(p) = 3$。令相等：$p^* = \frac{3}{7} \approx 0.43$。混合均衡不是 ESS。</p>
+
+<h3>复制者动态</h3>
+
+<p>$\phi'(p^*) = 5 > 0$，$p^* = \frac{3}{7}$ 不稳定。</p>
+
+<p>吸引域：</p>
+<ul>
+<li><strong>Stag</strong>：$[0, \frac{3}{7}) \approx [0, 0.43)$</li>
+<li><strong>Hare</strong>：$(\frac{3}{7}, 1] \approx (0.43, 1]$</li>
+</ul>
+
+<p>Hare 的吸引域（$57\%$）大于 Stag 的吸引域（$43\%$）。从均匀随机的初始条件出发，种群更可能收敛到 Hare。</p>
+
+<h3>帕累托占优 vs 风险占优</h3>
+
+<p><strong>帕累托占优</strong>：$(\text{Stag}, \text{Stag})$ 的支付 $5 > 3$，Stag 帕累托占优 Hare。</p>
+
+<p><strong>风险占优</strong>：偏离 Stag → Hare 的损失 = $5 - 3 = 2$；偏离 Hare → Stag 的损失 = $3 - 0 = 3$。偏离到 Stag 的损失更大，所以 <strong>Hare 更"安全"，Hare 风险占优。</strong></p>
+
+<blockquote>Stag 是更好的均衡——但前提是对方也选 Stag。如果不确定对方的选择，Hare 是更稳妥的策略。演化过程中，"稳妥"战胜了"高效"。</blockquote>
+
+<h3>含义</h3>
+
+<p>猎鹿博弈揭示了一个深刻的社会困境：</p>
+<ul>
+<li>从效率角度看，社会应该收敛到 Stag（帕累托最优）</li>
+<li>但从演化动态看，Hare 更可能被选中（风险占优，吸引域更大）</li>
+<li>历史偶然性把种群推入了 Hare 的吸引域后，就没有自发力量把它拉回 Stag</li>
+</ul>
+
+<p>这可以类比许多现实困境：</p>
+<ul>
+<li><strong>技术标准</strong>：VHS 画面质量不如 Betamax，但风险更低（更多厂商支持），最终胜出</li>
+<li><strong>制度改革</strong>：每个人都知道新制度更好，但没人愿意先迈出第一步</li>
+<li><strong>社会信任</strong>：高信任社会人人获益，但从低信任均衡出发，个体理性的选择是继续不信任</li>
+</ul>
+
+<p><strong>打破这种锁定的条件</strong>：需要外部冲击（政策干预、技术突破、领袖示范）把种群份额推过 $p^*$ 的门槛，之后演化动态自行完成剩余工作。</p>
+
+<h2>6.5 囚徒困境的演化视角</h2>
+
+<div class="formula-box">$$A = \begin{pmatrix} R & S \\ T & P \end{pmatrix}, \quad T > R > P > S, \quad 2R > T + S$$</div>
+
+<p>在基本设定下，合作被背叛严格劣势。唯一的 ESS 是纯背叛，复制者动态中合作份额单调递减至零。</p>
+
+<h3>但合作确实存在</h3>
+
+<p>以下是演化博弈论已经识别出的几种"合作促进机制"：</p>
+
+<p><strong>机制 1：重复博弈与互惠</strong> — 如果两个个体反复相遇，背叛的短期收益可能被未来的惩罚抵消。Axelrod (1984) 的锦标赛表明"一报还一报"策略表现优异。</p>
+
+<p><strong>机制 2：种群结构与空间效应</strong> — Nowak &amp; May (1992) 发现：在二维格子上，简单的空间结构就能使合作策略在囚徒困境中存活甚至繁荣。</p>
+
+<p><strong>机制 3：亲缘选择</strong> — Hamilton (1964) 的规则：如果 $rb > c$（亲缘系数 × 受益者收益 > 利他者成本），利他行为可以在亲属间演化。</p>
+
+<p><strong>机制 4：间接互惠与声誉</strong> — 合作者获得好名声，未来得到更多合作机会。</p>
+
+<h2>6.6 五个模型的比较</h2>
+
+<table>
+<thead><tr><th>模型</th><th>核心问题</th><th>ESS</th><th>动态行为</th><th>关键洞察</th></tr></thead>
+<tbody>
+<tr><td>鹰鸽</td><td>冲突中的策略共存</td><td>混合 ESS ($V/C$)</td><td>渐近稳定，负反馈</td><td>攻击性不能完全取代退让</td></tr>
+<tr><td>石剪布</td><td>循环竞争</td><td>均匀混合 NE（非ESS）</td><td>周期轨道</td><td>自然界存在永恒的"军备竞赛"</td></tr>
+<tr><td>协调</td><td>多均衡选择</td><td>两个纯 ESS</td><td>路径依赖</td><td>历史锁定可能产生次优结果</td></tr>
+<tr><td>猎鹿</td><td>帕累托 vs 风险</td><td>两个纯 ESS</td><td>路径依赖，风险占优方吸引域更大</td><td>效率最优不一定被演化选中</td></tr>
+<tr><td>囚徒困境</td><td>合作演化</td><td>纯背叛</td><td>合作消亡</td><td>基本设定下合作无法维持；需要额外结构</td></tr>
+</tbody>
+</table>
+
+<h2>6.7 小结</h2>
+
+<ol>
+<li><strong>鹰鸽博弈</strong>：$C > V$ 时混合 ESS 存在，解释了攻击与退让共存</li>
+<li><strong>石头-剪刀-布</strong>：揭示了 NE 可以不是 ESS，Lyapunov 稳定但不满足入侵抵抗条件，生物学有真实对应</li>
+<li><strong>协调博弈</strong>：帕累托占优不保证演化选中，风险占优和初始条件才是关键</li>
+<li><strong>猎鹿博弈</strong>：帕累托最优与风险占优可以指向不同方向，"稳妥"可能战胜"高效"</li>
+<li><strong>囚徒困境</strong>：基本框架中合作不能存活，但精确识别了促进合作的必要条件</li>
+</ol>
+
+<p>这五个模型覆盖了演化博弈论最核心的几个主题，后续应用（第八章）中的许多分析都可以追溯到这五个原型。</p>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>6.1（计算）</strong> 设鹰鸽博弈 $V = 1, C = 3$。计算混合 ESS，画出复制者动态的相图。</div>
+<div class="exercise"><strong>6.2（分析）</strong> 对石头-剪刀-布博弈，如果修改支付矩阵为 $A_{13} = 0$（即石头对布不再是 $-1$ 而是 $0$），ESS 和动态行为会如何改变？</div>
+<div class="exercise"><strong>6.3（讨论）</strong> 在协调博弈中，假设存在一个"外部冲击"（比如政府推广策略1的广告），使初始份额暂时超过 $p^*$。冲击撤销后，种群会回到混合均衡还是趋向纯策略1？用复制者动态解释。</div>
+<div class="exercise"><strong>6.4（开放性思考）</strong> 你认为现实世界中的哪些合作现象可以用囚徒困境 + 哪种机制来最好地解释？给出一个具体例子并说明为什么选这个机制。</div>
+<div class="exercise"><strong>6.5（计算）</strong> 猎鹿博弈改为 $A = \begin{pmatrix} 10 & 0 \\ 8 & 8 \end{pmatrix}$。计算混合均衡，判断哪个均衡风险占优、哪个帕累托占优。两者是否一致？画出复制者动态相图。</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 7 -->
+<!-- ================================================================ -->
+<article id="ch7">
+<h1 class="chapter-title"><span class="chapter-num">第七章</span>非对称博弈与多种群模型</h1>
+
+<p>前六章全部在<strong>对称博弈</strong>的框架内——两个玩家从同一个策略集中选择，角色可互换。但现实中，博弈双方往往处于不同<strong>角色</strong>：雇主与雇员、捕食者与猎物、拥有者与入侵者。这些非对称结构需要新的分析框架。</p>
+
+<p>本章的核心发现是：<strong>非对称性能产生对称博弈中不可能存在的纯策略 ESS。</strong></p>
+
+<h2>7.1 非对称博弈的设定</h2>
+
+<div class="definition">
+<span class="block-label">定义 7.1（非对称两人博弈）</span>
+<p>一个非对称两人博弈由以下要素确定：</p>
+<ul>
+<li>两个<strong>角色</strong>（roles）：行角色和列角色</li>
+<li>行角色的策略集 $S_1 = \{1, \ldots, m\}$</li>
+<li>列角色的策略集 $S_2 = \{1, \ldots, n\}$</li>
+<li>行角色的支付矩阵 $A \in \mathbb{R}^{m \times n}$</li>
+<li>列角色的支付矩阵 $B \in \mathbb{R}^{n \times m}$</li>
+</ul>
+<p>当行角色选策略 $i$、列角色选策略 $j$ 时，行角色得 $A_{ij}$，列角色得 $B_{ji}$。</p>
+</div>
+
+<p><strong>对称性条件</strong>：博弈是对称的 $\iff$ $S_1 = S_2$ 且 $A = B^\top$。非对称博弈至少违反其中一个条件。</p>
+
+<h2>7.2 两种群复制者动态</h2>
+
+<p>在非对称博弈中，处于不同角色的个体来自<strong>不同的种群</strong>。每个种群独立演化，但通过博弈互动相互影响。</p>
+
+<p>设行种群中策略 $i$ 的份额为 $x_i$，列种群中策略 $j$ 的份额为 $y_j$。</p>
+
+<div class="definition">
+<span class="block-label">定义 7.2（两种群复制者方程）</span>
+<div class="formula-box">$$\dot{x}_i = x_i \left[ (Ax)_i - x^\top A y \right]$$</div>
+<p>其中 $(Ax)_i = \sum_j A_{ij} y_j$ 是行种群中策略 $i$ 面对列种群的适应度，$x^\top A y = \sum_{i,j} x_i A_{ij} y_j$ 是行种群的平均适应度。</p>
+<p>列种群同理：</p>
+<div class="formula-box">$$\dot{y}_j = y_j \left[ (B^\top x)_j - y^\top B^\top x \right]$$</div>
+</div>
+
+<p><strong>与单种群的关键区别</strong>：</p>
+<ol>
+<li><strong>行种群的适应度只取决于列种群的状态 $y$</strong>，不取决于自身状态 $x$。</li>
+<li><strong>两个方程是耦合的</strong>，但通过交叉变量耦合：$\dot{x}$ 取决于 $y$，$\dot{y}$ 取决于 $x$。</li>
+<li><strong>相空间是 $\Delta^{m-1} \times \Delta^{n-1}$</strong>（两个单纯形的笛卡尔积），维数更高。</li>
+</ol>
+
+<div class="theorem">
+<span class="block-label">定理 7.1</span>
+<p>在两种群复制者动态中，$(x^*, y^*)$ 是不动点 $\iff$ $(x^*, y^*)$ 是纳什均衡。</p>
+</div>
+
+<h2>7.3 非对称博弈中的 ESS</h2>
+
+<div class="definition">
+<span class="block-label">定义 7.3（非对称 ESS）</span>
+<p>策略组合 $(x^*, y^*)$ 是非对称博弈的 ESS，如果对任意 $(u, v) \neq (x^*, y^*)$，存在 $\bar{\epsilon} > 0$ 使得对所有 $\epsilon \in (0, \bar{\epsilon})$，突变策略在任一种群中都不能获得更高适应度。</p>
+</div>
+
+<div class="theorem">
+<span class="block-label">定理 7.2</span>
+<p>每个<strong>严格纳什均衡</strong>都是非对称 ESS。</p>
+</div>
+
+<h2>7.4 核心例子：非对称鹰鸽博弈</h2>
+
+<h3>两种群视角</h3>
+
+<p>考虑拥有者 vs 入侵者的非对称鹰鸽，设 $V = 2$，入侵者在鹰对鹰中承担更高成本（客场劣势）：</p>
+
+<div class="formula-box">$$A = \begin{pmatrix} -1 & 2 \\ 0 & 1 \end{pmatrix} \quad \text{（拥有者）} \qquad B = \begin{pmatrix} -3 & 0 \\ 2 & 1 \end{pmatrix} \quad \text{（入侵者）}$$</div>
+
+<p>$A \neq B^\top$，这是真正的非对称性。</p>
+
+<p>两种群复制者动态（$x$ = 拥有者选鹰的概率，$y$ = 入侵者选鹰的概率）：</p>
+
+<div class="formula-box">$$\dot{x} = x(1-x) \cdot (1-2y), \qquad \dot{y} = y(1-y) \cdot (1-5x)$$</div>
+
+<p>内点不动点 $(x^*, y^*) = (1/5, 1/2)$。在该点线性化：</p>
+
+<div class="formula-box">$$J = \begin{pmatrix} 0 & -8/25 \\ -5/4 & 0 \end{pmatrix}$$</div>
+
+<p>$\text{tr}(J) = 0$，$\det(J) = 2/5 > 0$，特征值 $\pm i\sqrt{2/5}$——纯虚数。不动点是<strong>中心</strong>，轨道围绕它旋转。</p>
+
+<p><strong>与对称鹰鸽的对比</strong>：对称版本中混合 ESS 是渐近稳定的（负反馈，自动回归）。非对称版本中混合均衡只是中性稳定（轨道旋转，不回归也不远离）。非对称性改变了动态的定性行为。</p>
+
+<h3>Bourgeois 策略：角色条件策略的 ESS</h3>
+
+<p>上述两种群分析将拥有者和入侵者视为两个不同的种群。Maynard Smith 的经典分析走的是另一条路：保留<strong>单一种群</strong>，但扩展策略集，允许策略依赖角色信息。</p>
+
+<p>在对称鹰鸽（$V = 2, C = 4$）中，每个个体有 50% 概率扮演拥有者、50% 概率扮演入侵者。引入角色条件策略：</p>
+<ul>
+<li><strong>H</strong>：无论什么角色都选鹰</li>
+<li><strong>D</strong>：无论什么角色都选鸽</li>
+<li><strong>Bourgeois（B）</strong>：拥有者选鹰，入侵者选鸽</li>
+<li><strong>Anti-Bourgeois（AB）</strong>：拥有者选鸽，入侵者选鹰</li>
+</ul>
+
+<p>可以验证，B 和 AB 面对任何对手的期望支付都相同——因为角色随机分配 50/50，两种策略的"行为模式"在统计上等价。因此策略空间可简化为三个有效策略：H, D, B。</p>
+
+<p>简化后的 $3 \times 3$ 支付矩阵（行/列：H, D, B）：</p>
+
+<div class="formula-box">$$M = \begin{pmatrix} -1 & 2 & 0.5 \\ 0 & 1 & 0.5 \\ -0.5 & 1.5 & 0.5 \end{pmatrix}$$</div>
+
+<p><strong>关键观察</strong>：面对纯 B（$x^* = (0, 0, 1)$）时，所有策略的适应度都等于 0.5——H 得 0.5，D 得 0.5，B 自身也得 0.5。没有一阶优势。</p>
+
+<p><strong>ESS 验证</strong>：(E1) 不成立（适应度相等），检验 (E2)。</p>
+<ul>
+<li>$y = e_1$（纯 H）：$y^\top M y = -1$，$x^{*\top} M y = -0.5$。$-1 < -0.5$ ✓</li>
+<li>$y = e_2$（纯 D）：$y^\top M y = 1$，$x^{*\top} M y = 1.5$。$1 < 1.5$ ✓</li>
+</ul>
+
+<p><strong>Bourgeois 是 ESS。</strong> ✓</p>
+
+<p><strong>直觉</strong>：H 面对 H 自相残杀得 $-1$，B 面对 H 只得 $-0.5$（因为 B 在入侵者身份时选 D 避开了冲突）。D 面对 D 各得 $1$，B 面对 D 得 $1.5$（因为 B 在拥有者身份时选 H 掠夺了 D）。B 在"同族竞争"中利用角色信息做出了更优选择。</p>
+
+<h3>核心对比</h3>
+
+<table>
+<thead><tr><th></th><th>对称鹰鸽</th><th>非对称鹰鸽（角色条件策略）</th></tr></thead>
+<tbody>
+<tr><td>ESS</td><td>混合策略 $p^* = V/C$</td><td>纯策略 Bourgeois</td></tr>
+<tr><td>性质</td><td>需要个体随机化</td><td>条件性纯策略</td></tr>
+<tr><td>生物对应</td><td>无直接对应（个体不会随机化）</td><td>领地行为（owner 守、intruder 攻）</td></tr>
+</tbody>
+</table>
+
+<p>这就是非对称性的核心力量：<strong>角色信息扩展了策略空间，将原本"不可能的"纯策略 ESS 变为可能。</strong> 许多动物表现出的领地行为（territorial behavior）——拥有者积极防御、入侵者撤退——正是 Bourgeois 策略的自然实现。</p>
+
+<h2>7.5 信号博弈的演化分析（简要）</h2>
+
+<p>非对称博弈的另一个重要例子是<strong>信号博弈</strong>（signaling game），其中一方拥有私人信息（"类型"），另一方根据观察到的"信号"做出反应。</p>
+
+<p>Zahavi (1975) 的<strong>累赘原理</strong>（handicap principle）是信号博弈在生物学中的经典应用：高能力个体通过展示昂贵的信号（如孔雀尾羽）来"证明"自己的质量——低能力个体负担不起这个成本，所以信号是诚实的。</p>
+
+<h2>7.6 小结</h2>
+
+<ol>
+<li><strong>非对称博弈</strong>：玩家角色不同，需要两个支付矩阵 $(A, B)$，$A \neq B^\top$</li>
+<li><strong>两种群动态</strong>：每个种群独立演化，通过博弈耦合；不动点 = 纳什均衡</li>
+<li><strong>纯策略 ESS 的回归</strong>：非对称性扩展了策略空间（角色条件策略），使纯策略 ESS 在原本只有混合 ESS 的博弈中成为可能</li>
+<li><strong>Bourgeois 策略</strong>：在非对称鹰鸽中，"拥有者选鹰、入侵者选鸽"是纯 ESS——自然界中许多动物确实表现出这种"领地行为"</li>
+</ol>
+
+<p>非对称博弈的核心洞见：<strong>信息和角色结构改变了演化的可能性空间。</strong> 对称设定下不可能的结果，在引入不对称性后成为可能。</p>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>7.1（计算）</strong> 设非对称博弈 $A = \begin{pmatrix} 2 & 0 \\ 1 & 3 \end{pmatrix}$，$B = \begin{pmatrix} 1 & 2 \\ 0 & 1 \end{pmatrix}$。写出两种群复制者动态，求所有不动点，判断稳定性。</div>
+<div class="exercise"><strong>7.2（证明）</strong> 证明：在两种群复制者动态中，如果 $(x^*, y^*)$ 是严格纳什均衡，则它是渐近稳定的不动点。</div>
+<div class="exercise"><strong>7.3（分析）</strong> 在 Bourgeois vs Anti-Bourgeois 的对局中，谁赢？Anti-Bourgeois 能否在全 Bourgeois 的种群中入侵？（提示：计算 Anti-Bourgeois 面对 Bourgeois 的适应度。）</div>
+<div class="exercise"><strong>7.4（思考）</strong> 你认为"领地行为"在人类社会中是否存在？如果有，它是否可以被建模为 Bourgeois 策略？哪些因素可能导致人类偏离 Bourgeois 均衡？</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CHAPTER 8 -->
+<!-- ================================================================ -->
+<article id="ch8">
+<h1 class="chapter-title"><span class="chapter-num">第八章</span>应用与扩展方向</h1>
+
+<p>前七章建立了演化博弈论的核心理论框架。本章做两件事：一是展示这些理论如何被应用于生物学、经济学和社会科学中的具体问题；二是概述超越基本模型的几个前沿方向。</p>
+
+<p>本章是综述性质的——不追求推导细节，重在展示理论的解释力和边界。</p>
+
+<h2>8.1 生物学应用</h2>
+
+<h3>性比演化</h3>
+
+<p>Fisher (1930) 提出了一个经典问题：为什么大多数有性生殖物种的性别比接近 1:1？</p>
+
+<p>用演化博弈论的语言：策略是"分配资源给雄性后代的比例 $p$"。如果种群中雌性偏少（$p$ 偏低），生产雌性的策略就有更高的适应度（稀缺资源溢价），所以 $p$ 上升。反之亦然。混合均衡 $p^* = 0.5$ 是渐近稳定的。</p>
+
+<p><strong>性别比由种群动态内生决定，而非由自然选择"偏好"某个比例决定。</strong></p>
+
+<h3>警告色与拟态</h3>
+
+<p>许多有毒的蝴蝶和蛇类有鲜艳的警告色（aposematism），而无毒物种会拟态（mimicry）这些颜色。这可以用鹰鸽式的博弈来建模——频率依赖的动态，两种策略可以共存。</p>
+
+<h3>利他行为与亲缘选择</h3>
+
+<p>Hamilton (1964) 的亲缘选择理论可以用演化博弈论来重新表述。核心条件 $rb > c$ 可以被解读为：当博弈发生在亲属之间时，"合作"策略的有效支付被亲缘关系放大，使得合作在适当条件下成为 ESS。</p>
+
+<p>Nowak (2006) 统一了五种合作演化机制（亲缘选择、直接互惠、间接互惠、网络互惠、群体选择），将每种机制映射到特定的博弈结构和种群设定上。</p>
+
+<h2>8.2 经济学应用</h2>
+
+<h3>社会规范的演化</h3>
+
+<p>社会规范可以被建模为协调博弈中的均衡。一旦种群被锁定在"都违反"的均衡中，即使"都遵守"帕累托更优，也没有自发力量推动转变。</p>
+
+<p>Young (1993, 1998) 用随机演化博弈论证明在有限种群中，长期动态会"几乎必然"收敛到风险占优的均衡。</p>
+
+<h3>制度变迁</h3>
+
+<p>制度可以被理解为"自我实施的均衡"。North (1990) 的制度经济学强调了制度的"路径依赖"性质，这与演化博弈论中多重 ESS + 初始条件决定结果的框架完全吻合。</p>
+
+<h3>技术标准竞争</h3>
+
+<p>VHS vs Betamax、QWERTY vs Dvorak、蓝光 vs HD DVD——技术标准竞争是协调博弈的经典应用。风险占优而非帕累托占优决定最终结果。David (1985) 用 QWERTY 键盘的例子说明了"锁定"（lock-in）现象。</p>
+
+<h2>8.3 公共品博弈与社会困境</h2>
+
+<h3>公共品博弈</h3>
+
+<p>公共品博弈（public goods game）是囚徒困境的多人推广。在基本设定下，不投入严格优于投入，演化收敛到零贡献。</p>
+
+<h3>有条件合作者</h3>
+
+<p>实验经济学大量发现：现实中存在相当比例的"有条件合作者"。Fischbacher et al. (2001) 的实验表明，约 50% 的受试者属于这一类型。在演化博弈论中，这可以用"反应策略"来建模。</p>
+
+<h2>8.4 超越基本模型：扩展方向</h2>
+
+<h3>空间演化博弈</h3>
+
+<p>Nowak &amp; May (1992) 的突破性工作：将个体放在二维格子上，空间结构也能维持合作——合作者形成簇，在簇内部互相获益。</p>
+
+<h3>网络上的演化博弈</h3>
+
+<p>Santos &amp; Pacheco (2005) 发现，在无标度网络中，合作比在规则格子上更容易演化。枢纽节点的高连通度使其有更多机会获得合作者伙伴的收益。</p>
+
+<h3>有限种群与随机动态</h3>
+
+<p>在有限种群中，随机性（遗传漂变）成为不可忽略的因素。一个反直觉的结果：在有限种群中，弱选择下合作可能比在强选择下更容易演化——因为弱选择让随机波动有更多机会把种群推入合作的吸引域。</p>
+
+<h3>随机演化博弈动态</h3>
+
+<p>将随机性引入连续时间动态，得到随机微分方程。这类模型在金融和经济学中有应用。</p>
+
+<h2>8.5 与其他框架的联系</h2>
+
+<h3>演化博弈论与学习理论</h3>
+
+<p>演化动态可以被重新解释为"群体学习"的过程：不是基因遗传，而是社会学习（模仿成功者）驱动策略份额变化。复制者方程的一个经典解释就是"模仿动态"。</p>
+
+<h3>演化博弈论与多智能体系统</h3>
+
+<p>在人工智能和多智能体系统（MAS）中，演化博弈论为分析智能体群体的行为演化提供了框架。Sandholm (2010) 的专著系统地建立了这一联系。</p>
+
+<h3>演化博弈论与统计物理</h3>
+
+<p>复制者动态与 Boltzmann 方程有深刻的数学联系。物理学中的相变概念也对应于演化博弈论中的均衡选择和分岔现象。</p>
+
+<h2>8.6 小结</h2>
+
+<ol>
+<li><strong>生物学</strong>：性比、警告色、利他行为——频率依赖选择是演化博弈论最自然的应用领域</li>
+<li><strong>经济学</strong>：社会规范、制度变迁、技术标准——多重均衡 + 路径依赖解释了"锁定"现象</li>
+<li><strong>社会困境</strong>：公共品博弈是囚徒困境的多人版，现实中有条件合作者提供了合作的微观基础</li>
+<li><strong>空间与网络</strong>：打破完全混合假设后，合作在空间结构中可以自发涌现</li>
+<li><strong>有限种群</strong>：随机性既是破坏力量也是建设力量——弱选择下合作可能更容易演化</li>
+<li><strong>跨学科联系</strong>：演化博弈论连接了学习理论、多智能体系统和统计物理</li>
+</ol>
+
+<p>演化博弈论的核心力量在于它的<strong>通用性</strong>：同一个数学框架（种群 + 策略 + 适应度 + 动态）可以被应用于从基因演化到社会规范的广泛领域。具体结论取决于博弈结构和种群设定，但分析方法是统一的。</p>
+
+<h2>习题</h2>
+
+<div class="exercise"><strong>8.1（分析）</strong> Fisher 的性比模型可以被建模为一个对称博弈。写出支付矩阵，证明 $p^* = 0.5$ 是 ESS。</div>
+<div class="exercise"><strong>8.2（讨论）</strong> QWERTY 键盘被广泛认为是"锁定在帕累托次优均衡"的例子。你认为这个论述在演化博弈论框架中是否成立？有哪些潜在的反对意见？</div>
+<div class="exercise"><strong>8.3（思考）</strong> 在有限种群中，"弱选择下合作更容易演化"这一结论的直觉是什么？（提示：考虑种群小到只有 2 个人的情形。）</div>
+<div class="exercise"><strong>8.4（开放性）</strong> 选择一个你感兴趣的社会现象，尝试用演化博弈论的框架来建模它。你需要：定义策略集、支付函数、种群设定，并预测可能的 ESS。</div>
+</article>
+
+<div class="chapter-divider"><span>· · ·</span></div>
+
+<!-- ================================================================ -->
+<!-- CONCEPT INDEX -->
+<!-- ================================================================ -->
+<article id="index">
+<h1 class="chapter-title">概念索引（中英对照）</h1>
+
+<p>按拼音排序。格式：<strong>中文术语</strong>（English Term）— 所在章节</p>
+
+<h2>A</h2>
+<ul>
+<li><strong>Anti-Bourgeois 策略</strong>（Anti-Bourgeois strategy）— 7.4</li>
+</ul>
+
+<h2>B</h2>
+<ul>
+<li><strong>Bourgeois 策略</strong>（Bourgeois strategy）— 7.4</li>
+<li><strong>博弈的标准式表述</strong>（normal-form game）— 2.1</li>
+<li><strong>博弈论</strong>（game theory）— 1</li>
+</ul>
+
+<h2>C</h2>
+<ul>
+<li><strong>纯策略</strong>（pure strategy）— 2.1</li>
+<li><strong>纯策略纳什均衡</strong>（pure Nash equilibrium）— 2.2</li>
+<li><strong>重复博弈</strong>（repeated game）— 2.4, 6.4</li>
+</ul>
+
+<h2>D</h2>
+<ul>
+<li><strong>单纯形</strong>（simplex）— 2.3, 3.2</li>
+<li><strong>单位单纯形</strong>（unit simplex）— 3.2</li>
+<li><strong>对称博弈</strong>（symmetric game）— 2.1, 3.1</li>
+<li><strong>对称纳什均衡</strong>（symmetric Nash equilibrium）— 4.4</li>
+<li><strong>多种群模型</strong>（multi-population model）— 7.2</li>
+</ul>
+
+<h2>F</h2>
+<ul>
+<li><strong>非对称博弈</strong>（asymmetric game）— 7.1</li>
+<li><strong>非对称 ESS</strong>（asymmetric ESS）— 7.3</li>
+<li><strong>复制者动态</strong>（replicator dynamics）— 5.1</li>
+<li><strong>复制者方程</strong>（replicator equation）— 5.1</li>
+<li><strong>风险占优</strong>（risk dominance）— 6.3, 6.4</li>
+<li><strong>负反馈</strong>（negative feedback）— 5.4</li>
+</ul>
+
+<h2>G</h2>
+<ul>
+<li><strong>公共品博弈</strong>（public goods game）— 8.3</li>
+</ul>
+
+<h2>H</h2>
+<ul>
+<li><strong>混合策略</strong>（mixed strategy）— 2.3</li>
+<li><strong>混合策略纳什均衡</strong>（mixed Nash equilibrium）— 2.2</li>
+<li><strong>合作演化</strong>（evolution of cooperation）— 6.4, 8.3</li>
+<li><strong>互惠</strong>（reciprocity）— 6.4</li>
+</ul>
+
+<h2>J</h2>
+<ul>
+<li><strong>渐近稳定</strong>（asymptotically stable）— 5.3</li>
+<li><strong>均衡选择问题</strong>（equilibrium selection problem）— 2.3, 6.3</li>
+<li><strong>均衡的涌现</strong>（emergence of equilibrium）— 2.3</li>
+<li><strong>警告色</strong>（aposematism）— 8.1</li>
+</ul>
+
+<h2>K</h2>
+<ul>
+<li><strong>空间演化博弈</strong>（spatial evolutionary game）— 8.4</li>
+</ul>
+
+<h2>L</h2>
+<ul>
+<li><strong>累赘原理</strong>（handicap principle）— 7.5</li>
+<li><strong>离散时间复制者动态</strong>（discrete-time replicator dynamics）— 5.6</li>
+<li><strong>猎鹿博弈</strong>（Stag Hunt game）— 6.4</li>
+<li><strong>领地行为</strong>（territorial behavior）— 7.4</li>
+<li><strong>劣势策略</strong>（dominated strategy）— 3.5</li>
+<li><strong>路径依赖</strong>（path dependence）— 6.3, 8.2</li>
+</ul>
+
+<h2>M</h2>
+<ul>
+<li><strong>模仿动态</strong>（imitation dynamics）— 8.5</li>
+</ul>
+
+<h2>N</h2>
+<ul>
+<li><strong>纳什均衡</strong>（Nash Equilibrium, NE）— 2.2</li>
+<li><strong>拟态</strong>（mimicry）— 8.1</li>
+</ul>
+
+<h2>P</h2>
+<ul>
+<li><strong>帕累托占优</strong>（Pareto dominance）— 6.3, 6.4</li>
+<li><strong>频率依赖选择</strong>（frequency-dependent selection）— 8.1</li>
+<li><strong>平均适应度</strong>（mean fitness）— 2.3, 3.3</li>
+</ul>
+
+<h2>Q</h2>
+<ul>
+<li><strong>亲缘选择</strong>（kin selection）— 6.4, 8.1</li>
+<li><strong>囚徒困境</strong>（Prisoner's Dilemma）— 2.4, 6.4</li>
+<li><strong>去中心化过程</strong>（decentralized process）— 2.3</li>
+</ul>
+
+<h2>R</h2>
+<ul>
+<li><strong>入侵抵抗性</strong>（invasion barrier）— 4.1</li>
+<li><strong>入侵者</strong>（intruder）— 7.4</li>
+</ul>
+
+<h2>S</h2>
+<ul>
+<li><strong>社会规范</strong>（social norm）— 8.2</li>
+<li><strong>社会困境</strong>（social dilemma）— 8.3</li>
+<li><strong>适应度</strong>（fitness）— 3.3</li>
+<li><strong>适应度函数</strong>（fitness function）— 3.3</li>
+<li><strong>石头-剪刀-布</strong>（Rock-Paper-Scissors）— 5.4, 6.2</li>
+<li><strong>随机演化动态</strong>（stochastic evolutionary dynamics）— 8.4</li>
+<li><strong>锁定</strong>（lock-in）— 6.3, 8.2</li>
+</ul>
+
+<h2>T</h2>
+<ul>
+<li><strong>条件合作</strong>（conditional cooperation）— 8.3</li>
+<li><strong>同族竞争</strong>（intra-group competition）— 4.2</li>
+<li><strong>突变体</strong>（mutant）— 4.1</li>
+</ul>
+
+<h2>W</h2>
+<ul>
+<li><strong>网络演化博弈</strong>（network evolutionary game）— 8.4</li>
+<li><strong>网络互惠</strong>（network reciprocity）— 6.4, 8.4</li>
+</ul>
+
+<h2>X</h2>
+<ul>
+<li><strong>相对适应度</strong>（relative fitness）— 3.3</li>
+<li><strong>信号博弈</strong>（signaling game）— 7.5</li>
+<li><strong>性别比</strong>（sex ratio）— 8.1</li>
+<li><strong>协调博弈</strong>（coordination game）— 2.4, 6.3</li>
+<li><strong>学习理论</strong>（learning theory）— 8.5</li>
+</ul>
+
+<h2>Y</h2>
+<ul>
+<li><strong>演化博弈论</strong>（Evolutionary Game Theory, EvoGT）— 1</li>
+<li><strong>演化稳定策略</strong>（Evolutionarily Stable Strategy, ESS）— 4.2</li>
+<li><strong>严格纳什均衡</strong>（strict Nash equilibrium）— 4.4</li>
+<li><strong>严格劣势</strong>（strictly dominated）— 3.5</li>
+<li><strong>拥有者</strong>（owner）— 7.4</li>
+<li><strong>鹰鸽博弈</strong>（Hawk-Dove game）— 2.1, 4.5, 6.1</li>
+<li><strong>有限种群</strong>（finite population）— 8.4</li>
+</ul>
+
+<h2>Z</h2>
+<ul>
+<li><strong>支付函数</strong>（payoff function）— 2.1</li>
+<li><strong>支付矩阵</strong>（payoff matrix）— 2.1</li>
+<li><strong>种群博弈</strong>（population game）— 3.3</li>
+<li><strong>种群思维</strong>（population thinking）— 2.3</li>
+<li><strong>种群状态</strong>（population state）— 3.2</li>
+<li><strong>种群动态</strong>（population dynamics）— 2.3, 5.1</li>
+<li><strong>驻留策略</strong>（resident strategy）— 4.1</li>
+<li><strong>中心不动点</strong>（center fixed point）— 5.4, 7.4</li>
+<li><strong>周期轨道</strong>（periodic orbit）— 5.4, 6.2</li>
+<li><strong>自然选择</strong>（natural selection）— 5.1</li>
+<li><strong>最优反应</strong>（best response）— 2.2</li>
+</ul>
+
+</article>
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:48px 0 24px;color:var(--text-muted);font-size:.82rem;font-family:'Noto Sans SC',sans-serif;letter-spacing:.05em;">
+  演化博弈论讲义 · 学习工作区 · 2026 年 5 月
+</div>
+
+</main>
+</div>
+</body>
+</html>
