@@ -2,94 +2,120 @@
      Homepage Layout — jinhuazhang.top
      ============================================= */}}
 
-{{/* ===== 1. Slogan Banner (compact) ===== */}}
-<section class="hero-banner">
-  <div class="hero-inner">
-    <p class="hero-slogan-zh">
-      趁念头尚温，将它拓印在纸上，宛如接过一片刚落的雪。<br>
-      待到炉火旁反刍，才从那消融的水痕里，认出你跋涉已久的山脉。
-    </p>
-    <span class="hero-divider"></span>
-    <p class="hero-slogan-en">
-      While the thought is still warm, press it onto the page —<br>
-      like catching a snowflake in its fleeting age.<br>
-      Only by the fireside, from the meltwater stain,<br>
-      you discern the mountain range you've traveled again and again.
-    </p>
-  </div>
-</section>
+{{/* ===== Background pattern layer ===== */}}
+<div class="page-bg-pattern"></div>
 
-{{/* ===== 2. Personal Intro (avatar left, text right) ===== */}}
-<section class="intro-section">
-  <div class="intro-card">
-    {{/* Avatar placeholder */}}
-    <div class="intro-avatar-wrap">
-      {{ with .Site.Params.Author.image }}
-        {{ $img := "" }}
-        {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
-          {{ $img = resources.GetRemote . }}
-        {{ else }}
-          {{ $img = resources.Get . }}
-        {{ end }}
-        {{ if $img }}
-          {{ $final := $img }}
-          {{ if not (or $.Site.Params.disableImageOptimization (eq $img.MediaType.SubType "svg")) }}
-            {{ $final = $img.Fill "256x256 q96" }}
+<div class="home-container">
+
+  {{/* ===== 1. Slogan Banner (narrow, card style) ===== */}}
+  <section class="hero-banner">
+    {{/* Left ornament */}}
+    <div class="hero-ornament hero-ornament-left">
+      <span class="ornament-line"></span>
+      <span class="ornament-dot"></span>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-border"></div>
+      <p class="hero-slogan-zh">
+        趁念头尚温，将它拓印在纸上，宛如接过一片刚落的雪。<br>
+        待到炉火旁反刍，才从那消融的水痕里，认出你跋涉已久的山脉。
+      </p>
+      <span class="hero-divider">
+        <span class="divider-wing"></span>
+        <span class="divider-diamond">◆</span>
+        <span class="divider-wing"></span>
+      </span>
+      <p class="hero-slogan-en">
+        While the thought is still warm, press it onto the page —<br>
+        like catching a snowflake in its fleeting age.<br>
+        Only by the fireside, from the meltwater stain,<br>
+        you discern the mountain range you've traveled again and again.
+      </p>
+    </div>
+
+    {{/* Right ornament */}}
+    <div class="hero-ornament hero-ornament-right">
+      <span class="ornament-dot"></span>
+      <span class="ornament-line"></span>
+    </div>
+  </section>
+
+  {{/* ===== 2. Personal Intro ===== */}}
+  <section class="intro-section">
+    <div class="intro-card">
+      <div class="intro-card-accent"></div>
+
+      <div class="intro-avatar-wrap">
+        <div class="avatar-ring">
+          {{ with .Site.Params.Author.image }}
+            {{ $img := "" }}
+            {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+              {{ $img = resources.GetRemote . }}
+            {{ else }}
+              {{ $img = resources.Get . }}
+            {{ end }}
+            {{ if $img }}
+              {{ $final := $img }}
+              {{ if not (or $.Site.Params.disableImageOptimization (eq $img.MediaType.SubType "svg")) }}
+                {{ $final = $img.Fill "256x256 q96" }}
+              {{ end }}
+              <img class="intro-avatar" src="{{ $final.RelPermalink }}" alt="avatar" width="128" height="128">
+            {{ end }}
           {{ end }}
-          <img class="intro-avatar" src="{{ $final.RelPermalink }}" alt="avatar" width="128" height="128">
-        {{ end }}
+        </div>
+      </div>
+
+      <div class="intro-text">
+        <p class="intro-line intro-line-basic">
+          <span class="intro-label">基本情况</span>
+          南开大学PPE（政治学、经济学与哲学）实验班2024级本科生
+        </p>
+        <p class="intro-line intro-line-focus">
+          <span class="intro-label">最近关注</span>
+          社会科学方法论 · AI4SS · 政府与市场关系 · 乡村振兴
+        </p>
+        <p class="intro-line intro-line-motto">
+          勇于面对世界的复杂性，坚持自我迭代的终身学习者
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {{/* ===== 3. Recent Updates ===== */}}
+  {{ $allPosts := where .Site.RegularPages "Section" "in" (slice "blog" "portfolio") }}
+  {{ $recent := first 5 $allPosts }}
+  {{ if $recent }}
+  <section class="updates-section">
+    <div class="section-header">
+      <h2 class="section-title">最近更新</h2>
+      <span class="section-line"></span>
+    </div>
+    <div class="updates-grid">
+      {{ range $recent }}
+      <a class="update-card" href="{{ .RelPermalink }}">
+        <div class="update-card-top">
+          <span class="update-tag">{{ with .Params.categories }}{{ index . 0 }}{{ else }}{{ .Section }}{{ end }}</span>
+          <span class="update-date">{{ .Date.Format "01/02" }}</span>
+        </div>
+        <h3 class="update-title">{{ .Title }}</h3>
+        {{ with .Summary }}<p class="update-summary">{{ . | plainify | truncate 80 }}</p>{{ end }}
+      </a>
       {{ end }}
     </div>
+  </section>
+  {{ end }}
 
-    {{/* Intro text */}}
-    <div class="intro-text">
-      <p class="intro-line intro-line-basic">
-        <span class="intro-label">基本情况</span>
-        南开大学PPE（政治学、经济学与哲学）实验班2024级本科生
-      </p>
-      <p class="intro-line intro-line-focus">
-        <span class="intro-label">最近关注</span>
-        社会科学方法论 · AI4SS · 政府与市场关系 · 乡村振兴
-      </p>
-      <p class="intro-line intro-line-slogan">
-        勇于面对世界的复杂性，坚持自我迭代的终身学习者
-      </p>
-    </div>
-  </div>
-</section>
-
-{{/* ===== 3. Recent Updates (5 cards) ===== */}}
-{{ $allPosts := where .Site.RegularPages "Section" "in" (slice "blog" "portfolio") }}
-{{ $recent := first 5 $allPosts }}
-{{ if $recent }}
-<section class="updates-section">
-  <div class="section-header">
-    <h2 class="section-title">最近更新</h2>
-    <span class="section-line"></span>
-  </div>
-  <div class="updates-grid">
-    {{ range $recent }}
-    <a class="update-card" href="{{ .RelPermalink }}">
-      <div class="update-card-top">
-        <span class="update-tag">{{ with .Params.categories }}{{ index . 0 }}{{ else }}{{ .Section }}{{ end }}</span>
-        <span class="update-date">{{ .Date.Format "01/02" }}</span>
+  {{/* ===== 4. PPE Knowledge Base ===== */}}
+  <section class="kb-section">
+    <a class="kb-card" href="https://nankai.feishu.cn/wiki/space/7555694502260621340?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home" target="_blank" rel="noopener">
+      <div class="kb-icon">📚</div>
+      <div class="kb-content">
+        <h3 class="kb-title">PPE课程辅学知识库</h3>
+        <p class="kb-desc">政治学 · 经济学 · 哲学 课程笔记与学习资源汇编</p>
       </div>
-      <h3 class="update-title">{{ .Title }}</h3>
-      {{ with .Summary }}<p class="update-summary">{{ . | plainify | truncate 80 }}</p>{{ end }}
+      <div class="kb-arrow">→</div>
     </a>
-    {{ end }}
-  </div>
-</section>
-{{ end }}
+  </section>
 
-{{/* ===== 4. PPE Knowledge Base ===== */}}
-<section class="kb-section">
-  <a class="kb-card" href="https://nankai.feishu.cn/wiki/space/7555694502260621340?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home" target="_blank" rel="noopener">
-    <div class="kb-icon">📚</div>
-    <div class="kb-content">
-      <h3 class="kb-title">PPE课程辅学知识库</h3>
-      <p class="kb-desc">政治学 · 经济学 · 哲学 课程笔记与学习资源汇编</p>
-    </div>
-    <div class="kb-arrow">→</div>
-  </a>
-</section>
+</div>

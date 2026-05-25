@@ -17,6 +17,7 @@
   --gold-bright:   #D4AF37;
   --gold-dark:     #A68845;
   --cream:         #FDF8F0;
+  --cream-warm:    #FAF3EA;
   --ink:           #2C2C2C;
   --ink-light:     #6b6b6b;
 
@@ -32,78 +33,180 @@
 
 .dark {
   --cream:         #1a1a1a;
+  --cream-warm:    #221520;
   --ink:           #e8e8e8;
   --ink-light:     #a0a0a0;
   --purple-deep:   #1a031a;
 }
 
 /* =============================================
-   1. Slogan Banner (compact)
+   Background Pattern
+   ============================================= */
+.page-bg-pattern {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  background-image:
+    radial-gradient(circle at 20% 30%, var(--purple) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, var(--gold) 1px, transparent 1px);
+  background-size: 60px 60px, 80px 80px;
+  pointer-events: none;
+}
+
+.dark .page-bg-pattern {
+  opacity: 0.05;
+}
+
+/* =============================================
+   Home Container
+   ============================================= */
+.home-container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* =============================================
+   1. Slogan Banner (narrow card)
    ============================================= */
 .hero-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 2.5rem 0 2rem;
+  margin-top: 0.5rem;
+}
+
+/* Side ornaments */
+.hero-ornament {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.ornament-line {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+}
+
+.ornament-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 6px rgba(196, 162, 101, 0.4);
+}
+
+/* Banner card */
+.hero-card {
   position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  padding: 2.5rem 1.5rem 2rem;
+  max-width: 620px;
+  padding: 2rem 2.5rem;
   background: linear-gradient(
-    135deg,
-    var(--purple) 0%,
-    var(--purple-dark) 45%,
-    var(--purple-deep) 100%
+    160deg,
+    rgba(126, 12, 110, 0.04) 0%,
+    rgba(196, 162, 101, 0.04) 100%
   );
+  border: 1px solid rgba(196, 162, 101, 0.18);
+  border-radius: 6px;
   text-align: center;
   overflow: hidden;
 }
 
-/* Gold accent line at bottom */
-.hero-banner::after {
-  content: '';
+/* Inner gradient border (double border effect) */
+.hero-card-border {
   position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--gold) 30%,
-    var(--gold-bright) 50%,
-    var(--gold) 70%,
-    transparent 100%
-  );
+  inset: 4px;
+  border: 1px solid rgba(126, 12, 110, 0.08);
+  border-radius: 4px;
+  pointer-events: none;
 }
 
-.hero-inner {
-  max-width: 680px;
-  margin: 0 auto;
+/* Corner accents */
+.hero-card::before,
+.hero-card::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--gold);
+  border-style: solid;
+  border-width: 0;
+}
+
+.hero-card::before {
+  top: 8px;
+  left: 8px;
+  border-top-width: 1.5px;
+  border-left-width: 1.5px;
+}
+
+.hero-card::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 1.5px;
+  border-right-width: 1.5px;
+}
+
+.dark .hero-card {
+  background: linear-gradient(
+    160deg,
+    rgba(126, 12, 110, 0.08) 0%,
+    rgba(196, 162, 101, 0.06) 100%
+  );
+  border-color: rgba(196, 162, 101, 0.15);
 }
 
 .hero-slogan-zh {
   font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 2;
   letter-spacing: 0.1em;
-  color: #f0e8ed;
+  color: var(--ink);
   margin: 0;
 }
 
 .hero-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 1.2rem 0;
+}
+
+.divider-wing {
   display: block;
-  width: 36px;
+  width: 32px;
   height: 1px;
-  margin: 1.2rem auto;
-  background: rgba(196, 162, 101, 0.5);
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.divider-wing:last-child {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.divider-diamond {
+  font-size: 0.45rem;
+  color: var(--gold);
+  line-height: 1;
 }
 
 .hero-slogan-en {
   font-family: var(--font-display);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-style: italic;
   font-weight: 400;
-  line-height: 1.85;
+  line-height: 1.9;
   letter-spacing: 0.02em;
-  color: #d5c4d0;
+  color: var(--ink-light);
   margin: 0;
 }
 
@@ -111,9 +214,7 @@
    2. Personal Intro Section
    ============================================= */
 .intro-section {
-  max-width: 720px;
-  margin: 2rem auto 0;
-  padding: 0 1rem;
+  margin-top: 1.5rem;
 }
 
 .intro-card {
@@ -121,54 +222,71 @@
   align-items: flex-start;
   gap: 2rem;
   padding: 2rem 2rem 1.8rem;
-  background: linear-gradient(145deg, #fffcf8, #faf5ef);
+  background: linear-gradient(145deg, #fffcf8, var(--cream-warm));
   border: 1px solid rgba(196, 162, 101, 0.2);
   border-radius: var(--radius);
   box-shadow: var(--shadow-gold);
   position: relative;
+  overflow: hidden;
 }
 
-/* Gold corner accent */
-.intro-card::before {
-  content: '';
+/* Left purple accent bar */
+.intro-card-accent {
   position: absolute;
   top: 0;
   left: 0;
-  width: 48px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold-bright), var(--gold));
-  border-radius: var(--radius) 0 0 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--purple), var(--gold));
+  border-radius: var(--radius) 0 0 var(--radius);
 }
 
 .dark .intro-card {
   background: linear-gradient(145deg, #2a1a28, #221520);
-  border-color: rgba(196, 162, 101, 0.15);
+  border-color: rgba(196, 162, 101, 0.12);
 }
 
+/* Avatar */
 .intro-avatar-wrap {
   flex-shrink: 0;
+  padding-left: 0.5rem;
 }
 
-.intro-avatar {
+.avatar-ring {
+  position: relative;
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid rgba(196, 162, 101, 0.3);
-  box-shadow: 0 4px 16px rgba(126, 12, 110, 0.1);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--purple), var(--gold), var(--purple-light));
+  box-shadow: 0 4px 16px rgba(126, 12, 110, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.intro-avatar:hover {
+.avatar-ring:hover {
   transform: scale(1.04);
-  border-color: var(--gold);
+  box-shadow: 0 6px 24px rgba(126, 12, 110, 0.25);
 }
 
+.intro-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--cream);
+  display: block;
+}
+
+.dark .intro-avatar {
+  border-color: #221520;
+}
+
+/* Intro text */
 .intro-text {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   padding-top: 0.2rem;
 }
 
@@ -182,28 +300,29 @@
 
 .intro-label {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   color: var(--gold-dark);
-  background: rgba(196, 162, 101, 0.1);
-  padding: 0.15rem 0.5rem;
+  background: linear-gradient(135deg, rgba(196, 162, 101, 0.12), rgba(196, 162, 101, 0.06));
+  padding: 0.15rem 0.55rem;
   border-radius: 3px;
+  border: 1px solid rgba(196, 162, 101, 0.15);
   margin-right: 0.5rem;
   vertical-align: middle;
 }
 
-.intro-line-slogan {
+.intro-line-motto {
   font-family: var(--font-serif);
   font-size: 0.88rem;
   font-style: italic;
   color: var(--purple);
   margin-top: 0.3rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(126, 12, 110, 0.1);
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(126, 12, 110, 0.12);
 }
 
-.dark .intro-line-slogan {
+.dark .intro-line-motto {
   color: var(--gold-light);
   border-top-color: rgba(196, 162, 101, 0.2);
 }
@@ -224,7 +343,7 @@
 
 .section-title {
   font-family: var(--font-serif);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--purple);
   margin: 0;
@@ -249,9 +368,7 @@
    4. Recent Updates Cards
    ============================================= */
 .updates-section {
-  max-width: 720px;
-  margin: 2.5rem auto 0;
-  padding: 0 1rem;
+  margin-top: 2.5rem;
 }
 
 .updates-grid {
@@ -274,7 +391,7 @@
   overflow: hidden;
 }
 
-/* Purple gradient top bar */
+/* Top gradient bar (hidden by default) */
 .update-card::before {
   content: '';
   position: absolute;
@@ -350,9 +467,7 @@
    5. PPE Knowledge Base Card
    ============================================= */
 .kb-section {
-  max-width: 720px;
-  margin: 2.5rem auto 3rem;
-  padding: 0 1rem;
+  margin: 2.5rem 0 3rem;
 }
 
 .kb-card {
@@ -370,7 +485,7 @@
   overflow: hidden;
 }
 
-/* Gold shimmer overlay */
+/* Gold shimmer */
 .kb-card::before {
   content: '';
   position: absolute;
@@ -380,6 +495,17 @@
   height: 200px;
   background: radial-gradient(circle, rgba(196, 162, 101, 0.15), transparent 70%);
   pointer-events: none;
+}
+
+/* Bottom gold line */
+.kb-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
 .kb-card:hover {
@@ -429,17 +555,26 @@
    ============================================= */
 @media (max-width: 640px) {
   .hero-banner {
-    padding: 2rem 1.2rem 1.6rem;
+    gap: 0.6rem;
+    padding: 2rem 0 1.5rem;
+  }
+
+  .hero-ornament {
+    display: none;
+  }
+
+  .hero-card {
+    padding: 1.5rem 1.2rem;
   }
 
   .hero-slogan-zh {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     line-height: 1.85;
     letter-spacing: 0.06em;
   }
 
   .hero-slogan-en {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
   }
 
   .intro-card {
@@ -450,7 +585,11 @@
     gap: 1.2rem;
   }
 
-  .intro-avatar {
+  .intro-avatar-wrap {
+    padding-left: 0;
+  }
+
+  .avatar-ring {
     width: 100px;
     height: 100px;
   }

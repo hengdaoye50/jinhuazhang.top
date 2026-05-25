@@ -16,7 +16,7 @@ title = "张津华丨Jasper Zhang"
   email = "you@example.com"
   headline = ""
   bio = ""
-  avatar = "img/avatar.svg"
+  avatar = "img/avatar.jpg"
   links = [
     { github = "https://github.com/hengdaoye50" },
   ]
