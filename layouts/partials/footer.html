@@ -7,10 +7,14 @@
   {{ if .Site.Params.footer.showMenu | default true }}
     {{ if .Site.Menus.footer }}
       <nav class="footer-nav">
-        {{ range .Site.Menus.footer }}
-          <a href="{{ .URL }}" class="footer-link" title="{{ .Title }}">
-            {{ .Name | markdownify }}
+        {{ $total := len .Site.Menus.footer }}
+        {{ range $i, $item := .Site.Menus.footer }}
+          <a href="{{ $item.URL }}" class="footer-link" title="{{ $item.Title }}">
+            {{ $item.Name | markdownify }}
           </a>
+          {{ if lt (add $i 1) $total }}
+            <span class="footer-sep">·</span>
+          {{ end }}
         {{ end }}
       </nav>
     {{ end }}

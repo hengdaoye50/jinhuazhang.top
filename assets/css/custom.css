@@ -373,6 +373,12 @@
   color: var(--gold-light);
 }
 
+.footer-sep {
+  color: var(--gold);
+  font-size: 0.8rem;
+  user-select: none;
+}
+
 .footer-copyright {
   font-family: var(--font-body);
   font-size: 0.75rem;
