@@ -6,10 +6,6 @@ categories = ["哲学"]
 tags = ["马克思主义", "唯物史观", "政治哲学"]
 showTableOfContents = false
 showHero = false
+[build]
+  render = "never"
 +++
-
-基于牛子牛老师（南开大学哲学院）的马克思主义哲学课程，整理的系统性课堂笔记。
-
-全 6 编 14 节，覆盖引论、马克思主义哲学的当代意义、核心主旨（人的解放、现实性、社会关系、历史性）、物质本体论与实践唯物主义、历史唯物主义专题（生产力与生产关系、经济基础与上层建筑、社会形态、社会主义与共产主义）。
-
-👉 **[阅读完整笔记](/portfolio/marxist-philosophy.html)**

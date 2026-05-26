@@ -92,19 +92,23 @@
     </div>
     <div class="works-grid">
       {{ range first 6 (sort $recentPosts "Date" "desc") }}
-      <a class="work-card" href="{{ .RelPermalink }}">
-        <div class="work-card-top">
-          {{ if eq .Section "blog" }}
-          <span class="work-type-badge work-type-blog">博客</span>
-          {{ else }}
-          <span class="work-type-badge work-type-portfolio">作品</span>
-          {{ end }}
-          <span class="work-date">{{ .Date.Format "2006/01/02" }}</span>
-        </div>
-        <h3 class="work-title">{{ .Title }}</h3>
-        {{ with .Description }}<p class="work-desc">{{ . }}</p>{{ end }}
-        <span class="work-link">阅读全文 →</span>
-      </a>
+        {{ if eq .Section "blog" }}
+        <a class="work-card" href="{{ .RelPermalink }}">
+        {{ else }}
+        <a class="work-card" href="/portfolio/{{ .File.BaseFileName }}.html">
+        {{ end }}
+          <div class="work-card-top">
+            {{ if eq .Section "blog" }}
+            <span class="work-type-badge work-type-blog">博客</span>
+            {{ else }}
+            <span class="work-type-badge work-type-portfolio">作品</span>
+            {{ end }}
+            <span class="work-date">{{ .Date.Format "2006/01/02" }}</span>
+          </div>
+          <h3 class="work-title">{{ .Title }}</h3>
+          {{ with .Description }}<p class="work-desc">{{ . }}</p>{{ end }}
+          <span class="work-link">阅读全文 →</span>
+        </a>
       {{ end }}
     </div>
   </section>
