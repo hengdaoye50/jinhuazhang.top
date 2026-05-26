@@ -10,7 +10,7 @@
 
 ## 目录结构
 ```
-zhangjinhua.com/
+zhangjinhua.top/
 ├── QWEN.md                    # 本文件 — 开发文档
 ├── .gitignore
 ├── .gitmodules                # Blowfish 子模块

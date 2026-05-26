@@ -17,3 +17,6 @@ Thumbs.db
 
 # Node (if using PostCSS etc.)
 node_modules/
+
+# Qwen Code
+.qwen/
