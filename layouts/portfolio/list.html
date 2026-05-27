@@ -29,7 +29,7 @@
         </div>
 
         {{/* Card body */}}
-        {{ $portfolioURL := print "/portfolio/" .File.BaseFileName ".html" }}
+        {{ $portfolioURL := print "/portfolio/" .File.BaseFileName }}
         <h2 class="portfolio-card-title">
           <a href="{{ $portfolioURL }}">{{ .Title }}</a>
         </h2>
