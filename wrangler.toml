@@ -1,0 +1,6 @@
+# jinhuazhang.top — Cloudflare Pages config
+# KV bindings configured via Cloudflare API: see functions/api/pageviews.js
+name = "jinhuazhang-top"
+compatibility_date = "2026-05-25"
+
+[env.production]

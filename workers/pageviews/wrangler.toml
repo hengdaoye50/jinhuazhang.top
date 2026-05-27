@@ -8,9 +8,11 @@ binding = "PAGEVIEWS"
 id = "2a72510109654964920c620739e840da"
 preview_id = "e978bd3c7d324c68b925cc5749f947c1"
 
-[[routes]]
-pattern = "jinhuazhang.top/api/pageviews"
-zone_id = "0d37a4f4772fcbe80db6425586d6a1f7"
+# Routes removed — now served by Pages Functions (functions/api/pageviews.js)
+# Pages takes priority over Worker routes on the same domain.
+# [[routes]]
+# pattern = "jinhuazhang.top/api/pageviews"
+# zone_id = "0d37a4f4772fcbe80db6425586d6a1f7"
 
 [observability]
 enabled = false
