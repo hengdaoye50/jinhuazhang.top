@@ -1691,3 +1691,40 @@
     font-size: 0.75rem;
   }
 }
+
+/* =============================================
+   Page View Counter
+   ============================================= */
+.pv-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  opacity: 0.75;
+  transition: opacity 0.25s;
+}
+
+.pv-count svg,
+.pv-count .pv-icon {
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.pv-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-loading {
+  opacity: 0.4;
+}
+
+.dark .pv-count {
+  opacity: 0.6;
+}
+
+/* Special positioning inside blog cards — align with meta row */
+.blog-card-meta .pv-count {
+  margin-left: auto;
+}

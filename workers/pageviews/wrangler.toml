@@ -1,0 +1,11 @@
+name = "jinhuazhang-pageviews"
+main = "src/index.js"
+compatibility_date = "2025-05-27"
+
+[[kv_namespaces]]
+binding = "PAGEVIEWS"
+id = "2a72510109654964920c620739e840da"
+preview_id = "e978bd3c7d324c68b925cc5749f947c1"
+
+[observability]
+enabled = false
