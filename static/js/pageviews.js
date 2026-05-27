@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var API = "https://jinhuazhang-pageviews.zjh2225491299.workers.dev/";
+  var API = "https://jinhuazhang.top/api/pageviews";
 
   // Whether we're on a single article page (increment count)
   var isArticle = !!document.querySelector("article");
