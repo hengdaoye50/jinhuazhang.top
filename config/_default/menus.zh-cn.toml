@@ -29,3 +29,8 @@
   name = "分类"
   pageRef = "categories"
   weight = 20
+
+[[footer]]
+  name = "RSS 订阅"
+  url = "/blog/index.xml"
+  weight = 30
