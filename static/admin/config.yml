@@ -1,0 +1,61 @@
+# Decap CMS 配置 — jinhuazhang.top
+# 文档：https://decapcms.org/docs/configuration-options/
+
+site_url: https://jinhuazhang.top
+display_url: https://jinhuazhang.top
+locale: zh-cn
+
+backend:
+  name: github
+  repo: hengdaoye50/jinhuazhang.top
+  branch: main
+  # 替换为你的 GitHub OAuth App Client ID（创建方式见下方注释）
+  # 创建地址：https://github.com/settings/developers
+  # Homepage URL: https://jinhuazhang.top
+  # Authorization callback URL: https://api.decapcms.org/callback
+  # 拿到 Client ID 后替换下面这行
+  auth_providers:
+    github:
+      client_id: Ov23liYHnncLLC5CKLTD
+
+publish_mode: simple
+
+media_folder: static/img
+public_folder: /img
+
+collections:
+  - name: blog
+    label: 博客
+    label_singular: 博客文章
+    folder: content/blog
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}_{{slug}}"
+    format: toml-frontmatter
+    frontmatter_delimiter: "+++"
+    summary: "{{title}} — {{description}}"
+    fields:
+      - { label: 标题, name: title, widget: string, required: true }
+      - { label: 日期, name: date, widget: datetime, required: true, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+      - { label: 摘要, name: description, widget: text, required: true, hint: 一句话摘要，显示在文章卡片和 SEO 描述中 }
+      - { label: 标签, name: tags, widget: list, required: false, field: { label: 标签, name: tag, widget: string } }
+      - { label: 分类, name: categories, widget: list, required: false, field: { label: 分类, name: category, widget: string } }
+      - { label: 正文, name: body, widget: markdown, required: true }
+
+  - name: portfolio
+    label: 作品集
+    label_singular: 作品条目
+    folder: content/portfolio
+    create: true
+    slug: "{{slug}}"
+    format: toml-frontmatter
+    frontmatter_delimiter: "+++"
+    summary: "{{title}} — {{description}}"
+    fields:
+      - { label: 标题, name: title, widget: string, required: true }
+      - { label: 日期, name: date, widget: datetime, required: true, format: YYYY-MM-DD, date_format: YYYY-MM-DD, time_format: false }
+      - { label: 描述, name: description, widget: text, required: true }
+      - { label: 分类, name: categories, widget: list, required: false, field: { label: 分类, name: category, widget: string } }
+      - { label: 标签, name: tags, widget: list, required: false, field: { label: 标签, name: tag, widget: string } }
+      - { label: 显示目录, name: showTableOfContents, widget: boolean, required: false, default: false }
+      - { label: 显示 Hero, name: showHero, widget: boolean, required: false, default: false }
+      - { label: 正文, name: body, widget: markdown, required: true }

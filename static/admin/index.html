@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理后台 · 张津华个人学术主页</title>
+  <style>
+    body { margin: 0; }
+    /* 登录页面居中 */
+    .login-message {
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh; font-family: "Noto Sans SC", sans-serif;
+      color: #6b6b6b; font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
+  <script>
+    // 自定义中文翻译（覆盖默认英文）
+    CMS.registerLocale('zh-cn', {
+      auth: {
+        login: '使用 GitHub 登录',
+        loggingIn: '正在登录…',
+        loginWith: '使用 GitHub 登录',
+      },
+      app: {
+        header: {
+          content: '内容',
+          media: '媒体库',
+          workflow: '工作流',
+        },
+      },
+      collection: {
+        sidebar: {
+          collections: '集合',
+          searchAll: '搜索全部',
+        },
+      },
+      editor: {
+        editorControlPane: {
+          publish: '发布',
+          published: '已发布',
+        },
+        editor: {
+          preview: '预览',
+        },
+      },
+    });
+    CMS.init();
+  </script>
+</body>
+</html>
