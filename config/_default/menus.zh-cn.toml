@@ -19,18 +19,7 @@
   url = "https://github.com/hengdaoye50"
   weight = 40
 
-# -- Footer Menu --
-[[footer]]
-  name = "标签"
-  pageRef = "tags"
-  weight = 10
-
-[[footer]]
-  name = "分类"
-  pageRef = "categories"
-  weight = 20
-
-[[footer]]
-  name = "RSS 订阅"
+[[main]]
+  name = "RSS"
   url = "/blog/index.xml"
-  weight = 30
+  weight = 50

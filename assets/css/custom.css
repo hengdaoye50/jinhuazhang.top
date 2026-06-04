@@ -213,6 +213,21 @@
   transform: translate(1px, -1px);
 }
 
+/* RSS icon in nav */
+.rss-icon {
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.nav-link:hover .rss-icon {
+  opacity: 1;
+  color: #f26522;
+}
+
+.dark .nav-link:hover .rss-icon {
+  color: #fb8c3d;
+}
+
 /* GitHub link special styling */
 .nav-link-external {
   margin-left: 0.3rem;
