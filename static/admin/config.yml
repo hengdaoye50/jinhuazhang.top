@@ -9,14 +9,7 @@ backend:
   name: github
   repo: hengdaoye50/jinhuazhang.top
   branch: main
-  # 替换为你的 GitHub OAuth App Client ID（创建方式见下方注释）
-  # 创建地址：https://github.com/settings/developers
-  # Homepage URL: https://jinhuazhang.top
-  # Authorization callback URL: https://api.decapcms.org/callback
-  # 拿到 Client ID 后替换下面这行
-  auth_providers:
-    github:
-      client_id: Ov23liYHnncLLC5CKLTD
+  base_url: https://jinhuazhang.top
 
 publish_mode: simple
 
