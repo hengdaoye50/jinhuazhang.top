@@ -33,17 +33,19 @@ zhangjinhua.top/
 │   ├── img/                   #   图片（avatar.jpg, logo.svg, avatar.svg等）
 │   └── portfolio/             #   作品 HTML 文件（演化博弈论讲义等）
 ├── assets/
-│   └── css/custom.css         #   全站自定义样式（~1700行）
+│   └── css/custom.css         #   全站自定义样式（~1820行）
 ├── layouts/                   # 自定义模板（覆盖 Blowfish 主题）
+│   ├── _default/
+│   │   └── index.json         #     搜索索引模板（仅 blog + portfolio）
 │   ├── blog/list.html         #   博客列表页模板
 │   ├── portfolio/list.html    #   作品集列表页模板
 │   ├── partials/
 │   │   ├── home/
 │   │   │   ├── custom.html    #     首页入口（引用 profile.html）
 │   │   │   └── profile.html   #     首页核心布局（slogan、intro、近期更新、知识库）
-│   │   ├── header/basic.html  #     自定义顶栏（sticky、紫色/金色、移动端）
+│   │   ├── header/basic.html  #     自定义顶栏（sticky、紫色/金色、搜索、RSS、移动端）
 │   │   ├── footer.html        #     自定义页脚
-│   │   └── extend-footer.html #     页脚扩展（当前空）
+│   │   └── extend-footer.html #     页脚扩展（页面浏览量 JS）
 │   └── shortcodes/            #   短代码（icon-ref, theme-switcher）
 ├── themes/blowfish/           # 主题（git submodule，不要直接修改）
 └── public/                    # Hugo 构建输出（gitignore）
@@ -101,13 +103,44 @@ zhangjinhua.top/
 ### 顶栏 (`layouts/partials/header/basic.html`)
 - Sticky 定位 + backdrop-filter 毛玻璃
 - 左侧 logo + 站点标题（紫色渐变文字）
-- 右侧导航 + 明暗切换按钮
+- 右侧导航：博客 · 作品集 · 关于 · GitHub · 🔍搜索 · 📡RSS · 🌙明暗切换
+- 搜索按钮 (`id="search-button"`) 触发 Fuse.js 搜索弹窗
+- RSS 按钮带橙色图标，链接 `/blog/index.xml`
 - 滚动时添加 `scrolled` 阴影
-- 移动端汉堡菜单
+- 移动端：搜索 + 汉堡菜单并排
+
+### 搜索功能
+- **引擎**：Blowfish 内置 Fuse.js 客户端搜索
+- **索引**：`layouts/_default/index.json` 模板生成 `public/index.json`
+- **覆盖范围**：仅 `blog` + `portfolio` 类型，排除 tags/categories/series 等页面
+- **配置**：`params.toml` 中 `enableSearch = true`、`mainSections = ["blog", "portfolio"]`
+- **UI 入口**：顶栏搜索按钮（桌面端 `search-button`、移动端 `search-button-mobile`），搜索弹窗由主题 `baseof.html` 自动引入
+
+### RSS 订阅
+- **博客 feed**：`https://jinhuazhang.top/blog/index.xml`
+- **全站 feed**：`https://jinhuazhang.top/index.xml`（Hugo 默认输出）
+- **配置**：`content/blog/_index.md` frontmatter 中添加 `outputs = ["HTML", "RSS"]`
+- **HTML 自动发现**：`<link rel="alternate" type="application/rss+xml">` 在页面 `<head>` 中自动生成
+- **导航入口**：顶栏 RSS 按钮（橙色 WiFi 图标 SVG），移动端同样可见
+
+### 页脚 (`layouts/partials/footer.html`)
+- 仅显示版权信息（`© 2026 张津华`）
+- 标签/分类菜单已移除（2026-06-04）
 
 ---
 
 ## 内容 Frontmatter 约定
+
+### 博客 section 页（`blog/_index.md`）
+```toml
++++
+title = "博客"
+description = "抛砖引玉、交流思考。"
+showHero = false
+showBreadcrumbs = false
+outputs = ["HTML", "RSS"]  # 启用 RSS feed
++++
+```
 
 ### 博客文章
 ```toml
@@ -181,7 +214,7 @@ hugo version
 ## 部署配置 (Cloudflare Pages)
 - **构建命令**：`hugo --gc --minify`
 - **输出目录**：`public`
-- **Hugo 版本**：`0.161.0`（通过 `HUGO_VERSION` 环境变量）
+- **Hugo 版本**：`0.161.1`（通过 `HUGO_VERSION` 环境变量）
 - **框架预设**：Hugo
 
 ---
@@ -208,3 +241,6 @@ git push origin main
 - 所有自定义 CSS 集中在 `assets/css/custom.css`
 - 首页"近期更新"栏目自动合并 blog 和 portfolio 两个 section，按日期排序
 - 标签样式：博客紫标、作品金标
+- **搜索**：由 `layouts/_default/index.json` 控制索引范围，目前仅含 blog 和 portfolio
+- **RSS**：博客 feed 在 `/blog/index.xml`，blog `_index.md` 的 frontmatter 中 `outputs` 控制
+- **页脚**：仅保留版权信息，标签/分类/菜单已移除
