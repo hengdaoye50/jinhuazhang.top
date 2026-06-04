@@ -20,3 +20,7 @@ showTableOfContents = false
 
 - GitHub: [hengdaoye50](https://github.com/hengdaoye50)
 - Email: 2411638@mail.nankai.edu.cn
+
+---
+
+<small>[管理后台](/admin/)</small>
