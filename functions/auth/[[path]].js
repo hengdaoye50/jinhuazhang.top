@@ -26,10 +26,17 @@ export async function onRequest(context) {
       `&scope=${encodeURIComponent("repo,user")}` +
       `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
 
-    return new Response(
-      JSON.stringify({ url: githubURL, provider: "github" }),
-      { headers: { "Content-Type": "application/json" } }
-    );
+    // 同时支持两种协议：
+    // 1. POST → 返回 JSON（Decap CMS v3 标准）
+    // 2. GET  → 直接重定向（旧版兼容）
+    if (request.method === "POST") {
+      return new Response(
+        JSON.stringify({ url: githubURL, provider: "github" }),
+        { headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    return Response.redirect(githubURL, 302);
   }
 
   // ── /auth/callback —— GitHub 回调，换 token ──
