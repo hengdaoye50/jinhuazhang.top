@@ -50,6 +50,13 @@
         {{ end }}
       {{ end }}
 
+      {{/* Search button */}}
+      {{ if .Site.Params.enableSearch | default false }}
+        <button id="search-button" class="search-toggle" aria-label="搜索" title="搜索">
+          {{ partial "icon.html" "search" }}
+        </button>
+      {{ end }}
+
       {{/* Appearance toggle */}}
       {{ if .Site.Params.footer.showAppearanceSwitcher | default false }}
         <button id="appearance-switcher" class="theme-toggle" aria-label="切换明暗模式" title="切换明暗模式">
@@ -63,12 +70,19 @@
       {{ end }}
     </nav>
 
-    {{/* ——— Mobile menu toggle ——— */}}
-    <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单" aria-expanded="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 6h16M4 12h16M4 18h16"/>
-      </svg>
-    </button>
+    {{/* ——— Mobile search + menu toggle ——— */}}
+    <div class="mobile-actions">
+      {{ if .Site.Params.enableSearch | default false }}
+        <button id="search-button-mobile" class="search-toggle-mobile" aria-label="搜索" title="搜索">
+          {{ partial "icon.html" "search" }}
+        </button>
+      {{ end }}
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="菜单" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   {{/* ——— Mobile dropdown ——— */}}

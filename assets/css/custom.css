@@ -276,6 +276,79 @@
 .theme-icon-moon { display: none; }
 .dark .theme-icon-moon { display: block; }
 
+/* Search button (desktop) */
+.search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-left: 0.3rem;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ink-light);
+  transition: all 0.2s ease;
+}
+
+.search-toggle:hover {
+  background: rgba(126, 12, 110, 0.05);
+  color: var(--purple);
+}
+
+.dark .search-toggle {
+  color: #b0b0b0;
+}
+
+.dark .search-toggle:hover {
+  background: rgba(196, 162, 101, 0.06);
+  color: var(--gold-light);
+}
+
+.search-toggle .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Mobile actions container */
+.mobile-actions {
+  display: none;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Search button (mobile) */
+.search-toggle-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--ink-light);
+}
+
+.search-toggle-mobile:hover {
+  color: var(--purple);
+}
+
+.dark .search-toggle-mobile {
+  color: #b0b0b0;
+}
+
+.dark .search-toggle-mobile:hover {
+  color: var(--gold-light);
+}
+
+.search-toggle-mobile .icon {
+  width: 20px;
+  height: 20px;
+}
+
 /* Mobile toggle */
 .mobile-toggle {
   display: none;
@@ -346,6 +419,10 @@
 
   .header-nav {
     display: none;
+  }
+
+  .mobile-actions {
+    display: flex;
   }
 
   .mobile-toggle {
