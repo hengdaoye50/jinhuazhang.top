@@ -18,5 +18,8 @@ Thumbs.db
 # Node (if using PostCSS etc.)
 node_modules/
 
+# Convert tool output
+tools/convert/dist/
+
 # Qwen Code
 .qwen/

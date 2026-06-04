@@ -1,0 +1,9 @@
+{
+  "name": "jinhuazhang-convert",
+  "version": "1.0.0",
+  "description": "Markdown → 微信公众号 / 知乎 / 小红书 格式转换工具",
+  "private": true,
+  "dependencies": {
+    "marked": "^15.0.0"
+  }
+}
