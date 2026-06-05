@@ -86,13 +86,17 @@ export async function onRequest(context) {
 <html><head><meta charset="utf-8"><script>
   (function() {
     var data = { token: ${JSON.stringify(accessToken)}, provider: "github" };
-    window.opener.postMessage(data, "*");
-    window.close();
+    sessionStorage.setItem("gh_token", data.token);
+    if (window.opener) {
+      window.opener.postMessage(data, "*");
+      window.close();
+    } else {
+      window.location.href = "/admin/";
+    }
   })();
 </script></head>
 <body style="text-align:center;padding-top:40px;font-family:sans-serif;">
-  <p>✅ 登录成功，窗口即将关闭...</p>
-  <p style="color:#999;font-size:14px;">如未自动关闭，请<a href="/admin/">点击进入后台</a></p>
+  <p>✅ 登录成功，正在跳转...</p>
 </body></html>`,
         { headers: { "Content-Type": "text/html; charset=utf-8" } }
       );
