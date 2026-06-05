@@ -59,6 +59,8 @@ export async function onRequest(context) {
   (function() {
     var data = { token: ${JSON.stringify(accessToken)}, provider: "github" };
     window.opener.postMessage(data, "*");
+    localStorage.setItem("gh_token", data.token);
+    // 不关闭！Decap CMS 监听器需要弹窗保持 open 状态
   })();
 </script></head>
 <body style="text-align:center;padding-top:40px;font-family:sans-serif;">
