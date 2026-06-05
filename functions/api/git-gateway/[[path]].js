@@ -18,6 +18,18 @@ export async function onRequest({ request, env }) {
     );
   }
 
+  // 设置端点
+  if (path === "/settings" && request.method === "GET") {
+    return new Response(
+      JSON.stringify({
+        services: ["github"],
+        roles: ["admin", "editor"],
+        identity: { url: "/.netlify/identity" },
+      }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   // 代理到 GitHub API
   const gh = await fetch(`https://api.github.com${path}`, {
     method: request.method,
