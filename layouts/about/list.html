@@ -15,9 +15,18 @@
   <!-- 正文内容 -->
   <section class="about-body card">
     <div class="card-inner">
-      {{ .Content }}
+      {{ .Content | replaceRE `<small>.*</small>` "" | safeHTML }}
     </div>
   </section>
+
+  <!-- 管理后台入口 -->
+  <div class="about-admin-entry">
+    <a href="/admin/" class="admin-btn">
+      <span class="admin-icon">⚙️</span>
+      <span>管理后台</span>
+      <span class="admin-arrow">→</span>
+    </a>
+  </div>
 </div>
 
 <style>
@@ -159,6 +168,45 @@
 .about-body strong {
   color: var(--purple, #7E0C6E);
   font-weight: 600;
+}
+
+/* 管理后台入口 */
+.about-admin-entry {
+  margin-top: 32px;
+  text-align: center;
+}
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 28px;
+  border: 1px solid rgba(196,162,101,0.3);
+  background: var(--bg-card, #fff);
+  color: var(--text-secondary, #6b6b6b);
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 8px rgba(126,12,110,0.04);
+}
+.admin-btn:hover {
+  border-color: var(--purple, #7E0C6E);
+  color: var(--purple, #7E0C6E);
+  box-shadow: 0 4px 20px rgba(126,12,110,0.10);
+  transform: translateY(-1px);
+}
+.admin-icon {
+  font-size: 16px;
+}
+.admin-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.3s;
+}
+.admin-btn:hover .admin-arrow {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* 响应式 */
