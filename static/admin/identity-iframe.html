@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, sans-serif; background: #f5f0eb; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.card { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,.08); padding: 40px 32px; width: 100%; max-width: 380px; }
+h2 { text-align: center; margin-bottom: 24px; color: #333; }
+input { display: block; width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 16px; font-size: 15px; }
+button { width: 100%; padding: 12px; background: #7E0C6E; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+button:hover { background: #5C084F; }
+.msg { text-align: center; margin-top: 12px; font-size: 13px; }
+.error { color: #d32f2f; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>管理后台登录</h2>
+  <form id="form">
+    <input type="email" id="email" placeholder="邮箱（任意）" required value="admin@jinhuazhang.top">
+    <input type="password" id="password" placeholder="密码（任意）" required value="admin">
+    <button type="submit">登 录</button>
+  </form>
+  <div class="msg" id="msg"></div>
+</div>
+<script>
+  document.getElementById('form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var msg = document.getElementById('msg');
+    msg.textContent = '登录中…';
+    msg.className = 'msg';
+
+    try {
+      var email = document.getElementById('email').value;
+      var password = document.getElementById('password').value;
+
+      var res = await fetch('/.netlify/identity/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'grant_type=password&email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password),
+      });
+
+      if (!res.ok) throw new Error('服务器错误');
+
+      var data = await res.json();
+      if (data.error) throw new Error(data.error_description || data.error);
+
+      // 发送登录成功消息给父窗口
+      window.parent.postMessage(JSON.stringify({
+        action: "login",
+        user: {
+          id: "admin",
+          email: email,
+          token: data,
+          user_metadata: { full_name: "张津华" },
+          app_metadata: { provider: "email" },
+        }
+      }), window.location.origin);
+
+      msg.textContent = '✅ 登录成功';
+      msg.className = 'msg';
+    } catch (err) {
+      msg.textContent = '❌ ' + err.message;
+      msg.className = 'msg error';
+    }
+  });
+</script>
+</body>
+</html>

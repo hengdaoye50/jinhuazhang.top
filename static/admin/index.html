@@ -38,6 +38,16 @@
       },
     });
 
+    // Monkey-patch identity widget → 使用自建 iframe（避免 netlify CDN 被墙）
+    if (window.netlifyIdentity && window.netlifyIdentity.init) {
+      var _init = window.netlifyIdentity.init;
+      window.netlifyIdentity.init = function(opts) {
+        opts = opts || {};
+        opts.iframe = { url: '/admin/identity-iframe.html' };
+        return _init.call(this, opts);
+      };
+    }
+
     CMS.init();
     document.getElementById('status').style.display = 'none';
   </script>
