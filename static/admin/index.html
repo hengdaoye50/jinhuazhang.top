@@ -4,84 +4,197 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>管理后台 · 张津华个人学术主页</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root { --purple: #7E0C6E; --gold: #C4A265; --bg: #FDF8F0; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans SC', -apple-system, sans-serif; background: var(--bg); }
-/* Login */
-#login { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-.login-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 24px rgba(0,0,0,.08); padding: 48px 40px; width: 100%; max-width: 400px; text-align: center; }
-.login-card h1 { color: var(--purple); margin-bottom: 8px; }
-.login-card p { color: #999; margin-bottom: 24px; font-size: 14px; }
-.login-card input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; margin-bottom: 16px; }
-.login-card button { width: 100%; padding: 12px; background: var(--purple); color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
-.login-card .err { color: #d32f2f; font-size: 13px; margin-top: 8px; }
-/* App */
+:root {
+  --purple: #7E0C6E; --purple-light: #A83296; --purple-dark: #5C084F;
+  --gold: #C4A265; --gold-light: #D4C08A; --gold-dark: #A68845;
+  --bg: #FDF8F0; --bg-card: #fff; --bg-editor: #FAF7F2;
+  --text: #2C2C2C; --text-secondary: #6b6b6b;
+  --card-radius: 14px;
+  --card-shadow: 0 2px 16px rgba(126,12,110,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  --card-shadow-lg: 0 4px 32px rgba(126,12,110,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans SC', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+/* ===== Login ===== */
+#login {
+  display: flex; align-items: center; justify-content: center; min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg) 0%, #F0E6F6 50%, var(--bg) 100%);
+}
+.login-wrapper { position: relative; }
+.login-wrapper::before {
+  content: ''; position: absolute; top: -2px; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--purple), var(--gold));
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+.login-card {
+  background: var(--bg-card); border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow-lg); padding: 56px 48px; width: 420px; text-align: center;
+  position: relative; z-index: 1;
+}
+.login-card .logo { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--purple); margin-bottom: 4px; letter-spacing: -0.5px; }
+.login-card .subtitle { color: var(--text-secondary); font-size: 14px; font-weight: 300; margin-bottom: 36px; }
+.login-card .field { text-align: left; margin-bottom: 20px; }
+.login-card .field label { display: block; font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; }
+.login-card .field input {
+  width: 100%; padding: 12px 14px; border: 1px solid rgba(196,162,101,0.25); border-radius: 8px;
+  font-size: 15px; font-family: inherit; background: #FAF8F4; transition: var(--transition); color: var(--text);
+}
+.login-card .field input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(126,12,110,0.08); }
+.login-card .btn-login {
+  width: 100%; padding: 13px; background: linear-gradient(135deg, var(--purple), var(--purple-light));
+  color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 500;
+  cursor: pointer; transition: var(--transition); letter-spacing: 1px; margin-top: 8px;
+}
+.login-card .btn-login:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(126,12,110,0.25); }
+.login-card .err { color: #d32f2f; font-size: 13px; margin-top: 12px; min-height: 20px; }
+
+/* ===== App Layout ===== */
 #app { display: none; min-height: 100vh; }
-.topbar { background: #fff; border-bottom: 1px solid #f0e8d8; padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
-.topbar h2 { color: var(--purple); font-size: 16px; }
-.topbar .actions { display: flex; gap: 8px; }
-.topbar button { padding: 6px 16px; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 13px; }
-.topbar .btn-pri { background: var(--purple); color: #fff; border: none; }
-.main { display: flex; height: calc(100vh - 56px); }
-.sidebar { width: 260px; background: #fff; border-right: 1px solid #f0e8d8; overflow-y: auto; padding: 12px; }
-.sidebar .tab { display: flex; gap: 4px; margin-bottom: 12px; }
-.sidebar .tab button { flex: 1; padding: 6px; border: none; background: #f5f0eb; border-radius: 6px; cursor: pointer; font-size: 13px; }
-.sidebar .tab button.active { background: var(--purple); color: #fff; }
-.sidebar .file { padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; color: #555; margin-bottom: 2px; }
-.sidebar .file:hover, .sidebar .file.active { background: #f5f0eb; color: var(--purple); }
-.editor-area { flex: 1; display: flex; flex-direction: column; }
-.editor-area .meta { padding: 12px 20px; background: #fff; border-bottom: 1px solid #f0e8d8; display: flex; gap: 16px; }
-.editor-area .meta label { font-size: 12px; color: #999; }
-.editor-area .meta input { border: 1px solid #e0d8cc; border-radius: 4px; padding: 4px 8px; font-size: 13px; }
-.editor-area .meta .f-title { flex: 1; }
-.editor-area textarea { flex: 1; border: none; padding: 20px; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 14px; line-height: 1.8; resize: none; background: #fdfaf5; }
+/* Topbar */
+.topbar {
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(196,162,101,0.12); padding: 0 28px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10;
+}
+.topbar .brand { font-family: 'Playfair Display', serif; font-size: 18px; letter-spacing: -0.3px; }
+.topbar .brand span:first-child { background: linear-gradient(135deg, var(--purple), var(--purple-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.topbar .brand span:last-child { color: var(--gold); margin-left: 4px; font-size: 13px; font-family: 'Noto Sans SC', sans-serif; }
+.topbar .actions { display: flex; gap: 10px; }
+.btn { padding: 8px 18px; border-radius: 8px; border: 1px solid rgba(196,162,101,0.3); background: var(--bg-card); cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 400; color: var(--text-secondary); transition: var(--transition); }
+.btn:hover { border-color: var(--gold); color: var(--purple); background: #FAF6F0; }
+.btn-pri { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: #fff; border: none; font-weight: 500; }
+.btn-pri:hover { box-shadow: 0 4px 16px rgba(126,12,110,0.25); transform: translateY(-1px); color: #fff; }
+.btn-wechat { color: #576b95; border-color: rgba(87,107,149,0.25); }
+.btn-wechat:hover { background: #F0F4FA; border-color: #576b95; color: #576b95; }
+
+/* Main */
+.main { display: flex; height: calc(100vh - 64px); }
+
+/* Sidebar */
+.sidebar {
+  width: 280px; background: var(--bg-card); border-right: 1px solid rgba(196,162,101,0.10);
+  overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 16px;
+}
+.sidebar .tabs { display: flex; gap: 6px; }
+.sidebar .tabs button {
+  flex: 1; padding: 9px 0; border: none; background: #F5F0EA; border-radius: 8px;
+  cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 500; color: var(--text-secondary); transition: var(--transition);
+}
+.sidebar .tabs button.active { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: #fff; }
+.sidebar .file-list { flex: 1; overflow-y: auto; }
+.sidebar .file {
+  padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text-secondary);
+  margin-bottom: 3px; transition: var(--transition); line-height: 1.5; word-break: break-all;
+}
+.sidebar .file:hover { background: #FAF5F0; color: var(--purple); }
+.sidebar .file.active { background: linear-gradient(135deg, rgba(126,12,110,0.06), rgba(196,162,101,0.08)); color: var(--purple); font-weight: 500; }
+
+/* Editor */
+.editor-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-editor); }
+.editor-area .meta {
+  padding: 16px 24px; background: var(--bg-card);
+  border-bottom: 1px solid rgba(196,162,101,0.10); display: flex; gap: 20px; flex-wrap: wrap;
+}
+.editor-area .meta .field { display: flex; flex-direction: column; gap: 4px; }
+.editor-area .meta .field label { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.editor-area .meta .field input {
+  border: 1px solid rgba(196,162,101,0.2); border-radius: 6px; padding: 7px 10px;
+  font-size: 13px; font-family: inherit; background: #FAF8F4; transition: var(--transition); color: var(--text);
+}
+.editor-area .meta .field input:focus { outline: none; border-color: var(--purple); }
+.editor-area .meta .f-title { flex: 2; min-width: 200px; }
+.editor-area .meta .f-date { flex: 0 0 130px; }
+.editor-area .meta .f-desc { flex: 2; min-width: 200px; }
+.editor-area textarea {
+  flex: 1; border: none; padding: 28px 32px; font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+  font-size: 14px; line-height: 1.9; resize: none; background: var(--bg-editor); color: var(--text);
+}
 .editor-area textarea:focus { outline: none; }
-.empty { display: flex; align-items: center; justify-content: center; height: 100%; color: #ccc; font-size: 14px; }
-.msg { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 999; animation: fadeIn .3s; }
-.msg-ok { background: #e8f5e9; color: #2e7d32; }
-.msg-err { background: #ffebee; color: #c62828; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.editor-area textarea::placeholder { color: #ccc; }
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; color: #d0c8b8; font-size: 15px; gap: 12px; font-weight: 300;
+}
+.empty-state .icon { font-size: 48px; opacity: 0.5; }
+
+/* Toast */
+.msg {
+  position: fixed; bottom: 28px; right: 28px; padding: 12px 22px; border-radius: 10px;
+  font-size: 13px; z-index: 999; animation: fadeIn .3s; font-family: inherit; font-weight: 400;
+  box-shadow: var(--card-shadow);
+}
+.msg-ok { background: #e8f5e9; color: #2e7d32; border: 1px solid rgba(46,125,50,0.15); }
+.msg-err { background: #ffebee; color: #c62828; border: 1px solid rgba(198,40,40,0.15); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(196,162,101,0.25); border-radius: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
 </style>
 </head>
 <body>
 
 <div id="login">
-  <div class="login-card">
-    <h1>管理后台</h1>
-    <p>张津华个人学术主页</p>
-    <input type="password" id="pwd" placeholder="输入管理密码" autofocus>
-    <button onclick="doLogin()">登 录</button>
-    <div class="err" id="err"></div>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="logo">Content Studio</div>
+      <div class="subtitle">张津华 · 个人学术主页</div>
+      <div class="field">
+        <label>管理密码</label>
+        <input type="password" id="pwd" placeholder="输入密码" autofocus>
+      </div>
+      <button class="btn-login" onclick="doLogin()">进入后台</button>
+      <div class="err" id="err"></div>
+    </div>
   </div>
 </div>
 
 <div id="app">
   <div class="topbar">
-    <h2>📝 内容管理</h2>
+    <div class="brand"><span>Content Studio</span><span>· 管理后台</span></div>
     <div class="actions">
-      <button onclick="newFile()">+ 新建文章</button>
-      <button class="btn-pri" onclick="saveFile()">保存并提交</button>
-      <button onclick="toWechat()" style="color:#576b95;border-color:#576b95;">📱 微信发布</button>
-      <button onclick="location.reload()">退出</button>
+      <button class="btn" onclick="newFile()">＋ 新建</button>
+      <button class="btn btn-wechat" onclick="toWechat()">📱 微信发布</button>
+      <button class="btn btn-pri" onclick="saveFile()">保存并提交</button>
+      <button class="btn" onclick="location.reload()">退出</button>
     </div>
   </div>
   <div class="main">
     <div class="sidebar">
-      <div class="tab">
-        <button id="tab-blog" class="active" onclick="switchTab('blog')">博客</button>
-        <button id="tab-portfolio" onclick="switchTab('portfolio')">作品集</button>
+      <div class="tabs">
+        <button id="tab-blog" class="active" onclick="switchTab('blog')">📝 博客</button>
+        <button id="tab-portfolio" onclick="switchTab('portfolio')">📂 作品集</button>
       </div>
-      <div id="file-list">加载中...</div>
+      <div class="file-list" id="file-list">加载中…</div>
     </div>
     <div class="editor-area">
       <div class="meta">
-        <label class="f-title">标题 <input type="text" id="meta-title" placeholder="文章标题"></label>
-        <label>日期 <input type="text" id="meta-date" placeholder="YYYY-MM-DD"></label>
-        <label>摘要 <input type="text" id="meta-desc" placeholder="一句话描述"></label>
+        <div class="field f-title">
+          <label>标题</label>
+          <input type="text" id="meta-title" placeholder="文章标题">
+        </div>
+        <div class="field f-date">
+          <label>日期</label>
+          <input type="text" id="meta-date" placeholder="YYYY-MM-DD">
+        </div>
+        <div class="field f-desc">
+          <label>摘要</label>
+          <input type="text" id="meta-desc" placeholder="一句话描述">
+        </div>
       </div>
-      <textarea id="editor" placeholder="选择左侧文章或点击「新建文章」"></textarea>
-      <div class="empty" id="empty-hint">← 选择文章或新建</div>
+      <textarea id="editor" placeholder="选择左侧文章，开始编辑…"></textarea>
+      <div class="empty-state" id="empty-hint">
+        <div class="icon">✍️</div>
+        <div>选择一篇文章或新建</div>
+      </div>
     </div>
   </div>
 </div>
@@ -93,10 +206,7 @@ var files = { blog: [], portfolio: [] };
 async function api(path, opts) {
   opts = opts || {};
   opts.headers = opts.headers || {};
-  if (token) {
-    opts.headers['Authorization'] = 'Bearer ' + token;
-    opts.headers['X-Token-Ts'] = tokenTs;
-  }
+  if (token) { opts.headers['Authorization'] = 'Bearer ' + token; opts.headers['X-Token-Ts'] = tokenTs; }
   var res = await fetch(path, opts);
   if (res.status === 401) { location.reload(); throw new Error('unauthorized'); }
   return res;
@@ -107,8 +217,7 @@ async function doLogin() {
   var res = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: pwd }) });
   var data = await res.json();
   if (data.error) { document.getElementById('err').textContent = data.error; return; }
-  token = data.token;
-  tokenTs = data.ts;
+  token = data.token; tokenTs = data.ts;
   document.getElementById('login').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   loadFiles();
@@ -128,7 +237,7 @@ function renderFileList() {
     var cls = 'file' + (currentFile === f.path ? ' active' : '');
     return '<div class="' + cls + '" onclick="openFile(\'' + f.path + '\')">' + f.name + '</div>';
   }).join('');
-  document.getElementById('file-list').innerHTML = html || '<div class="empty">暂无文章</div>';
+  document.getElementById('file-list').innerHTML = html || '<div class="empty-state" style="font-size:13px;padding:24px;">暂无文章</div>';
 }
 
 function switchTab(tab) {
@@ -140,6 +249,7 @@ function switchTab(tab) {
   document.getElementById('meta-title').value = '';
   document.getElementById('meta-date').value = '';
   document.getElementById('meta-desc').value = '';
+  document.getElementById('empty-hint').style.display = 'flex';
   loadFiles();
 }
 
@@ -147,11 +257,8 @@ async function openFile(path) {
   var res = await api('/api/admin/file?path=' + encodeURIComponent(path));
   var data = await res.json();
   if (data.error) { toast(data.error, 'err'); return; }
-  currentFile = path;
-  currentSha = data.sha;
+  currentFile = path; currentSha = data.sha;
   var content = data.content;
-
-  // 解析 frontmatter
   var fm = {};
   if (content.startsWith('+++')) {
     var end = content.indexOf('+++', 3);
@@ -159,7 +266,7 @@ async function openFile(path) {
       var fmText = content.substring(3, end);
       fmText.split('\n').forEach(function(line) {
         var m = line.match(/^\s*(\w+)\s*=\s*(.+)/);
-        if (m) fm[m[1]] = m[2].replace(/^"|"$/g, '');
+        if (m) fm[m[1]] = m[2].replace(/^["']|["']$/g, '').trim();
       });
       content = content.substring(end + 3).trim();
     }
@@ -173,12 +280,13 @@ async function openFile(path) {
 }
 
 function newFile() {
+  var d = new Date().toISOString().slice(0,10);
   currentFile = currentTab === 'blog'
-    ? 'content/blog/' + new Date().toISOString().slice(0,10) + '_new-post.md'
+    ? 'content/blog/' + d + '_new-post.md'
     : 'content/portfolio/new-item.md';
   currentSha = null;
   document.getElementById('meta-title').value = '';
-  document.getElementById('meta-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('meta-date').value = d;
   document.getElementById('meta-desc').value = '';
   document.getElementById('editor').value = '';
   document.getElementById('empty-hint').style.display = 'none';
@@ -190,26 +298,33 @@ async function saveFile() {
   var date = document.getElementById('meta-date').value;
   var desc = document.getElementById('meta-desc').value;
   var body = document.getElementById('editor').value;
-
   var frontmatter = '+++\ntitle = "' + title + '"\ndate = ' + date + '\n';
   if (desc) frontmatter += 'description = "' + desc + '"\n';
   frontmatter += '+++\n\n';
-
   var content = frontmatter + body.trim() + '\n';
   var res = await api('/api/admin/file', {
     method: 'PUT',
-    body: JSON.stringify({
-      path: currentFile,
-      content: content,
-      sha: currentSha,
-      message: title ? '更新 ' + title : '更新 ' + currentFile.split('/').pop(),
-    }),
+    body: JSON.stringify({ path: currentFile, content: content, sha: currentSha, message: title ? '更新 ' + title : '更新 ' + currentFile.split('/').pop() }),
   });
   var data = await res.json();
   if (data.error) { toast(data.error, 'err'); return; }
   currentSha = data.sha;
-  toast('已保存');
+  toast('已保存并提交到 GitHub');
   loadFiles();
+}
+
+async function toWechat() {
+  var title = document.getElementById('meta-title').value;
+  var body = document.getElementById('editor').value;
+  if (!body.trim()) { toast('请先打开一篇文章', 'err'); return; }
+  var frontmatter = '+++\ntitle = "' + title + '"\ndate = ' + document.getElementById('meta-date').value + '\ndescription = "' + document.getElementById('meta-desc').value + '"\n+++\n\n';
+  var res = await api('/api/wechat-convert', { method: 'POST', body: JSON.stringify({ content: frontmatter + body }) });
+  var data = await res.json();
+  if (data.error) { toast(data.error, 'err'); return; }
+  var w = window.open('', '_blank');
+  w.document.write(data.html);
+  w.document.close();
+  toast('已在新窗口打开微信预览');
 }
 
 function toast(msg, type) {
@@ -220,30 +335,7 @@ function toast(msg, type) {
   setTimeout(function() { d.remove(); }, 2500);
 }
 
-async function toWechat() {
-  var title = document.getElementById('meta-title').value;
-  var body = document.getElementById('editor').value;
-  if (!body.trim()) { toast('请先打开一篇文章', 'err'); return; }
-
-  var frontmatter = '+++\ntitle = "' + title + '"\ndate = ' + document.getElementById('meta-date').value + '\ndescription = "' + document.getElementById('meta-desc').value + '"\n+++\n\n';
-  var fullContent = frontmatter + body;
-
-  var res = await api('/api/wechat-convert', {
-    method: 'POST',
-    body: JSON.stringify({ content: fullContent }),
-  });
-  var data = await res.json();
-  if (data.error) { toast(data.error, 'err'); return; }
-
-  var w = window.open('', '_blank');
-  w.document.write(data.html);
-  w.document.close();
-  toast('已在新窗口打开微信预览');
-}
-
-document.getElementById('pwd').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') doLogin();
-});
+document.getElementById('pwd').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
 </script>
 </body>
 </html>
