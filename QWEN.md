@@ -29,7 +29,14 @@ zhangjinhua.top/
 │   │   └── [标题].md          #   作品条目
 │   └── about/                 #   关于页
 │       └── _index.md
+├── functions/                 # Cloudflare Pages Functions
+│   └── api/
+│       ├── admin/
+│       │   └── [[path]].js    #   管理后台 API
+│       └── wechat-convert.js  #   微信公众号转换器
 ├── static/                    # 静态资源
+│   ├── admin/
+│   │   └── index.html         #   管理后台前端（紫金 UI）
 │   ├── img/                   #   图片（avatar.jpg, logo.svg, avatar.svg等）
 │   └── portfolio/             #   作品 HTML 文件（演化博弈论讲义等）
 ├── assets/
@@ -37,6 +44,8 @@ zhangjinhua.top/
 ├── layouts/                   # 自定义模板（覆盖 Blowfish 主题）
 │   ├── _default/
 │   │   └── index.json         #     搜索索引模板（仅 blog + portfolio）
+│   ├── about/
+│   │   └── list.html          #     关于页模板（紫金 Hero + 卡片）
 │   ├── blog/list.html         #   博客列表页模板
 │   ├── portfolio/list.html    #   作品集列表页模板
 │   ├── partials/
@@ -231,6 +240,56 @@ git commit -m "feat: 描述更改内容"
 # 推送到 GitHub（触发 Cloudflare Pages 部署）
 git push origin main
 ```
+
+---
+
+## Cloudflare Pages Functions
+```
+functions/
+├── api/
+│   ├── admin/
+│   │   └── [[path]].js      # 管理后台 API（登录/文件读写）
+│   ├── pageviews.js         # 浏览量计数器 Worker
+│   └── wechat-convert.js    # Markdown → 公众号 HTML
+```
+
+## 自建管理后台
+
+访问 `https://jinhuazhang.top/admin/`，密码登录后编辑内容。
+
+### 技术架构
+- **前端**：`static/admin/index.html` — 紫金设计风格单页应用
+- **API**：`functions/api/admin/[[path]].js` — HMAC 密码认证 + GitHub API 直连
+- **认证**：SHA-256 HMAC token（密码 + 时间戳，24h 有效）
+- **内容操作**：通过 `GITHUB_PAT` 环境变量调用 GitHub REST API
+
+### 环境变量
+| 变量 | 说明 |
+|------|------|
+| `ADMIN_PASSWORD` | 管理后台登录密码（纯文本） |
+| `GITHUB_PAT` | GitHub Personal Access Token（repo 权限） |
+
+### 功能
+- 博客 / 作品集文章列表
+- frontmatter 字段编辑（标题、日期、摘要）
+- Markdown 正文编辑器
+- 「保存并提交」→ 写回 GitHub → 触发 Hugo 自动构建
+
+## 微信公众号转换器
+
+管理后台顶部的「📱 微信发布」按钮，将当前 Markdown 文章转为微信公众号兼容 HTML。
+
+- **API**：`POST /api/wechat-convert`（`functions/api/wechat-convert.js`）
+- **支持**：标题、代码块（深色背景）、行内代码、图片、链接、引用、列表
+- **输出**：新窗口显示，可直接复制到公众号编辑器
+
+## About 页面模板
+
+`layouts/about/list.html` — 自定义 Hugo 模板，紫金设计风格：
+- 渐变边框环头像 + 衬线字体标题
+- 内容卡片（紫色→金色顶部渐变条）
+- 研究兴趣药丸形标签
+- 管理后台胶囊按钮（hover 紫色 + 箭头动画）
 
 ---
 
