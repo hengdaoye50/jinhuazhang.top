@@ -18,7 +18,7 @@
   <script>
     window.CMS_MANUAL_INIT = true;
   </script>
-  <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
+  <script src="https://unpkg.com/decap-cms@3.12.0/dist/decap-cms.js"></script>
   <script>
     // 自定义中文翻译（覆盖默认英文）
     CMS.registerLocale('zh-cn', {
@@ -50,6 +50,21 @@
         },
       },
     });
+
+    // 绕过浏览器弹窗拦截：用 <a> 标签点击代替 window.open
+    var _origOpen = window.open;
+    window.open = function(url, name, features) {
+      if (url && url.indexOf('github.com/login/oauth') !== -1) {
+        var a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return { closed: false, close: function() {} };
+      }
+      return _origOpen(url, name, features);
+    };
 
     CMS.init();
 </body>
