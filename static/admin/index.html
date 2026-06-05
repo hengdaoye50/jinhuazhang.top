@@ -55,19 +55,31 @@
       },
     });
 
-    // 绕过浏览器弹窗拦截：用 <a> 标签点击代替 window.open
+    // 代理 window.open：拦截空弹窗的 .location 赋值，用 <a> 打开避免拦截
     var _origOpen = window.open;
     window.open = function(url, name, features) {
-      if (url && url.indexOf('github.com/login/oauth') !== -1) {
-        var a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        return { closed: false, close: function() {} };
-      }
-      return _origOpen(url, name, features);
+      var proxy = {
+        closed: false,
+        focus: function() {},
+        close: function() { proxy.closed = true; }
+      };
+      Object.defineProperty(proxy, 'location', {
+        set: function(val) {
+          var targetUrl = typeof val === 'string' ? val : val.href || '';
+          if (targetUrl.indexOf('github.com/login/oauth') !== -1) {
+            var a = document.createElement('a');
+            a.href = targetUrl;
+            a.target = '_blank';
+            a.rel = 'opener';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        },
+        get: function() { return { href: '' }; },
+        enumerable: true, configurable: true
+      });
+      return proxy;
     };
 
     CMS.init();
