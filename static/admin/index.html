@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>管理后台 · 张津华个人学术主页</title>
+<style>
+:root { --purple: #7E0C6E; --gold: #C4A265; --bg: #FDF8F0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans SC', -apple-system, sans-serif; background: var(--bg); }
+/* Login */
+#login { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.login-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 24px rgba(0,0,0,.08); padding: 48px 40px; width: 100%; max-width: 400px; text-align: center; }
+.login-card h1 { color: var(--purple); margin-bottom: 8px; }
+.login-card p { color: #999; margin-bottom: 24px; font-size: 14px; }
+.login-card input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; margin-bottom: 16px; }
+.login-card button { width: 100%; padding: 12px; background: var(--purple); color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+.login-card .err { color: #d32f2f; font-size: 13px; margin-top: 8px; }
+/* App */
+#app { display: none; min-height: 100vh; }
+.topbar { background: #fff; border-bottom: 1px solid #f0e8d8; padding: 0 20px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+.topbar h2 { color: var(--purple); font-size: 16px; }
+.topbar .actions { display: flex; gap: 8px; }
+.topbar button { padding: 6px 16px; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-size: 13px; }
+.topbar .btn-pri { background: var(--purple); color: #fff; border: none; }
+.main { display: flex; height: calc(100vh - 56px); }
+.sidebar { width: 260px; background: #fff; border-right: 1px solid #f0e8d8; overflow-y: auto; padding: 12px; }
+.sidebar .tab { display: flex; gap: 4px; margin-bottom: 12px; }
+.sidebar .tab button { flex: 1; padding: 6px; border: none; background: #f5f0eb; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.sidebar .tab button.active { background: var(--purple); color: #fff; }
+.sidebar .file { padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; color: #555; margin-bottom: 2px; }
+.sidebar .file:hover, .sidebar .file.active { background: #f5f0eb; color: var(--purple); }
+.editor-area { flex: 1; display: flex; flex-direction: column; }
+.editor-area .meta { padding: 12px 20px; background: #fff; border-bottom: 1px solid #f0e8d8; display: flex; gap: 16px; }
+.editor-area .meta label { font-size: 12px; color: #999; }
+.editor-area .meta input { border: 1px solid #e0d8cc; border-radius: 4px; padding: 4px 8px; font-size: 13px; }
+.editor-area .meta .f-title { flex: 1; }
+.editor-area textarea { flex: 1; border: none; padding: 20px; font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 14px; line-height: 1.8; resize: none; background: #fdfaf5; }
+.editor-area textarea:focus { outline: none; }
+.empty { display: flex; align-items: center; justify-content: center; height: 100%; color: #ccc; font-size: 14px; }
+.msg { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 999; animation: fadeIn .3s; }
+.msg-ok { background: #e8f5e9; color: #2e7d32; }
+.msg-err { background: #ffebee; color: #c62828; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="login-card">
+    <h1>管理后台</h1>
+    <p>张津华个人学术主页</p>
+    <input type="password" id="pwd" placeholder="输入管理密码" autofocus>
+    <button onclick="doLogin()">登 录</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <h2>📝 内容管理</h2>
+    <div class="actions">
+      <button onclick="newFile()">+ 新建文章</button>
+      <button class="btn-pri" onclick="saveFile()">保存并提交</button>
+      <button onclick="location.reload()">退出</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="tab">
+        <button id="tab-blog" class="active" onclick="switchTab('blog')">博客</button>
+        <button id="tab-portfolio" onclick="switchTab('portfolio')">作品集</button>
+      </div>
+      <div id="file-list">加载中...</div>
+    </div>
+    <div class="editor-area">
+      <div class="meta">
+        <label class="f-title">标题 <input type="text" id="meta-title" placeholder="文章标题"></label>
+        <label>日期 <input type="text" id="meta-date" placeholder="YYYY-MM-DD"></label>
+        <label>摘要 <input type="text" id="meta-desc" placeholder="一句话描述"></label>
+      </div>
+      <textarea id="editor" placeholder="选择左侧文章或点击「新建文章」"></textarea>
+      <div class="empty" id="empty-hint">← 选择文章或新建</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var token = '', tokenTs = '', currentTab = 'blog', currentFile = null, currentSha = null;
+var files = { blog: [], portfolio: [] };
+
+async function api(path, opts) {
+  opts = opts || {};
+  opts.headers = opts.headers || {};
+  if (token) {
+    opts.headers['Authorization'] = 'Bearer ' + token;
+    opts.headers['X-Token-Ts'] = tokenTs;
+  }
+  var res = await fetch(path, opts);
+  if (res.status === 401) { location.reload(); throw new Error('unauthorized'); }
+  return res;
+}
+
+async function doLogin() {
+  var pwd = document.getElementById('pwd').value;
+  var res = await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: pwd }) });
+  var data = await res.json();
+  if (data.error) { document.getElementById('err').textContent = data.error; return; }
+  token = data.token;
+  tokenTs = data.ts;
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadFiles();
+}
+
+async function loadFiles() {
+  var res = await api('/api/admin/files?dir=content/' + currentTab);
+  var data = await res.json();
+  if (data.error) { toast(data.error, 'err'); return; }
+  files[currentTab] = data;
+  renderFileList();
+}
+
+function renderFileList() {
+  var list = files[currentTab] || [];
+  var html = list.map(function(f) {
+    var cls = 'file' + (currentFile === f.path ? ' active' : '');
+    return '<div class="' + cls + '" onclick="openFile(\'' + f.path + '\')">' + f.name + '</div>';
+  }).join('');
+  document.getElementById('file-list').innerHTML = html || '<div class="empty">暂无文章</div>';
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-blog').className = tab === 'blog' ? 'active' : '';
+  document.getElementById('tab-portfolio').className = tab === 'portfolio' ? 'active' : '';
+  currentFile = null; currentSha = null;
+  document.getElementById('editor').value = '';
+  document.getElementById('meta-title').value = '';
+  document.getElementById('meta-date').value = '';
+  document.getElementById('meta-desc').value = '';
+  loadFiles();
+}
+
+async function openFile(path) {
+  var res = await api('/api/admin/file?path=' + encodeURIComponent(path));
+  var data = await res.json();
+  if (data.error) { toast(data.error, 'err'); return; }
+  currentFile = path;
+  currentSha = data.sha;
+  var content = data.content;
+
+  // 解析 frontmatter
+  var fm = {};
+  if (content.startsWith('+++')) {
+    var end = content.indexOf('+++', 3);
+    if (end > 0) {
+      var fmText = content.substring(3, end);
+      fmText.split('\n').forEach(function(line) {
+        var m = line.match(/^\s*(\w+)\s*=\s*(.+)/);
+        if (m) fm[m[1]] = m[2].replace(/^"|"$/g, '');
+      });
+      content = content.substring(end + 3).trim();
+    }
+  }
+  document.getElementById('meta-title').value = fm.title || '';
+  document.getElementById('meta-date').value = fm.date || '';
+  document.getElementById('meta-desc').value = fm.description || '';
+  document.getElementById('editor').value = content;
+  document.getElementById('empty-hint').style.display = 'none';
+  renderFileList();
+}
+
+function newFile() {
+  currentFile = currentTab === 'blog'
+    ? 'content/blog/' + new Date().toISOString().slice(0,10) + '_new-post.md'
+    : 'content/portfolio/new-item.md';
+  currentSha = null;
+  document.getElementById('meta-title').value = '';
+  document.getElementById('meta-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('meta-desc').value = '';
+  document.getElementById('editor').value = '';
+  document.getElementById('empty-hint').style.display = 'none';
+}
+
+async function saveFile() {
+  if (!currentFile) { toast('请先选择或新建文章', 'err'); return; }
+  var title = document.getElementById('meta-title').value;
+  var date = document.getElementById('meta-date').value;
+  var desc = document.getElementById('meta-desc').value;
+  var body = document.getElementById('editor').value;
+
+  var frontmatter = '+++\ntitle = "' + title + '"\ndate = ' + date + '\n';
+  if (desc) frontmatter += 'description = "' + desc + '"\n';
+  frontmatter += '+++\n\n';
+
+  var content = frontmatter + body.trim() + '\n';
+  var res = await api('/api/admin/file', {
+    method: 'PUT',
+    body: JSON.stringify({
+      path: currentFile,
+      content: content,
+      sha: currentSha,
+      message: title ? '更新 ' + title : '更新 ' + currentFile.split('/').pop(),
+    }),
+  });
+  var data = await res.json();
+  if (data.error) { toast(data.error, 'err'); return; }
+  currentSha = data.sha;
+  toast('已保存');
+  loadFiles();
+}
+
+function toast(msg, type) {
+  var d = document.createElement('div');
+  d.className = 'msg msg-' + (type || 'ok');
+  d.textContent = msg;
+  document.body.appendChild(d);
+  setTimeout(function() { d.remove(); }, 2500);
+}
+
+document.getElementById('pwd').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+</body>
+</html>
