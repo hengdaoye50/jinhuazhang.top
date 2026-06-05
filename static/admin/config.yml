@@ -9,7 +9,8 @@ backend:
   name: github
   repo: hengdaoye50/jinhuazhang.top
   branch: main
-  auth_endpoint: /auth
+  base_url: https://jinhuazhang.top
+  auth_endpoint: auth
 
 publish_mode: simple
 
