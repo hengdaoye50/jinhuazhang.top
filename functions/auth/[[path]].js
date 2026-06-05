@@ -58,9 +58,11 @@ export async function onRequest(context) {
 <html><head><meta charset="utf-8"><script>
   (function() {
     var data = { token: ${JSON.stringify(accessToken)}, provider: "github" };
-    window.opener.postMessage(data, "*");
     localStorage.setItem("gh_token", data.token);
-    // 不关闭！Decap CMS 监听器需要弹窗保持 open 状态
+    // 刷新主窗口，触发 admin 页重载后自动认证
+    if (window.opener && !window.opener.closed) {
+      window.opener.location.href = "/admin/";
+    }
   })();
 </script></head>
 <body style="text-align:center;padding-top:40px;font-family:sans-serif;">

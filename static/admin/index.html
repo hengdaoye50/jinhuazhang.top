@@ -40,22 +40,23 @@
     CMS.init();
     document.getElementById('status').style.display = 'none';
 
-    // 兜底：监听 localStorage 完成认证
-    var poll = setInterval(function() {
-      var t = localStorage.getItem('gh_token');
-      if (!t) return;
-      localStorage.removeItem('gh_token');
-      clearInterval(poll);
-      // 等 CMS 完全初始化后注入
+    // 页面重载后 localsStorage 有 token → 自动完成认证
+    (function() {
+      var token = localStorage.getItem('gh_token');
+      if (!token) return;
+      // 等 CMS.init 完成后再触发
       setTimeout(function() {
-        // 尝试触发 Decap CMS 内置消息监听器
-        window.postMessage({ token: t, provider: 'github' }, window.location.origin);
-        // 1 秒后重试
+        var btn = document.querySelector('button');
+        if (!btn) return;
+        localStorage.removeItem('gh_token');
+        // 点击登录按钮 → Decap CMS 建立监听器
+        btn.click();
+        // 监听器建立后发送 token
         setTimeout(function() {
-          window.postMessage({ token: t, provider: 'github' }, window.location.origin);
-        }, 1000);
-      }, 500);
-    }, 500);
+          window.postMessage({ token: token, provider: 'github' }, window.location.origin);
+        }, 800);
+      }, 1000);
+    })();
   </script>
 </body>
 </html>
