@@ -1,0 +1,173 @@
+{{ define "main" }}
+<div class="about-page">
+  <!-- Hero 区域 -->
+  <section class="about-hero">
+    <div class="about-avatar-wrapper">
+      <div class="about-avatar-ring">
+        <img src="/img/avatar.jpg" alt="张津华" class="about-avatar">
+      </div>
+    </div>
+    <h1 class="about-name">{{ .Title }}</h1>
+    <p class="about-subtitle">南开大学 PPE 实验班 2024 级本科生</p>
+    <div class="about-divider"></div>
+  </section>
+
+  <!-- 正文内容 -->
+  <section class="about-body card">
+    <div class="card-inner">
+      {{ .Content }}
+    </div>
+  </section>
+</div>
+
+<style>
+/* ===== About 页面专属样式 ===== */
+.about-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+/* Hero */
+.about-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.about-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.about-avatar-ring {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, var(--purple, #7E0C6E), var(--gold, #C4A265));
+}
+.about-avatar-ring::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--bg-card, #fff);
+}
+.about-avatar {
+  position: relative;
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.about-name {
+  font-family: var(--font-serif, 'Noto Serif SC', serif);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text, #2C2C2C);
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+.about-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary, #6b6b6b);
+  font-weight: 300;
+  margin: 0;
+}
+.about-divider {
+  width: 48px;
+  height: 3px;
+  margin: 24px auto 0;
+  background: linear-gradient(90deg, var(--purple, #7E0C6E), var(--gold, #C4A265));
+  border-radius: 2px;
+}
+
+/* Card */
+.card {
+  background: var(--bg-card, #fff);
+  border-radius: var(--card-radius, 14px);
+  box-shadow: 0 2px 16px rgba(126,12,110,0.06), 0 1px 4px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--purple, #7E0C6E), var(--gold, #C4A265));
+}
+.card-inner {
+  padding: 36px 40px;
+}
+
+/* 正文排版 */
+.about-body h2 {
+  font-family: var(--font-serif, 'Noto Serif SC', serif);
+  font-size: 22px;
+  color: var(--text, #2C2C2C);
+  margin: 28px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(196,162,101,0.2);
+}
+.about-body h3 {
+  font-size: 16px;
+  color: var(--purple, #7E0C6E);
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+.about-body p {
+  line-height: 1.9;
+  margin: 10px 0;
+  color: var(--text-secondary, #6b6b6b);
+  font-size: 15px;
+}
+.about-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.about-body ul li {
+  background: linear-gradient(135deg, rgba(126,12,110,0.05), rgba(196,162,101,0.06));
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: var(--text, #2C2C2C);
+  border: 1px solid rgba(196,162,101,0.15);
+}
+.about-body a {
+  color: var(--purple, #7E0C6E);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(126,12,110,0.2);
+  transition: border-color 0.2s;
+}
+.about-body a:hover {
+  border-color: var(--purple, #7E0C6E);
+}
+.about-body hr {
+  border: none;
+  border-top: 1px solid rgba(196,162,101,0.2);
+  margin: 24px 0;
+}
+.about-body small {
+  font-size: 12px;
+  color: #aaa;
+}
+.about-body strong {
+  color: var(--purple, #7E0C6E);
+  font-weight: 600;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .about-page { padding: 36px 16px 60px; }
+  .about-name { font-size: 28px; }
+  .about-avatar-ring { width: 100px; height: 100px; }
+  .about-avatar { width: 92px; height: 92px; }
+  .card-inner { padding: 24px 20px; }
+}
+</style>
+{{ end }}
