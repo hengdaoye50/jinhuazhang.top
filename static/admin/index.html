@@ -15,10 +15,14 @@
   </style>
 </head>
 <body>
+  <div id="status" style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;font-size:1rem;color:#333;">
+    管理后台加载中...
+  </div>
   <script>
     window.CMS_MANUAL_INIT = true;
+    document.getElementById('status').textContent = 'Decap CMS JS 加载中...';
   </script>
-  <script src="https://unpkg.com/decap-cms@3.12.0/dist/decap-cms.js"></script>
+  <script src="https://unpkg.com/decap-cms@3.12.0/dist/decap-cms.js" onerror="document.getElementById('status').textContent='❌ CDN 加载失败'"></script>
   <script>
     // 自定义中文翻译（覆盖默认英文）
     CMS.registerLocale('zh-cn', {
@@ -67,5 +71,7 @@
     };
 
     CMS.init();
+    document.getElementById('status').style.display = 'none';
+  </script>
 </body>
 </html>
