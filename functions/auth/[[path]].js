@@ -59,11 +59,19 @@ export async function onRequest(context) {
   (function() {
     var data = { token: ${JSON.stringify(accessToken)}, provider: "github" };
     window.opener.postMessage(data, "*");
-    window.close();
   })();
 </script></head>
 <body style="text-align:center;padding-top:40px;font-family:sans-serif;">
-  <p>✅ 登录成功，窗口即将关闭...</p>
+  <p>✅ 登录成功</p>
+  <p style="color:#999;">窗口可关闭。<span id="timer">3</span> 秒后自动关闭…</p>
+  <script>
+    var s = 3;
+    setInterval(function() {
+      s--;
+      document.getElementById('timer').textContent = s;
+      if (s <= 0) window.close();
+    }, 1000);
+  </script>
 </body></html>`,
         { headers: { "Content-Type": "text/html; charset=utf-8" } }
       );
