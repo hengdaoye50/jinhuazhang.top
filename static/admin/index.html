@@ -58,27 +58,16 @@
     CMS.init();
     document.getElementById('status').style.display = 'none';
 
-    // 兜底：轮询 sessionStorage 中的 token
-    (function pollToken() {
-      var token = sessionStorage.getItem('gh_token');
-      if (!token) { setTimeout(pollToken, 500); return; }
-      sessionStorage.removeItem('gh_token');
-
-      var btn = document.querySelector('button');
-      if (!btn) return;
-
-      // 临时拦截 window.open，click 触发外部 OAuth 流程后立即发送 token
-      var _open = window.open;
-      window.open = function() {
-        window.open = _open;
-        setTimeout(function() {
-          window.postMessage({ token: token, provider: 'github' }, window.location.origin);
-        }, 600);
-        var d = { closed: false, close: function() { d.closed = true; } };
-        Object.defineProperty(d, 'location', { set: function(){}, get: function(){return{};}, configurable:true });
-        return d;
-      };
-      btn.click();
+    // 兜底：轮询 localStorage，发现 token 后手动触发认证
+    (function poll() {
+      var token = localStorage.getItem('gh_token');
+      if (!token) { setTimeout(poll, 500); return; }
+      localStorage.removeItem('gh_token');
+      // 直接向自身发消息，Decap CMS 的监听器可能正在等待
+      window.postMessage({ token: token, provider: 'github' }, window.location.origin);
+      setTimeout(function() {
+        window.postMessage({ token: token, provider: 'github' }, window.location.origin);
+      }, 1000);
     })();
   </script>
 </body>
