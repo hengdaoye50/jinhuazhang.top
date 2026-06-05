@@ -58,17 +58,42 @@
     CMS.init();
     document.getElementById('status').style.display = 'none';
 
-    // 兜底：轮询 localStorage，发现 token 后手动触发认证
-    (function poll() {
+    // localStorage 兜底认证
+    (function autoAuth() {
       var token = localStorage.getItem('gh_token');
-      if (!token) { setTimeout(poll, 500); return; }
+      if (!token) { setTimeout(autoAuth, 500); return; }
       localStorage.removeItem('gh_token');
-      // 直接向自身发消息，Decap CMS 的监听器可能正在等待
-      window.postMessage({ token: token, provider: 'github' }, window.location.origin);
+
+      // 点击登录按钮触发 Decap CMS 建立消息监听器
+      var btn = document.querySelector('button');
+      if (!btn) { setTimeout(autoAuth, 500); return; }
+
+      // 拦截 window.open，返回静默 dummy
+      var _open = window.open;
+      window.open = function() {
+        window.open = _open;
+        var d = { closed: false, close: function(){} };
+        Object.defineProperty(d, 'location', {
+          set: function(){}, get: function(){ return { href: '' }; }, configurable: true
+        });
+        return d;
+      };
+      btn.click();
+
+      // 等监听器建立后发送 token
       setTimeout(function() {
         window.postMessage({ token: token, provider: 'github' }, window.location.origin);
-      }, 1000);
+      }, 1500);
     })();
+
+    // storage 事件：跨标签页实时接收
+    window.addEventListener('storage', function(e) {
+      if (e.key !== 'gh_token' || !e.newValue) return;
+      localStorage.removeItem('gh_token');
+      setTimeout(function() {
+        window.postMessage({ token: e.newValue, provider: 'github' }, window.location.origin);
+      }, 200);
+    });
   </script>
 </body>
 </html>
