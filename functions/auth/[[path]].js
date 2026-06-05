@@ -85,21 +85,15 @@ export async function onRequest(context) {
         `<!DOCTYPE html>
 <html><head><meta charset="utf-8"></head>
 <body style="text-align:center;padding-top:40px;font-family:sans-serif;">
-  <p>✅ 登录成功</p>
-  <p id="info" style="color:#999;font-size:14px;"></p>
-  <p><a href="/admin/">点击进入后台</a></p>
+  <p>✅ 登录成功，正在进入后台...</p>
   <script>
-    (function() {
-      var data = { token: ${JSON.stringify(accessToken)}, provider: "github" };
-      localStorage.setItem("gh_token", data.token);
-      var info = document.getElementById("info");
-      if (window.opener) {
-        window.opener.postMessage(data, "*");
-        info.textContent = "已通知管理后台，可关闭此窗口。";
-      } else {
-        info.textContent = "未检测到主窗口（opener 为空），请手动点击上方链接进入后台。";
-      }
-    })();
+    localStorage.setItem("gh_token", ${JSON.stringify(accessToken)});
+    if (window.opener) {
+      window.opener.location.href = "/admin/";
+      window.close();
+    } else {
+      window.location.href = "/admin/";
+    }
   </script>
 </body></html>`,
         { headers: { "Content-Type": "text/html; charset=utf-8" } }
