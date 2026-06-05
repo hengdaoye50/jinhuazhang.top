@@ -51,42 +51,21 @@
       },
     });
 
-    // 如果是 Edge 弹窗拦截导致弹窗打不开，
-    // 重写 window.open 将弹窗改为当前窗口重定向
+    // 解决浏览器弹窗拦截：用 <a> 标签点击代替 window.open
     var _origOpen = window.open;
     window.open = function(url, name, features) {
       if (url && url.indexOf('github.com/login/oauth') !== -1) {
-        window.location.href = url;
+        var a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         return { closed: false, close: function() {} };
       }
       return _origOpen(url, name, features);
     };
 
     CMS.init();
-
-    // 重定向登录回跳后，用 sessionStorage 中的 token 完成认证
-    (function checkToken() {
-      var token = sessionStorage.getItem('gh_token');
-      if (!token) return;
-      // 给 CMS 一些初始化时间后尝试注入
-      setTimeout(function() {
-        // 方式1: 向自身发送 postMessage（CMS 可能在监听）
-        window.postMessage({ token: token, provider: 'github' }, window.location.origin);
-        // 方式2: 尝试访问内部 store
-        try {
-          var entry = Object.entries(window).find(function(e) {
-            return e[1] && e[1].store && e[1].store.dispatch;
-          });
-          if (entry) {
-            entry[1].store.dispatch({
-              type: 'AUTH_SUCCESS',
-              payload: { token: token, provider: 'github', email: token, name: token }
-            });
-          }
-        } catch(e) {}
-        sessionStorage.removeItem('gh_token');
-      }, 2000);
-    })();
-  </script>
 </body>
 </html>
