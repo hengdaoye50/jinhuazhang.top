@@ -6,9 +6,11 @@ display_url: https://jinhuazhang.top
 locale: zh-cn
 
 backend:
-  name: git-gateway
+  name: github
   repo: hengdaoye50/jinhuazhang.top
   branch: main
+  base_url: https://jinhuazhang.top
+  auth_endpoint: auth
 
 publish_mode: simple
 
