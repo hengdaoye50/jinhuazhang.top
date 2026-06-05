@@ -89,7 +89,11 @@ export async function onRequest(context) {
     sessionStorage.setItem("gh_token", data.token);
     if (window.opener) {
       window.opener.postMessage(data, "*");
-      window.close();
+      // 延迟关闭，确保消息送达
+      setTimeout(function() {
+        window.opener.postMessage(data, "*");
+        setTimeout(function() { window.close(); }, 300);
+      }, 300);
     } else {
       window.location.href = "/admin/";
     }
