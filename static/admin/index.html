@@ -55,43 +55,6 @@
       },
     });
 
-    // 用 Proxy 全面代理 window.open 返回值，拦截 location/href
-    var openViaLink = function(targetUrl) {
-      if (!targetUrl || targetUrl.indexOf('github.com/login/oauth') === -1) return;
-      var a = document.createElement('a');
-      a.href = targetUrl;
-      a.target = '_blank';
-      a.rel = 'opener';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    };
-
-    window.open = function(url, name, features) {
-      return new Proxy({ closed: false }, {
-        set: function(target, prop, value) {
-          if (prop === 'location') {
-            openViaLink(typeof value === 'string' ? value : value && value.href);
-            return true;
-          }
-          target[prop] = value;
-          return true;
-        },
-        get: function(target, prop) {
-          if (prop === 'location') {
-            return new Proxy({ href: '' }, {
-              set: function(t, p, v) {
-                if (p === 'href') openViaLink(v);
-                return true;
-              }
-            });
-          }
-          if (prop in target) return target[prop];
-          return function() {};
-        }
-      });
-    };
-
     CMS.init();
     document.getElementById('status').style.display = 'none';
   </script>
