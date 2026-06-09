@@ -1820,3 +1820,8 @@
 .blog-card-meta .pv-count {
   margin-left: auto;
 }
+
+/* Portfolio card — same alignment inside header row */
+.portfolio-card-header .pv-count {
+  margin-left: auto;
+}

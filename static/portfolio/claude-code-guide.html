@@ -409,5 +409,5 @@ document.querySelectorAll('.fade').forEach(el => obs.observe(el));
 const ids = ['hero','s1','s2','s3']; const navLinks = document.querySelectorAll('.nav a');
 window.addEventListener('scroll', () => { let cur = 'hero'; ids.forEach(id => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= 200) cur = id; }); navLinks.forEach((a, i) => a.classList.toggle('active', ids[i] === cur)); });
 </script>
-</body>
+<script src="/js/pageviews.js" defer></script></body>
 </html>

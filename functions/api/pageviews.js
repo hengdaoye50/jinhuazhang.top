@@ -7,10 +7,18 @@
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
-  const slug = url.searchParams.get("slug");
+  let slug = url.searchParams.get("slug");
 
   if (!slug) {
     return new Response("Missing slug", { status: 400 });
+  }
+
+  // Normalize: strip .html extension, ensure trailing slash
+  if (/\.html$/i.test(slug)) {
+    slug = slug.replace(/\.html$/i, "");
+  }
+  if (slug !== "/" && !slug.endsWith("/")) {
+    slug += "/";
   }
 
   if (!/^\/[\w\-\.\/~]+$/.test(slug)) {

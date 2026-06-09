@@ -7,14 +7,26 @@
 
   var API = "https://jinhuazhang.top/api/pageviews";
 
-  // Whether we're on a single article page (increment count)
-  var isArticle = !!document.querySelector("article");
-  var slug = window.location.pathname;
+  /** Normalize slug: strip .html, ensure trailing slash */
+  function normalizeSlug(path) {
+    if (!path) return path;
+    if (/\.html$/i.test(path)) path = path.replace(/\.html$/i, "");
+    if (path !== "/" && !path.endsWith("/")) path += "/";
+    return path;
+  }
+
+  var rawSlug = window.location.pathname;
+  var slug = normalizeSlug(rawSlug);
+
+  /** Detect single article/item page (not list pages) */
+  var isSinglePage =
+    /^\/blog\/.+/.test(slug) ||
+    (/^\/portfolio\/.+/.test(slug) && !/^\/portfolio\/?$/.test(slug));
 
   /** Fetch view count for a slug */
   function getViews(slug, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", API + "?slug=" + encodeURIComponent(slug));
+    xhr.open("GET", API + "?slug=" + encodeURIComponent(normalizeSlug(slug)));
     xhr.timeout = 3000;
     xhr.onload = function () {
       if (xhr.status === 200) callback(parseInt(xhr.responseText) || 0);
@@ -23,7 +35,7 @@
     xhr.send();
   }
 
-  /** Increment view count (article pages only) */
+  /** Increment view count (single pages only) */
   function postViews(slug) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", API + "?slug=" + encodeURIComponent(slug));
@@ -44,8 +56,8 @@
     return el;
   }
 
-  // ── Article page: increment view ──
-  if (isArticle && slug) {
+  // ── Single page: increment view ──
+  if (isSinglePage && slug) {
     postViews(slug);
   }
 
